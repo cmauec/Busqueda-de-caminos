@@ -67,7 +67,7 @@ STOPPED = 1
 # =======================================
 # used by GUI
 # =======================================
-CAPTION = 'искать дорогу'
+CAPTION = 'Path Finding 0.1.1'
 
 NODE_SIZE  = 35
 RESOLUTION = (910, 700)
