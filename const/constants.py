@@ -98,6 +98,7 @@ TARGET_COLOR             = 'tomato1'
 PARENT_LINE_COLOR        = 'gray'
 NODE_INFO_COLOR          = 'gray30'
 CONTROL_FONT_COLOR       = 'white'
+ALGO_FONT_COLOR       = 'white'
 SELECTED_COLOR           = 'tomato1'
 HELP_FONT_COLOR          = 'white'
 PATH_COLOR               = 'yellow1'
@@ -122,6 +123,12 @@ HELP_FONT_SIZE = 11
 HELP_POS = (5, 5)
 HELP_TEXT_POS = (10, 10)
 HELP_Y_OFFSET = 16
+
+# algo info
+ALGO_FONT_SIZE = 11
+ALGO_POS = (790, 600)
+ALGO_TEXT_POS = (790, 605)
+ALGO_Y_OFFSET = 16
 
 # connection info
 CONNECTION_FAILURE_FONT_SIZE = 30
