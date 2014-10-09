@@ -126,8 +126,8 @@ HELP_Y_OFFSET = 16
 
 # algo info
 ALGO_FONT_SIZE = 11
-ALGO_POS = (790, 600)
-ALGO_TEXT_POS = (790, 605)
+ALGO_POS = (700, 600)
+ALGO_TEXT_POS = (700, 605)
 ALGO_Y_OFFSET = 16
 
 # connection info
