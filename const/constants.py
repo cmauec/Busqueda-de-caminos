@@ -69,9 +69,9 @@ STOPPED = 1
 # =======================================
 CAPTION = 'Path Finding 0.1.1'
 
-NODE_SIZE  = 35
-RESOLUTION = (910, 700)
-MAP_SIZE = (910, 700)
+NODE_SIZE  = 25
+RESOLUTION = (450, 300)
+MAP_SIZE = (450, 300)
 
 FPS_LIMIT  = 30
 

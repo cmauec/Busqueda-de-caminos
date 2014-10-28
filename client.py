@@ -446,8 +446,8 @@ class Client(object):
         self.algo_info = _AlgoInfo(ui_path,'T')
 
         
-        self.source = (3, 9)
-        self.target = (22, 9)
+        self.source = (1, 11)
+        self.target = (17, 0)
         self.path = []
 
         # general status
@@ -482,6 +482,14 @@ class Client(object):
             self._draw_parent_lines()
             self._draw_grid_lines()
             self._draw_path()
+            self._draw_wall([(2,2),(2,9)])
+            self._draw_wall([(3,2),(3,9)])
+            self._draw_wall([(6,2),(6,9)])
+            self._draw_wall([(7,2),(7,9)])
+            self._draw_wall([(10,2),(10,9)])
+            self._draw_wall([(11,2),(11,9)])
+            self._draw_wall([(14,2),(14,9)])
+            self._draw_wall([(15,2),(15,9)])
             self.control_info.draw(self.screen)
             self.help_info.draw(self.screen)
             self.algo_info.draw(self.screen)
@@ -608,6 +616,19 @@ class Client(object):
                     node.rect, 0)
         except LookupError:
             pass
+
+    def _draw_wall(self,wall):
+        """draw the room walls.
+        """
+        wall1 = wall
+        range_limit_low = (wall1[0][1]+1)
+        range_limit_high = (wall1[1][1])
+        nodes_wall = range(range_limit_low,range_limit_high)
+        for v in nodes_wall:
+            wall1.append((wall1[0][0],v))
+        for w in wall1:
+            nx, ny = w
+            self._set_node_status((nx, ny), BLOCKED)
 
 
     def _draw_source_target(self):
