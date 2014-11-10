@@ -69,9 +69,9 @@ STOPPED = 1
 # =======================================
 CAPTION = 'Path Finding 0.1.1'
 
-NODE_SIZE  = 25
-RESOLUTION = (450, 300)
-MAP_SIZE = (450, 300)
+NODE_SIZE  = 20
+RESOLUTION = (1350, 700)
+MAP_SIZE = (1350, 700)
 
 FPS_LIMIT  = 30
 
@@ -113,8 +113,8 @@ MARGIN = 3
 
 # control info
 CONTROL_FONT_SIZE = 11
-CONTROL_POS = (790, 5)
-CONTROL_TEXT_POS = (795, 10)
+CONTROL_POS = (1250, 5)
+CONTROL_TEXT_POS = (1255, 15)
 CONTROL_Y_OFFSET = 16
 
 
@@ -126,8 +126,8 @@ HELP_Y_OFFSET = 16
 
 # algo info
 ALGO_FONT_SIZE = 11
-ALGO_POS = (700, 600)
-ALGO_TEXT_POS = (700, 605)
+ALGO_POS = (1250, 600)
+ALGO_TEXT_POS = (1255, 700)
 ALGO_Y_OFFSET = 16
 
 # connection info
