@@ -448,6 +448,7 @@ class Client(object):
         
         self.source = (1, 11)
         self.target = (17, 0)
+        self.target1 = (19, 0)
         self.path = []
 
         # general status
@@ -479,6 +480,7 @@ class Client(object):
             self._draw_background()
             self._draw_nodes()
             self._draw_source_target()
+            self._draw_source_target1()
             self._draw_parent_lines()
             self._draw_grid_lines()
             self._draw_path()
@@ -580,14 +582,18 @@ class Client(object):
                 self._reset_except_block()
                 self.status = RECEIVING
                 t1 = time.time()
-                self.core.calc(self._get_str_map(), 
+                self.core.calc(self._get_str_map(self.source,self.target), 
                         self.control_info.selection,
                         self.control_info.speed,t1)
             elif self.status == RECEIVING:
                 self.status = DRAWING
                 self.core.stop()
         elif event.key == K_r:
-            self._reset()
+            t1 = time.time()
+            self.core.calc(self._get_str_map(self.target,self.target1), 
+                        self.control_info.selection,
+                        self.control_info.speed,t1)
+            #self._reset()
         elif event.key == K_ESCAPE:
             self.quit()
 
@@ -652,6 +658,19 @@ class Client(object):
                 Rect(nx, ny, NODE_SIZE, NODE_SIZE)) 
 
         x, y = self.target
+        nx, ny = x * NODE_SIZE, y * NODE_SIZE
+        pygame.draw.rect(self.screen, self.node_color[TARGET], 
+                Rect(nx, ny, NODE_SIZE, NODE_SIZE))
+
+    def _draw_source_target1(self):
+        """Source and target nodes are drawed on top of other nodes.
+        """
+        x, y = self.source
+        nx, ny = x * NODE_SIZE, y * NODE_SIZE
+        pygame.draw.rect(self.screen, self.node_color[SOURCE], 
+                Rect(nx, ny, NODE_SIZE, NODE_SIZE)) 
+
+        x, y = self.target1
         nx, ny = x * NODE_SIZE, y * NODE_SIZE
         pygame.draw.rect(self.screen, self.node_color[TARGET], 
                 Rect(nx, ny, NODE_SIZE, NODE_SIZE)) 
@@ -729,16 +748,16 @@ class Client(object):
                 node.h = None
                 node.parent = None
 
-    def _get_str_map(self):
+    def _get_str_map(self,sourceA,targetA):
         """Generate a string represented map from the current nodes' status.
         """
         final_str = []
         for row in self.nodes:
             str = []
             for node in row:
-                if node.pos == self.source:
+                if node.pos == sourceA:
                     str.append(SOURCE)
-                elif node.pos == self.target:
+                elif node.pos == targetA :
                     str.append(TARGET)
                 else: 
                     str.append(node.status)
