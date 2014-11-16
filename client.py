@@ -40,6 +40,8 @@ t2 = 0
 t = 0
 
 
+
+
 # ==========================================================================
 # Core
 # ==========================================================================
@@ -399,6 +401,7 @@ class Client(object):
     
     def __init__(self, ui_path, addr):
 
+        self.flag = 0
         os.environ['SDL_VIDEO_CENTERED'] = '1'
         pygame.init()
 
@@ -577,23 +580,29 @@ class Client(object):
         elif event.key == K_a:
             self.control_info.toggle_speed(-1)
         elif event.key == K_SPACE and self.core.connected:
-            # starts computation
-            if self.status == DRAWING:
-                self._reset_except_block()
-                self.status = RECEIVING
+            self.flag += 1
+            print self.flag
+            if self.flag == 1:
+                # starts computation
+                if self.status == DRAWING:
+                    self._reset_except_block()
+                    self.status = RECEIVING
+                    t1 = time.time()
+                    self.core.calc(self._get_str_map(self.source,self.target), 
+                        self.control_info.selection,
+                        self.control_info.speed,t1)
+                    t1 = time.time()
+                elif self.status == RECEIVING:
+                    self.status = DRAWING
+                    self.core.stop()
+            elif self.flag == 2:
                 t1 = time.time()
-                self.core.calc(self._get_str_map(self.source,self.target), 
+                self.core.calc(self._get_str_map(self.target,self.target1), 
                         self.control_info.selection,
                         self.control_info.speed,t1)
-            elif self.status == RECEIVING:
-                self.status = DRAWING
-                self.core.stop()
         elif event.key == K_r:
-            t1 = time.time()
-            self.core.calc(self._get_str_map(self.target,self.target1), 
-                        self.control_info.selection,
-                        self.control_info.speed,t1)
-            #self._reset()
+            self._reset()
+            self.flag = 0
         elif event.key == K_ESCAPE:
             self.quit()
 
@@ -616,8 +625,12 @@ class Client(object):
             print why
 
     def _set_path(self, path):
-        self.status = DRAWING
-        self.path = path
+        if not self.path:
+            self.status = DRAWING
+            self.path = path
+        else:
+            self.status = DRAWING
+            self.path = self.path+path
 
     def _draw_background(self):
         self.screen.fill(Color(BACKGROUND_COLOR))
