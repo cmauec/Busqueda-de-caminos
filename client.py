@@ -40,8 +40,6 @@ t2 = 0
 t = 0
 
 
-
-
 # ==========================================================================
 # Core
 # ==========================================================================
@@ -57,7 +55,7 @@ class CoreClient(asynchat.async_chat, threading.Thread):
         """*Note*: the connection is established in the `run` routine 
         instead of __init__.
         """
-
+        self.flag = 0
         asynchat.async_chat.__init__(self)
         threading.Thread.__init__(self)
 
@@ -135,6 +133,12 @@ class CoreClient(asynchat.async_chat, threading.Thread):
         self.push(data_speed)
         self.push(data_start)
 
+    def lenght_targets(self,lenght_targets):
+        self.lenght_targets = lenght_targets
+
+    def reset_flag(self):
+        self.flag = 0
+
 
     def toggle_speed(self, speed):
         data_speed = cPickle.dumps(('SPEED', speed)) + TERM
@@ -159,6 +163,12 @@ class CoreClient(asynchat.async_chat, threading.Thread):
     def set_path_callback(self, callback):
         self.path_callback = callback
 
+    def set_send_server_callback(self, callback):
+        self.send_server_callback = callback
+
+    def set_send_server_callback1(self, callback):
+        self.send_server_callback1 = callback
+
     def _cmd_open(self, arg):
         self.open_callback(arg, OPENED)
 
@@ -174,11 +184,15 @@ class CoreClient(asynchat.async_chat, threading.Thread):
         self.parent_callback(pos1, pos2)
 
     def _cmd_path(self, arg):
-        t2 = time.time()
-        t = t2-self.t1
-        print str(t)
-        self.time_algo = str(t)
-        self.path_callback(arg)
+        if self.flag < self.lenght_targets:
+            t2 = time.time()
+            t = t2-self.t1
+            print str(t)
+            self.time_algo = str(t)
+            self.path_callback(arg)
+            self.send_server_callback()
+            self.flag += 1
+            #self.send_server_callback1()
 
     
 
@@ -412,6 +426,8 @@ class Client(object):
         self.core.set_value_callback(self._set_node_value)
         self.core.set_parent_callback(self._set_node_parent)
         self.core.set_path_callback(self._set_path)
+        self.core.set_send_server_callback(self._send_calc_server)
+        #self.core.set_send_server_callback1(self._send_calc_server1)
         self.core.setDaemon(True)
 
         # GUI related stuffs
@@ -450,9 +466,12 @@ class Client(object):
 
         
         self.source = (1, 11)
+        self.targets = [(17, 0),(19, 0),(28, 3),(28, 5),(30, 10),(35,20)]
+        self.lenght_targets = len(self.targets)
+        self.core.lenght_targets(self.lenght_targets)
         self.target = (17, 0)
-        self.target1 = (19, 0)
-        self.target2 = (28, 3)
+        #self.target1 = (19, 0)
+        #self.target2 = (28, 3)
         self.path = []
 
         # general status
@@ -484,8 +503,8 @@ class Client(object):
             self._draw_background()
             self._draw_nodes()
             self._draw_source_target()
-            self._draw_source_target1()
-            self._draw_source_target2()
+            #self._draw_source_target1()
+            #self._draw_source_target2()
             self._draw_parent_lines()
             self._draw_grid_lines()
             self._draw_path()
@@ -582,9 +601,20 @@ class Client(object):
         elif event.key == K_a:
             self.control_info.toggle_speed(-1)
         elif event.key == K_SPACE and self.core.connected:
-            self.flag += 1
-            print self.flag
-            if self.flag == 1:
+            #self.flag += 1
+            # starts computation
+            if self.status == DRAWING:
+                self._reset_except_block()
+                self.status = RECEIVING
+                t1 = time.time()
+                self.core.calc(self._get_str_map(self.source,self.targets[0]), 
+                    self.control_info.selection,
+                    self.control_info.speed,t1)
+                t1 = time.time()
+            elif self.status == RECEIVING:
+                self.status = DRAWING
+                self.core.stop()
+            '''if self.flag == 1:
                 # starts computation
                 if self.status == DRAWING:
                     self._reset_except_block()
@@ -606,10 +636,11 @@ class Client(object):
                 t1 = time.time()
                 self.core.calc(self._get_str_map(self.target1,self.target2), 
                         self.control_info.selection,
-                        self.control_info.speed,t1)
+                        self.control_info.speed,t1)'''
         elif event.key == K_r:
             self._reset()
             self.flag = 0
+            self.core.reset_flag()
         elif event.key == K_ESCAPE:
             self.quit()
 
@@ -676,10 +707,10 @@ class Client(object):
         nx, ny = x * NODE_SIZE, y * NODE_SIZE
         pygame.draw.rect(self.screen, self.node_color[SOURCE], 
                 Rect(nx, ny, NODE_SIZE, NODE_SIZE)) 
-
-        x, y = self.target
-        nx, ny = x * NODE_SIZE, y * NODE_SIZE
-        pygame.draw.rect(self.screen, self.node_color[TARGET], 
+        for target in self.targets:
+            x, y = target
+            nx, ny = x * NODE_SIZE, y * NODE_SIZE
+            pygame.draw.rect(self.screen, self.node_color[TARGET], 
                 Rect(nx, ny, NODE_SIZE, NODE_SIZE))
 
     def _draw_source_target1(self):
@@ -797,6 +828,20 @@ class Client(object):
             str.append('\n')
             final_str.append(''.join(str))
         return ''.join(final_str)
+
+    def _send_calc_server(self):
+        print str(self.flag)
+        if self.flag < self.lenght_targets:
+            t1 = time.time()
+            self.core.calc(self._get_str_map(self.targets[self.flag],self.targets[self.flag+1]), 
+                        self.control_info.selection,
+                        self.control_info.speed,t1)
+            self.flag +=1
+    '''def _send_calc_server1(self):
+        t1 = time.time()
+        self.core.calc(self._get_str_map(self.target1,self.target2), 
+                        self.control_info.selection,
+                        self.control_info.speed,t1)'''
 
 
 def print_help():
