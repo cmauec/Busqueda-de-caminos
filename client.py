@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+ #!/usr/bin/env python
 
 # Copyright (C) 2011 by Xueqiao Xu <xueqiaoxu@gmail.com>
 #
@@ -452,6 +452,7 @@ class Client(object):
         self.source = (1, 11)
         self.target = (17, 0)
         self.target1 = (19, 0)
+        self.target2 = (28, 3)
         self.path = []
 
         # general status
@@ -484,6 +485,7 @@ class Client(object):
             self._draw_nodes()
             self._draw_source_target()
             self._draw_source_target1()
+            self._draw_source_target2()
             self._draw_parent_lines()
             self._draw_grid_lines()
             self._draw_path()
@@ -505,8 +507,8 @@ class Client(object):
             self._draw_wall([(48,5),(48,30)])
             self._draw_wall([(53,5),(53,30)])
             self._draw_wall([(54,5),(54,30)])
-            self._draw_wall([(61,5),(61,30)])
-            self._draw_wall([(62,5),(62,30)])
+            self._draw_wall([(59,5),(59,30)])
+            self._draw_wall([(60,5),(60,30)])
             self.control_info.draw(self.screen)
             self.help_info.draw(self.screen)
             self.algo_info.draw(self.screen)
@@ -600,6 +602,11 @@ class Client(object):
                 self.core.calc(self._get_str_map(self.target,self.target1), 
                         self.control_info.selection,
                         self.control_info.speed,t1)
+            elif self.flag == 3:
+                t1 = time.time()
+                self.core.calc(self._get_str_map(self.target1,self.target2), 
+                        self.control_info.selection,
+                        self.control_info.speed,t1)
         elif event.key == K_r:
             self._reset()
             self.flag = 0
@@ -684,6 +691,19 @@ class Client(object):
                 Rect(nx, ny, NODE_SIZE, NODE_SIZE)) 
 
         x, y = self.target1
+        nx, ny = x * NODE_SIZE, y * NODE_SIZE
+        pygame.draw.rect(self.screen, self.node_color[TARGET], 
+                Rect(nx, ny, NODE_SIZE, NODE_SIZE)) 
+
+    def _draw_source_target2(self):
+        """Source and target nodes are drawed on top of other nodes.
+        """
+        x, y = self.source
+        nx, ny = x * NODE_SIZE, y * NODE_SIZE
+        pygame.draw.rect(self.screen, self.node_color[SOURCE], 
+                Rect(nx, ny, NODE_SIZE, NODE_SIZE)) 
+
+        x, y = self.target2
         nx, ny = x * NODE_SIZE, y * NODE_SIZE
         pygame.draw.rect(self.screen, self.node_color[TARGET], 
                 Rect(nx, ny, NODE_SIZE, NODE_SIZE)) 
