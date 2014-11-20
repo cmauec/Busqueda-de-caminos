@@ -27,6 +27,7 @@ import socket
 import cPickle
 import asyncore
 import threading
+import random
 
 import asynchatmod as asynchat
 
@@ -184,6 +185,7 @@ class CoreClient(asynchat.async_chat, threading.Thread):
         self.parent_callback(pos1, pos2)
 
     def _cmd_path(self, arg):
+        print str(self.lenght_targets)
         if self.flag < self.lenght_targets:
             t2 = time.time()
             t = t2-self.t1
@@ -464,10 +466,40 @@ class Client(object):
         self.connection_info = _ConnectionInfo(ui_path, self.core)
         self.algo_info = _AlgoInfo(ui_path,'T')
 
+        # Creamos variables para guardar coordenadas de los productos en las estanterias
+        products_in_wall1 = []
+        products_in_wall2 = []
+        products_in_wall3 = []
+        products_in_wall4 = []
+        products_in_wall5 = []
+        products_in_wall6 = []
+        products_in_wall7 = []
+        products_in_wall8 = []
+        products_in_wall9 = []
+        products_in_wall10 = []
+
+        # Llenamos las varibles de los productos con coordenadas aleatorias
+        target_wall1_products = random.randrange(0,6)
+        for p in range(0,target_wall1_products):
+            products_in_wall1.append(self.gen_element(5,5,31))
+        target_wall2_products = random.randrange(0,6)
+        for p in range(0,target_wall2_products):
+            products_in_wall2.append(self.gen_element(11,5,31))
+        target_wall3_products = random.randrange(0,6)
+        for p in range(0,target_wall3_products):
+            products_in_wall3.append(self.gen_element(17,5,31))
+        target_wall4_products = random.randrange(0,6)
+        for p in range(0,target_wall4_products):
+            products_in_wall4.append(self.gen_element(23,5,31))
+        target_wall5_products = random.randrange(0,6)
+        for p in range(0,target_wall5_products):
+            products_in_wall5.append(self.gen_element(29,5,31))
+
         
         self.source = (1, 11)
-        self.targets = [(17, 0),(19, 0),(28, 3),(28, 5),(30, 10),(35,20)]
+        self.targets = products_in_wall1+products_in_wall2+products_in_wall3+products_in_wall4+products_in_wall5
         self.lenght_targets = len(self.targets)
+        print self.lenght_targets
         self.core.lenght_targets(self.lenght_targets)
         self.target = (17, 0)
         #self.target1 = (19, 0)
@@ -480,6 +512,10 @@ class Client(object):
         self.erasing = False
         self.drag = None
 
+    def gen_element(self,origin,limit_1_y,limit_2_y):
+        x = origin+random.randrange(0,2)
+        y = random.randrange(limit_1_y,limit_2_y)
+        return (x,y)
 
     def run(self):
         """Starts the main loop
@@ -505,7 +541,7 @@ class Client(object):
             self._draw_source_target()
             #self._draw_source_target1()
             #self._draw_source_target2()
-            self._draw_parent_lines()
+            #self._draw_parent_lines()
             self._draw_grid_lines()
             self._draw_path()
             self._draw_wall([(5,5),(5,30)])
@@ -677,7 +713,7 @@ class Client(object):
         for row in self.nodes:
             for node in row:
                 self._draw_node_rect(node)
-                self._draw_node_info(node)
+                #self._draw_node_info(node)
 
     def _draw_node_rect(self, node):
         try:
