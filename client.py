@@ -481,19 +481,19 @@ class Client(object):
         # Llenamos las varibles de los productos con coordenadas aleatorias
         target_wall1_products = random.randrange(0,6)
         for p in range(0,target_wall1_products):
-            products_in_wall1.append(self.gen_element(5,5,31))
+            products_in_wall1.append(self.gen_element(7,7,41))
         target_wall2_products = random.randrange(0,6)
         for p in range(0,target_wall2_products):
-            products_in_wall2.append(self.gen_element(11,5,31))
+            products_in_wall2.append(self.gen_element(13,7,41))
         target_wall3_products = random.randrange(0,6)
         for p in range(0,target_wall3_products):
-            products_in_wall3.append(self.gen_element(17,5,31))
+            products_in_wall3.append(self.gen_element(19,7,41))
         target_wall4_products = random.randrange(0,6)
         for p in range(0,target_wall4_products):
-            products_in_wall4.append(self.gen_element(23,5,31))
+            products_in_wall4.append(self.gen_element(25,7,41))
         target_wall5_products = random.randrange(0,6)
         for p in range(0,target_wall5_products):
-            products_in_wall5.append(self.gen_element(29,5,31))
+            products_in_wall5.append(self.gen_element(31,7,41))
 
         
         self.source = (1, 11)
@@ -513,7 +513,10 @@ class Client(object):
         self.drag = None
 
     def gen_element(self,origin,limit_1_y,limit_2_y):
-        x = origin+random.randrange(0,2)
+        mov_right = random.randrange(0,2) 
+        if mov_right == 1:
+            mov_right = 2
+        x = origin+mov_right
         y = random.randrange(limit_1_y,limit_2_y)
         return (x,y)
 
@@ -544,26 +547,55 @@ class Client(object):
             #self._draw_parent_lines()
             self._draw_grid_lines()
             self._draw_path()
-            self._draw_wall([(5,5),(5,30)])
-            self._draw_wall([(6,5),(6,30)])
-            self._draw_wall([(11,5),(11,30)])
-            self._draw_wall([(12,5),(12,30)])
-            self._draw_wall([(17,5),(17,30)])
-            self._draw_wall([(18,5),(18,30)])
-            self._draw_wall([(23,5),(23,30)])
-            self._draw_wall([(24,5),(24,30)])
-            self._draw_wall([(29,5),(29,30)])
-            self._draw_wall([(30,5),(30,30)])
-            self._draw_wall([(35,5),(35,30)])
-            self._draw_wall([(36,5),(36,30)])
-            self._draw_wall([(41,5),(41,30)])
-            self._draw_wall([(42,5),(42,30)])
-            self._draw_wall([(47,5),(47,30)])
-            self._draw_wall([(48,5),(48,30)])
-            self._draw_wall([(53,5),(53,30)])
-            self._draw_wall([(54,5),(54,30)])
-            self._draw_wall([(59,5),(59,30)])
-            self._draw_wall([(60,5),(60,30)])
+            self._draw_wall([(4,0),(85,0)],'horizontal')
+            self._draw_wall([(4,1),(85,1)],'horizontal')
+            self._draw_wall([(4,44),(85,44)],'horizontal')
+            self._draw_wall([(4,45),(85,45)],'horizontal')
+            self._draw_wall([(0,7),(1,40)])
+            self._draw_wall([(1,7),(1,40)])
+            self._draw_wall([(0,80),(80,80)])
+            self._draw_wall([(0,81),(80,81)])
+            self._draw_wall([(88,7),(88,40)])
+            self._draw_wall([(89,7),(89,40)])
+            self._draw_wall([(7,7),(7,40)])
+            self._draw_wall([(8,7),(8,40)])
+            self._draw_wall([(9,7),(9,40)])
+            self._draw_wall([(13,7),(13,40)])
+            self._draw_wall([(14,7),(14,40)])
+            self._draw_wall([(15,7),(15,40)])
+            self._draw_wall([(19,7),(19,40)])
+            self._draw_wall([(20,7),(20,40)])
+            self._draw_wall([(21,7),(21,40)])
+            self._draw_wall([(25,7),(25,40)])
+            self._draw_wall([(26,7),(26,40)])
+            self._draw_wall([(27,7),(27,40)])
+            self._draw_wall([(31,7),(31,40)])
+            self._draw_wall([(32,7),(32,40)])
+            self._draw_wall([(33,7),(33,40)])
+            self._draw_wall([(37,7),(37,40)])
+            self._draw_wall([(38,7),(38,40)])
+            self._draw_wall([(39,7),(39,40)])
+            self._draw_wall([(43,7),(43,40)])
+            self._draw_wall([(44,7),(44,40)])
+            self._draw_wall([(45,7),(45,40)])
+            self._draw_wall([(49,7),(49,40)])
+            self._draw_wall([(50,7),(50,40)])
+            self._draw_wall([(51,7),(51,40)])
+            self._draw_wall([(55,7),(55,40)])
+            self._draw_wall([(56,7),(56,40)])
+            self._draw_wall([(57,7),(57,40)])
+            self._draw_wall([(61,7),(61,40)])
+            self._draw_wall([(62,7),(62,40)])
+            self._draw_wall([(63,7),(63,40)])
+            self._draw_wall([(67,7),(67,40)])
+            self._draw_wall([(68,7),(68,40)])
+            self._draw_wall([(69,7),(69,40)])
+            self._draw_wall([(73,7),(73,40)])
+            self._draw_wall([(74,7),(74,40)])
+            self._draw_wall([(75,7),(75,40)])
+            self._draw_wall([(79,7),(79,40)])
+            self._draw_wall([(80,7),(80,40)])
+            self._draw_wall([(81,7),(81,40)])
             self.control_info.draw(self.screen)
             self.help_info.draw(self.screen)
             self.algo_info.draw(self.screen)
@@ -722,19 +754,29 @@ class Client(object):
         except LookupError:
             pass
 
-    def _draw_wall(self,wall):
+    def _draw_wall(self,wall,direction='vertical'):
         """draw the room walls.
         """
-        wall1 = wall
-        range_limit_low = (wall1[0][1]+1)
-        range_limit_high = (wall1[1][1])
-        nodes_wall = range(range_limit_low,range_limit_high)
-        for v in nodes_wall:
-            wall1.append((wall1[0][0],v))
-        for w in wall1:
-            nx, ny = w
-            self._set_node_status((nx, ny), BLOCKED)
-
+        if direction == 'vertical':
+            wall1 = wall
+            range_limit_low = (wall1[0][1]+1)
+            range_limit_high = (wall1[1][1])
+            nodes_wall = range(range_limit_low,range_limit_high)
+            for v in nodes_wall:
+                wall1.append((wall1[0][0],v))
+            for w in wall1:
+                nx, ny = w
+                self._set_node_status((nx, ny), BLOCKED)
+        elif direction == 'horizontal':
+            wall1 = wall
+            range_limit_low = (wall1[0][0]+1)
+            range_limit_high = (wall1[1][0])
+            nodes_wall = range(range_limit_low,range_limit_high)
+            for v in nodes_wall:
+                wall1.append((v, wall1[0][1]))
+            for w in wall1:
+                nx, ny = w
+                self._set_node_status((nx, ny), BLOCKED)
 
     def _draw_source_target(self):
         """Source and target nodes are drawed on top of other nodes.

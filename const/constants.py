@@ -69,7 +69,7 @@ STOPPED = 1
 # =======================================
 CAPTION = 'Path Finding 0.1.1'
 
-NODE_SIZE  = 20
+NODE_SIZE  = 15
 RESOLUTION = (1350, 700)
 MAP_SIZE = (1350, 700)
 
