@@ -477,27 +477,39 @@ class Client(object):
         products_in_wall8 = []
         products_in_wall9 = []
         products_in_wall10 = []
+        products_in_wall11 = []
+        products_in_wall12 = []
+        products_in_wall13 = []
 
         # Llenamos las varibles de los productos con coordenadas aleatorias
         target_wall1_products = random.randrange(0,6)
         for p in range(0,target_wall1_products):
-            products_in_wall1.append(self.gen_element(7,7,41))
+            products_in_wall1.append(self.gen_element(7,8,37))
         target_wall2_products = random.randrange(0,6)
         for p in range(0,target_wall2_products):
-            products_in_wall2.append(self.gen_element(13,7,41))
+            products_in_wall2.append(self.gen_element(13,8,37))
         target_wall3_products = random.randrange(0,6)
         for p in range(0,target_wall3_products):
-            products_in_wall3.append(self.gen_element(19,7,41))
+            products_in_wall3.append(self.gen_element(19,8,37))
         target_wall4_products = random.randrange(0,6)
         for p in range(0,target_wall4_products):
-            products_in_wall4.append(self.gen_element(25,7,41))
+            products_in_wall4.append(self.gen_element(25,8,37))
         target_wall5_products = random.randrange(0,6)
         for p in range(0,target_wall5_products):
-            products_in_wall5.append(self.gen_element(31,7,41))
+            products_in_wall5.append(self.gen_element(31,8,37))
+        target_wall11_products = random.randrange(0,4)
+        for p in range(0,target_wall11_products):
+            products_in_wall11.append(self.gen_element1(1,8,37))
+        target_wall12_products = random.randrange(0,5)
+        for p in range(0,target_wall12_products):
+            products_in_wall12.append(self.gen_element2(4,7,81))
+            target_wall13_products = random.randrange(0,5)
+        for p in range(0,target_wall13_products):
+            products_in_wall13.append(self.gen_element2(41,7,81))
 
         
         self.source = (1, 11)
-        self.targets = products_in_wall1+products_in_wall2+products_in_wall3+products_in_wall4+products_in_wall5
+        self.targets = products_in_wall1+products_in_wall2+products_in_wall3+products_in_wall4+products_in_wall5+products_in_wall11+products_in_wall12+products_in_wall13
         self.lenght_targets = len(self.targets)
         print self.lenght_targets
         self.core.lenght_targets(self.lenght_targets)
@@ -518,6 +530,16 @@ class Client(object):
             mov_right = 2
         x = origin+mov_right
         y = random.randrange(limit_1_y,limit_2_y)
+        return (x,y)
+
+    def gen_element1(self,origin,limit_1_y,limit_2_y):
+        x = origin
+        y = random.randrange(limit_1_y,limit_2_y)
+        return (x,y)
+
+    def gen_element2(self,origin,limit_1_x,limit_2_x):
+        y = origin
+        x = random.randrange(limit_1_x,limit_2_x)
         return (x,y)
 
     def run(self):
@@ -547,55 +569,57 @@ class Client(object):
             #self._draw_parent_lines()
             self._draw_grid_lines()
             self._draw_path()
-            self._draw_wall([(4,0),(85,0)],'horizontal')
-            self._draw_wall([(4,1),(85,1)],'horizontal')
-            self._draw_wall([(4,44),(85,44)],'horizontal')
-            self._draw_wall([(4,45),(85,45)],'horizontal')
-            self._draw_wall([(0,7),(1,40)])
-            self._draw_wall([(1,7),(1,40)])
-            self._draw_wall([(0,80),(80,80)])
-            self._draw_wall([(0,81),(80,81)])
-            self._draw_wall([(88,7),(88,40)])
-            self._draw_wall([(89,7),(89,40)])
-            self._draw_wall([(7,7),(7,40)])
-            self._draw_wall([(8,7),(8,40)])
-            self._draw_wall([(9,7),(9,40)])
-            self._draw_wall([(13,7),(13,40)])
-            self._draw_wall([(14,7),(14,40)])
-            self._draw_wall([(15,7),(15,40)])
-            self._draw_wall([(19,7),(19,40)])
-            self._draw_wall([(20,7),(20,40)])
-            self._draw_wall([(21,7),(21,40)])
-            self._draw_wall([(25,7),(25,40)])
-            self._draw_wall([(26,7),(26,40)])
-            self._draw_wall([(27,7),(27,40)])
-            self._draw_wall([(31,7),(31,40)])
-            self._draw_wall([(32,7),(32,40)])
-            self._draw_wall([(33,7),(33,40)])
-            self._draw_wall([(37,7),(37,40)])
-            self._draw_wall([(38,7),(38,40)])
-            self._draw_wall([(39,7),(39,40)])
-            self._draw_wall([(43,7),(43,40)])
-            self._draw_wall([(44,7),(44,40)])
-            self._draw_wall([(45,7),(45,40)])
-            self._draw_wall([(49,7),(49,40)])
-            self._draw_wall([(50,7),(50,40)])
-            self._draw_wall([(51,7),(51,40)])
-            self._draw_wall([(55,7),(55,40)])
-            self._draw_wall([(56,7),(56,40)])
-            self._draw_wall([(57,7),(57,40)])
-            self._draw_wall([(61,7),(61,40)])
-            self._draw_wall([(62,7),(62,40)])
-            self._draw_wall([(63,7),(63,40)])
-            self._draw_wall([(67,7),(67,40)])
-            self._draw_wall([(68,7),(68,40)])
-            self._draw_wall([(69,7),(69,40)])
-            self._draw_wall([(73,7),(73,40)])
-            self._draw_wall([(74,7),(74,40)])
-            self._draw_wall([(75,7),(75,40)])
-            self._draw_wall([(79,7),(79,40)])
-            self._draw_wall([(80,7),(80,40)])
-            self._draw_wall([(81,7),(81,40)])
+            self._draw_wall([(7,4),(81,4)],'horizontal')
+            self._draw_wall([(7,3),(81,3)],'horizontal')
+            self._draw_wall([(7,42),(81,42)],'horizontal')
+            self._draw_wall([(7,41),(81,41)],'horizontal')
+            self._draw_wall([(0,8),(0,37)])
+            self._draw_wall([(1,8),(1,37)])
+            self._draw_wall([(88,23),(88,24)])
+            self._draw_wall([(89,23),(89,24)])
+            self._draw_wall([(88,12),(88,13)])
+            self._draw_wall([(89,12),(89,13)])
+            self._draw_wall([(88,35),(88,36)])
+            self._draw_wall([(89,35),(89,36)])
+            self._draw_wall([(7,8),(7,37)])
+            self._draw_wall([(8,8),(8,37)])
+            self._draw_wall([(9,8),(9,37)])
+            self._draw_wall([(13,8),(13,37)])
+            self._draw_wall([(14,8),(14,37)])
+            self._draw_wall([(15,8),(15,37)])
+            self._draw_wall([(19,8),(19,37)])
+            self._draw_wall([(20,8),(20,37)])
+            self._draw_wall([(21,8),(21,37)])
+            self._draw_wall([(25,8),(25,37)])
+            self._draw_wall([(26,8),(26,37)])
+            self._draw_wall([(27,8),(27,37)])
+            self._draw_wall([(31,8),(31,37)])
+            self._draw_wall([(32,8),(32,37)])
+            self._draw_wall([(33,8),(33,37)])
+            self._draw_wall([(37,8),(37,37)])
+            self._draw_wall([(38,8),(38,37)])
+            self._draw_wall([(39,8),(39,37)])
+            self._draw_wall([(43,8),(43,37)])
+            self._draw_wall([(44,8),(44,37)])
+            self._draw_wall([(45,8),(45,37)])
+            self._draw_wall([(49,8),(49,37)])
+            self._draw_wall([(50,8),(50,37)])
+            self._draw_wall([(51,8),(51,37)])
+            self._draw_wall([(55,8),(55,37)])
+            self._draw_wall([(56,8),(56,37)])
+            self._draw_wall([(57,8),(57,37)])
+            self._draw_wall([(61,8),(61,37)])
+            self._draw_wall([(62,8),(62,37)])
+            self._draw_wall([(63,8),(63,37)])
+            self._draw_wall([(67,8),(67,37)])
+            self._draw_wall([(68,8),(68,37)])
+            self._draw_wall([(69,8),(69,37)])
+            self._draw_wall([(73,8),(73,37)])
+            self._draw_wall([(74,8),(74,37)])
+            self._draw_wall([(75,8),(75,37)])
+            self._draw_wall([(79,8),(79,37)])
+            self._draw_wall([(80,8),(80,37)])
+            self._draw_wall([(81,8),(81,37)])
             self.control_info.draw(self.screen)
             self.help_info.draw(self.screen)
             self.algo_info.draw(self.screen)
