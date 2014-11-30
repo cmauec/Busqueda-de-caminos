@@ -78,8 +78,9 @@ class CoreClient(asynchat.async_chat, threading.Thread):
 
         # algorithm dictionary
         self.algo_dict = {ASTARM: 'ASTARM',
-                          DIJKSTRA: 'DIJKSTRA',
-                          BDBFS: 'BDBFS'}
+                          #DIJKSTRA: 'DIJKSTRA',
+                          #BDBFS: 'BDBFS'
+                          }
 
     def run(self):
         """Overides the run method of threading.Thread
@@ -229,7 +230,7 @@ class _HelpInfo(object):
             ui_path : str
                 the folder where the ui resources are located
         """
-        self.pos = HELP_POS
+        '''self.pos = HELP_POS
         self.text_pos = HELP_TEXT_POS
         self.background = pygame.image.load(
                 os.path.join(ui_path, 'layer1.png')).convert_alpha()
@@ -243,7 +244,7 @@ class _HelpInfo(object):
         self.font = pygame.font.Font(os.path.join(
             ui_path, FONT_NAME), HELP_FONT_SIZE)
         self.img = [self.font.render(line, True, Color(HELP_FONT_COLOR)) 
-                for line in self.text]
+                for line in self.text]'''
 
     def draw(self, surface):
         surface.blit(self.background, self.pos)
@@ -271,8 +272,9 @@ class _ControlInfo(object):
                 os.path.join(ui_path, 'layer2.png')).convert_alpha()
         self.text_pos = CONTROL_TEXT_POS
         self.algo_text = ('A* (Manhattan)',
-                          'Dijkstra',
-                          'Bi-Directional BFS')
+                          #'Dijkstra',
+                          #'Bi-Directional BFS'
+                          )
         self.selection = 0
         self.speed_text = 'Speed : '
         self.speed = DEFAULT_SPEED
@@ -330,7 +332,7 @@ class _AlgoInfo(object):
             ui_path : str
                 the folder where the ui resources are located
         """
-        self.pos = ALGO_POS
+        '''self.pos = ALGO_POS
         self.text_pos = ALGO_TEXT_POS
         self.background = pygame.image.load(
                 os.path.join(ui_path, 'layer1.png')).convert_alpha()
@@ -339,7 +341,7 @@ class _AlgoInfo(object):
         self.font = pygame.font.Font(os.path.join(
             ui_path, FONT_NAME), HELP_FONT_SIZE)
         self.img = [self.font.render(line, True, Color(ALGO_FONT_COLOR)) 
-                for line in self.text]
+                for line in self.text]'''
 
     def draw(self, surface):
         surface.blit(self.background, self.pos)
@@ -462,7 +464,7 @@ class Client(object):
         
         # floating texts
         self.control_info = _ControlInfo(ui_path, self.core)
-        self.help_info = _HelpInfo(ui_path)
+        #self.help_info = _HelpInfo(ui_path)
         self.connection_info = _ConnectionInfo(ui_path, self.core)
         self.algo_info = _AlgoInfo(ui_path,'T')
 
@@ -503,7 +505,7 @@ class Client(object):
         target_wall12_products = random.randrange(0,5)
         for p in range(0,target_wall12_products):
             products_in_wall12.append(self.gen_element2(4,7,81))
-            target_wall13_products = random.randrange(0,5)
+        target_wall13_products = random.randrange(0,5)
         for p in range(0,target_wall13_products):
             products_in_wall13.append(self.gen_element2(41,7,81))
 
@@ -621,8 +623,8 @@ class Client(object):
             self._draw_wall([(80,8),(80,37)])
             self._draw_wall([(81,8),(81,37)])
             self.control_info.draw(self.screen)
-            self.help_info.draw(self.screen)
-            self.algo_info.draw(self.screen)
+            #self.help_info.draw(self.screen)
+            #self.algo_info.draw(self.screen)
             self.connection_info.draw(self.screen)
 
             # update screen
@@ -684,15 +686,15 @@ class Client(object):
     def _handle_keyboard(self, event):
         """Handle keyboard events
         """
-        if event.key == K_w:
+        '''if event.key == K_w:
             self.control_info.toggle_selection(-1)
         elif event.key == K_s:
             self.control_info.toggle_selection(1)
         elif event.key == K_d:
             self.control_info.toggle_speed(1)
         elif event.key == K_a:
-            self.control_info.toggle_speed(-1)
-        elif event.key == K_SPACE and self.core.connected:
+            self.control_info.toggle_speed(-1)'''
+        if event.key == K_SPACE and self.core.connected:
             #self.flag += 1
             # starts computation
             if self.status == DRAWING:
