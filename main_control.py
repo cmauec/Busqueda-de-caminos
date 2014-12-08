@@ -126,7 +126,7 @@ class Client(object):
             products_in_wall13.append(self.gen_element2(41,7,81))
 
         
-        self.source = (1, 11)
+        self.source = (1, 1)
         self.targets = products_in_wall1+products_in_wall2+products_in_wall3+products_in_wall4+products_in_wall5+products_in_wall11+products_in_wall12+products_in_wall13
         self.lenght_targets = len(self.targets)
         self.path = []
@@ -289,15 +289,17 @@ class Client(object):
         """
         
         if event.key == K_SPACE:
-            nodes_map_raw = self._get_str_map(self.source,self.targets[0])
-            a = AStar(nodes_map_raw)
-            print a
-            if self.status == DRAWING:
-                self._reset_except_block()
-                self.status = RECEIVING
-            elif self.status == RECEIVING:
-                self.status = DRAWING
-                            
+            self.inicio = 0
+            self.fin = len(self.targets)
+            for t in range(len(self.targets)):
+                if t+1 < len(self.targets):
+                    nodes_map_raw = self._get_str_map(self.targets[t], self.targets[t+1])
+                    a = AStar(nodes_map_raw)
+                    for i in a.step():
+                        pass
+                    self.path += a.path
+                self.inicio += 1 
+            print self.path                            
         elif event.key == K_r:
             self._reset()
             self.flag = 0
@@ -449,8 +451,6 @@ class Client(object):
 
     def _draw_path(self):
         if self.path:
-            self.algo_info = _AlgoInfo(ui_path,self.core.time_algo)
-            self.status = DRAWING
             seg = [self.nodes[y][x].rect.center 
                     for (x, y) in self.path]
             pygame.draw.lines(self.screen, Color(PATH_COLOR), False,
