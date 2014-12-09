@@ -78,7 +78,8 @@ class Client(object):
                            OPENED: Color(OPENED_COLOR),
                            CLOSED: Color(CLOSED_COLOR),
                            SOURCE: Color(SOURCE_COLOR),
-                           TARGET: Color(TARGET_COLOR)}
+                           TARGET: Color(TARGET_COLOR),
+                           TARGET_PATH_COLOR: Color(TARGET_PATH_COLOR)}
 
         self.node_font = pygame.font.Font(os.path.join(
             ui_path, FONT_NAME), NODE_INFO_FONT_SIZE)
@@ -128,14 +129,38 @@ class Client(object):
         
         self.source = (1, 1)
         self.targets = products_in_wall1+products_in_wall2+products_in_wall3+products_in_wall4+products_in_wall5+products_in_wall11+products_in_wall12+products_in_wall13
+        self.targets_with_source = []
         self.lenght_targets = len(self.targets)
         self.path = []
+        self.move_right_wall = (1,9,15,21,27,33,39,45,51,57,63,69,75) 
+        self.move_left_wall = (7,13,19,25,31,37,43,49,55,61,67,73)
+        self.move_down_wall = 4
+        self.move_up_wall = 41
+        self.wall_is_vertical = range(8,38)
 
         # general status
         self.status = DRAWING
         self.editable = False
         self.erasing = False
         self.drag = None
+
+    def gen_path(self, targets):
+        path = []
+        for t in targets:
+            if t[1] in self.wall_is_vertical:
+                if t[0] in self.move_right_wall:
+                    t = (t[0]+1,t[1])
+                elif t[0] in self.move_left_wall:
+                    t = (t[0]-1,t[1]) 
+            else:
+                if t[1] == self.move_down_wall:
+                    t = (t[0],t[1]+1)
+                elif t[1] == self.move_up_wall:
+                    t = (t[0],t[1]-1)
+             
+            path.append(t)
+        return path
+
 
     def gen_element(self,origin,limit_1_y,limit_2_y):
         mov_right = random.randrange(0,2) 
@@ -159,15 +184,12 @@ class Client(object):
         """Starts the main loop
         """
         # handle events
+        print self.targets
         while self.status != EXIT:
 
             for event in pygame.event.get():
                 if event.type == QUIT:
                     self._quit()
-                elif event.type in (MOUSEMOTION, 
-                                    MOUSEBUTTONDOWN,
-                                    MOUSEBUTTONUP):
-                    self._handle_mouse(event)
                 elif event.type == KEYDOWN:
                     self._handle_keyboard(event)
             
@@ -175,6 +197,7 @@ class Client(object):
             self._draw_background()
             self._draw_nodes()
             self._draw_source_target()
+            self._draw_target_path()
             self._draw_grid_lines()
             self._draw_path()
             self._draw_wall([(7,4),(81,4)],'horizontal')
@@ -243,68 +266,31 @@ class Client(object):
         raise SystemExit
 
 
-    def _handle_mouse(self, event):
-        """Handle mouse events.
-        """
-        x, y = event.pos 
-        nx, ny = int(x / NODE_SIZE), int(y / NODE_SIZE)
-
-        if event.type == MOUSEBUTTONDOWN:
-            # if mouse pointer is on either source or target nodes,
-            # then drag them around.
-            if (nx, ny) == self.source:
-                self.drag = SOURCE
-            elif (nx, ny) == self.target:
-                self.drag = TARGET
-            else:
-                # if mouse pointer is on BLOCKED nodes,
-                # then set the following operations to be erasing
-                # otherwise set to be blocking
-                self.editable = True
-                if self.nodes[ny][nx].status == BLOCKED:
-                    self.erasing = True
-                elif self.nodes[ny][nx].status != BLOCKED:
-                    self.erasing = False
-
-        elif event.type == MOUSEBUTTONUP:
-            self.editable = False
-            self.drag = None
-
-        # toggle BLOCKED / NORAML status
-        if self.editable:
-            if self.erasing == True:
-                self._set_node_status((nx, ny), NORMAL)
-            else:
-                self._set_node_status((nx, ny), BLOCKED)
-        
-        # drag source or target node
-        if self.drag == SOURCE:
-            self.source = nx, ny
-        elif self.drag == TARGET:
-            self.target = nx, ny
-
-
     def _handle_keyboard(self, event):
         """Handle keyboard events
         """
         
         if event.key == K_SPACE:
-            self.inicio = 0
-            self.fin = len(self.targets)
-            for t in range(len(self.targets)):
-                if t+1 < len(self.targets):
-                    nodes_map_raw = self._get_str_map(self.targets[t], self.targets[t+1])
-                    a = AStar(nodes_map_raw)
-                    for i in a.step():
+            self.targets_with_source =self.targets
+            self.targets_with_source.insert(0,self.source)
+            print self.targets_with_source
+            self.targets_with_source = self.gen_path(self.targets_with_source)
+            for t in range(len(self.targets_with_source)):
+                if t+1 < len(self.targets_with_source):
+                    nodes_map_raw = self._get_str_map(self.targets_with_source[t], self.targets_with_source[t+1])
+                    try:
+                        a = AStar(nodes_map_raw)
+                        for i in a.step():
+                            pass
+                        self.path += a.path
+                    except:
                         pass
-                    self.path += a.path
-                self.inicio += 1 
-            print self.path                            
+            #print self.path                            
         elif event.key == K_r:
             self._reset()
             self.flag = 0
         elif event.key == K_ESCAPE:
-            self.quit()
+            self._quit()
 
     def _set_node_status(self, (x, y), status):
         try:
@@ -383,6 +369,19 @@ class Client(object):
             x, y = target
             nx, ny = x * NODE_SIZE, y * NODE_SIZE
             pygame.draw.rect(self.screen, self.node_color[TARGET], 
+                Rect(nx, ny, NODE_SIZE, NODE_SIZE))
+
+    def _draw_target_path(self):
+        """Source and target nodes are drawed on top of other nodes.
+        """
+        x, y = self.source
+        nx, ny = x * NODE_SIZE, y * NODE_SIZE
+        pygame.draw.rect(self.screen, self.node_color[SOURCE], 
+                Rect(nx, ny, NODE_SIZE, NODE_SIZE)) 
+        for target in self.targets_with_source:
+            x, y = target
+            nx, ny = x * NODE_SIZE, y * NODE_SIZE
+            pygame.draw.rect(self.screen, self.node_color[TARGET_PATH_COLOR], 
                 Rect(nx, ny, NODE_SIZE, NODE_SIZE))
 
     def _draw_source_target1(self):
