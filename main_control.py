@@ -126,7 +126,8 @@ class Client(object):
         for p in range(0,target_wall13_products):
             products_in_wall13.append(self.gen_element2(41,7,81))
 
-        
+        self.pos = 30
+        self.mov_pos = 0
         self.source = (1, 1)
         self.targets = products_in_wall1+products_in_wall2+products_in_wall3+products_in_wall4+products_in_wall5+products_in_wall11+products_in_wall12+products_in_wall13
         self.targets_with_source = []
@@ -184,7 +185,6 @@ class Client(object):
         """Starts the main loop
         """
         # handle events
-        print self.targets
         while self.status != EXIT:
 
             for event in pygame.event.get():
@@ -251,12 +251,20 @@ class Client(object):
             self._draw_wall([(79,8),(79,37)])
             self._draw_wall([(80,8),(80,37)])
             self._draw_wall([(81,8),(81,37)])
+            self.length_path = len(self.targets_with_source)
+            if self.mov_pos < self.length_path:
+                self.source1 = self.targets_with_source[self.mov_pos]
+                x, y = self.source1
+                nx, ny = x*NODE_SIZE, y*NODE_SIZE
+                pygame.draw.rect(self.screen, self.node_color[SOURCE], Rect(nx, ny, NODE_SIZE, NODE_SIZE))
+                self.mov_pos += 1
             
             # update screen
             pygame.display.update()
 
             # control frame rate
             self.clock.tick(FPS_LIMIT)
+
 
 
     def _quit(self):
@@ -291,6 +299,9 @@ class Client(object):
             self.flag = 0
         elif event.key == K_ESCAPE:
             self._quit()
+        elif event.key == K_s:
+            self._reset()
+            self.flag = 0
 
     def _set_node_status(self, (x, y), status):
         try:
