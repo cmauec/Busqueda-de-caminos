@@ -138,6 +138,23 @@ class Client(object):
         self.move_down_wall = 4
         self.move_up_wall = 41
         self.wall_is_vertical = range(8,38)
+        #coordenadas para dividir el mapa en secciones verticalmente
+        self.sections = [(1,8),(9,14),(15,20),(21,26),(27,32),(33,38),(39,44),(45,50),(51,56),(57,62),(63,68),(69,74),(75,80),(81,82)]
+        self.section1 = (1,8)
+        self.section2 = (9,14)
+        self.section3 = (15,20)
+        self.section4 = (21,26)
+        self.section5 = (27,32)
+        self.section6 = (33,38)
+        self.section7 = (39,44)
+        self.section8 = (45,50)
+        self.section9 = (51,56)
+        self.section10 = (57,62)
+        self.section11 = (63,68)
+        self.section12 = (69,74)
+        self.section13 = (75,80)
+        self.section14 = (81,82)
+
 
         # general status
         self.status = DRAWING
@@ -162,24 +179,28 @@ class Client(object):
             path.append(t)
         return path
 
+
+    # Para ordenar los targets de menor a mayor (por longitud)    
     def gen_path_order(self, targets):
         path = []
         index = 0
         index_cycle = 1
-        for t in targets:
-            try:
-                nodes_map_raw = self._get_str_map(self.targets[index], self.targets[index_cycle])
-                a = AStar(nodes_map_raw)
-                for i in a.step():
-                    pass
-                lenght_path = len(a.path)
-                path.append(lenght_path)
-            except: 
-                pass
-            index_cycle +=1
-            path.sort()
+        for s in self.sections:
+            for t in targets:
+                if t[0] in range(s[0], s[1]+1):
+                    try:
+                        '''nodes_map_raw = self._get_str_map(self.targets[index], self.targets[index_cycle])
+                        a = AStar(nodes_map_raw)
+                        for i in a.step():
+                            pass
+                        lenght_path = len(a.path)'''
+                        path.append(t)
+                    except:  
+                        pass
+            #index_cycle +=1
+            #path.sort()
         return path
-
+        
 
     def gen_element(self,origin,limit_1_y,limit_2_y):
         mov_right = random.randrange(0,2) 
@@ -270,6 +291,7 @@ class Client(object):
             self._draw_wall([(80,8),(80,37)])
             self._draw_wall([(81,8),(81,37)])
             self.length_path = len(self.targets_with_source)
+            #punto verde dinamico 
             if self.mov_pos < self.length_path:
                 self.source1 = self.targets_with_source[self.mov_pos]
                 x, y = self.source1
@@ -301,8 +323,8 @@ class Client(object):
             self.targets_with_source.insert(0,self.source)
             print self.targets_with_source
             self.targets_with_source = self.gen_path(self.targets_with_source)
-            self.targets_with_source_order = self.gen_path_order(self.targets_with_source)
-            print self.targets_with_source_order
+            self.targets_with_source = self.gen_path_order(self.targets_with_source)
+            print self.targets_with_source
             for t in range(len(self.targets_with_source)):
                 if t+1 < len(self.targets_with_source):
                     nodes_map_raw = self._get_str_map(self.targets_with_source[t], self.targets_with_source[t+1])
