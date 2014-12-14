@@ -162,6 +162,24 @@ class Client(object):
             path.append(t)
         return path
 
+    def gen_path_order(self, targets):
+        path = []
+        index = 0
+        index_cycle = 1
+        for t in targets:
+            try:
+                nodes_map_raw = self._get_str_map(self.targets[index], self.targets[index_cycle])
+                a = AStar(nodes_map_raw)
+                for i in a.step():
+                    pass
+                lenght_path = len(a.path)
+                path.append(lenght_path)
+            except: 
+                pass
+            index_cycle +=1
+            path.sort()
+        return path
+
 
     def gen_element(self,origin,limit_1_y,limit_2_y):
         mov_right = random.randrange(0,2) 
@@ -283,6 +301,8 @@ class Client(object):
             self.targets_with_source.insert(0,self.source)
             print self.targets_with_source
             self.targets_with_source = self.gen_path(self.targets_with_source)
+            self.targets_with_source_order = self.gen_path_order(self.targets_with_source)
+            print self.targets_with_source_order
             for t in range(len(self.targets_with_source)):
                 if t+1 < len(self.targets_with_source):
                     nodes_map_raw = self._get_str_map(self.targets_with_source[t], self.targets_with_source[t+1])
