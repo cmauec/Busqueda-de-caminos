@@ -126,6 +126,7 @@ class Client(object):
         for p in range(0,target_wall13_products):
             products_in_wall13.append(self.gen_element2(41,7,81))
 
+        self.play_animation = False
         self.pos = 30
         self.mov_pos = 0
         self.source = (1, 1)
@@ -169,27 +170,39 @@ class Client(object):
     # Para ordenar los targets de menor a mayor (por seccion)    
     def gen_path_order(self, targets):
         path = []
-        distance_path = []
         for s in self.sections:
+            path_section = []
             for t in targets:
                 if t[0] in range(s[0], s[1]+1):
                     try:
-                        path.append(t)
+                        #path.append(t)
+                        path_section.append(t)
                     except:  
                         pass
+            #path_section = self.path_order_distance(path_section)
+            path = path +path_section
         return path
 
-    def gen_path_order_distance(self, targets):
+    def path_order_distance(self, targets):
         targets_order = []
         temp = []
-        #targets_temp = targets
+        targets_temp = []
+        for t in targets:
+            targets_temp.append(t)
         for t1 in targets:
-            if len(targets)>0:
-                element = targets[0]
-                targets_order.append(targets[0])
-                targets.remove(element)
-                temp = []
-                for t in targets:
+            if len(targets_order) == 0: 
+                element = targets_temp[0]
+                targets_order.append(targets_temp[0])
+                targets_temp.remove(element)
+            else:
+                element = targets_order[-1]
+            temp = []
+            targets_temp_order = []
+            for t2 in targets_temp:
+                targets_temp_order.append(t2)
+            print targets_temp_order
+            if len(targets_temp_order)>0:
+                for t in targets_temp_order:
                     nodes_map_raw = self._get_str_map(element, t)
                     a = AStar(nodes_map_raw)
                     for i in a.step():
@@ -200,8 +213,7 @@ class Client(object):
                     temp.sort()
                 element_near = (temp[0][1],temp[0][2])
                 targets_order.append(element_near)
-                targets.remove(element_near)
-        targets_order = targets_order+targets
+                targets_temp.remove(element_near)
         return targets_order
 
        
@@ -295,13 +307,14 @@ class Client(object):
             self._draw_wall([(80,8),(80,37)])
             self._draw_wall([(81,8),(81,37)])
             self.length_path = len(self.targets_with_source)
-            #punto verde dinamico 
-            if self.mov_pos < self.length_path:
-                self.source1 = self.targets_with_source[self.mov_pos]
-                x, y = self.source1
-                nx, ny = x*NODE_SIZE, y*NODE_SIZE
-                pygame.draw.rect(self.screen, self.node_color[SOURCE], Rect(nx, ny, NODE_SIZE, NODE_SIZE))
-                self.mov_pos += 1
+            #punto verde dinamico
+            if self.play_animation: 
+                if self.mov_pos < self.length_path:
+                    self.source1 = self.targets_with_source[self.mov_pos]
+                    x, y = self.source1
+                    nx, ny = x*NODE_SIZE, y*NODE_SIZE
+                    pygame.draw.rect(self.screen, self.node_color[SOURCE], Rect(nx, ny, NODE_SIZE, NODE_SIZE))
+                    self.mov_pos += 1
             
             # update screen
             pygame.display.update()
@@ -323,13 +336,13 @@ class Client(object):
         """
         
         if event.key == K_SPACE:
+            self.play_animation = True
             self.targets_with_source =self.targets
             self.targets_with_source.insert(0,self.source)
             print self.targets_with_source
             self.targets_with_source = self.gen_path(self.targets_with_source)
             self.targets_with_source = self.gen_path_order(self.targets_with_source)
             #self.targets_with_source = self.gen_path_order_distance(self.targets_with_source)
-            print self.targets_with_source
             for t in range(len(self.targets_with_source)):
                 if t+1 < len(self.targets_with_source):
                     nodes_map_raw = self._get_str_map(self.targets_with_source[t], self.targets_with_source[t+1])
@@ -342,6 +355,59 @@ class Client(object):
                         pass
             #print self.path                            
         elif event.key == K_r:
+            # Creamos variables para guardar coordenadas de los productos en las estanterias
+            products_in_wall1 = []
+            products_in_wall2 = []
+            products_in_wall3 = []
+            products_in_wall4 = []
+            products_in_wall5 = []
+            products_in_wall6 = []
+            products_in_wall7 = []
+            products_in_wall8 = []
+            products_in_wall9 = []
+            products_in_wall10 = []
+            products_in_wall11 = []
+            products_in_wall12 = []
+            products_in_wall13 = []
+
+            # Llenamos las varibles de los productos con coordenadas aleatorias
+            target_wall1_products = random.randrange(0,6)
+            for p in range(0,target_wall1_products):
+                products_in_wall1.append(self.gen_element(7,8,37))
+            target_wall2_products = random.randrange(0,6)
+            for p in range(0,target_wall2_products):
+                products_in_wall2.append(self.gen_element(13,8,37))
+            target_wall3_products = random.randrange(0,6)
+            for p in range(0,target_wall3_products):
+                products_in_wall3.append(self.gen_element(19,8,37))
+            target_wall4_products = random.randrange(0,6)
+            for p in range(0,target_wall4_products):
+                products_in_wall4.append(self.gen_element(25,8,37))
+            target_wall5_products = random.randrange(0,6)
+            for p in range(0,target_wall5_products):
+                products_in_wall5.append(self.gen_element(31,8,37))
+            target_wall11_products = random.randrange(0,4)
+            for p in range(0,target_wall11_products):
+                products_in_wall11.append(self.gen_element1(1,8,37))
+            target_wall12_products = random.randrange(0,5)
+            for p in range(0,target_wall12_products):
+                products_in_wall12.append(self.gen_element2(4,7,81))
+            target_wall13_products = random.randrange(0,5)
+            for p in range(0,target_wall13_products):
+                products_in_wall13.append(self.gen_element2(41,7,81))
+            self.targets = products_in_wall1+products_in_wall2+products_in_wall3+products_in_wall4+products_in_wall5+products_in_wall11+products_in_wall12+products_in_wall13
+            self.targets_with_source = self.targets
+            self.targets_with_source = self.gen_path(self.targets_with_source)
+            self.targets_with_source = self.gen_path_order(self.targets_with_source)
+
+            self.play_animation = False
+            self.pos = 30
+            self.mov_pos = 0
+            self.source = (1, 1)
+            self.play_animation = False
+            self.pos = 30
+            self.mov_pos = 0
+            targets_with_source = []
             self._reset()
             self.flag = 0
         elif event.key == K_ESCAPE:
