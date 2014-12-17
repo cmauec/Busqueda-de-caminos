@@ -179,6 +179,8 @@ class Client(object):
                         path_section.append(t)
                     except:  
                         pass
+            if len(path)>0:
+                path_section.insert(0,path[-1])
             path_section = self.path_order_distance(path_section)
             path = path +path_section
         return path
@@ -201,13 +203,15 @@ class Client(object):
             for t2 in targets_temp:
                 targets_temp_order.append(t2)
             if len(targets_temp_order)>0:
-                print element
                 for t in targets_temp_order:
                     nodes_map_raw = self._get_str_map(element, t)
-                    a = AStar(nodes_map_raw)
-                    for i in a.step():
-                        pass
-                    v1 = len(a.path)
+                    try:
+                        a = AStar(nodes_map_raw)
+                        for i in a.step():
+                            pass
+                        v1 = len(a.path)
+                    except:
+                        v1 = 0
                     t = (v1,t[0],t[1])
                     temp.append(t)
                     temp.sort()
