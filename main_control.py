@@ -179,7 +179,7 @@ class Client(object):
                         path_section.append(t)
                     except:  
                         pass
-            #path_section = self.path_order_distance(path_section)
+            path_section = self.path_order_distance(path_section)
             path = path +path_section
         return path
 
@@ -200,8 +200,8 @@ class Client(object):
             targets_temp_order = []
             for t2 in targets_temp:
                 targets_temp_order.append(t2)
-            print targets_temp_order
             if len(targets_temp_order)>0:
+                print element
                 for t in targets_temp_order:
                     nodes_map_raw = self._get_str_map(element, t)
                     a = AStar(nodes_map_raw)
@@ -339,7 +339,6 @@ class Client(object):
             self.play_animation = True
             self.targets_with_source =self.targets
             self.targets_with_source.insert(0,self.source)
-            print self.targets_with_source
             self.targets_with_source = self.gen_path(self.targets_with_source)
             self.targets_with_source = self.gen_path_order(self.targets_with_source)
             #self.targets_with_source = self.gen_path_order_distance(self.targets_with_source)
@@ -352,8 +351,7 @@ class Client(object):
                             pass
                         self.path += a.path
                     except:
-                        pass
-            #print self.path                            
+                        pass                         
         elif event.key == K_r:
             # Creamos variables para guardar coordenadas de los productos en las estanterias
             products_in_wall1 = []
