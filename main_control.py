@@ -99,6 +99,9 @@ class Client(object):
         products_in_wall11 = []
         products_in_wall12 = []
         products_in_wall13 = []
+        products_in_wall14 = []
+        products_in_wall15 = []
+        products_in_wall16 = []
 
         # Llenamos las varibles de los productos con coordenadas aleatorias
         target_wall1_products = random.randrange(0,6)
@@ -116,28 +119,53 @@ class Client(object):
         target_wall5_products = random.randrange(0,6)
         for p in range(0,target_wall5_products):
             products_in_wall5.append(self.gen_element(31,8,37))
-        target_wall11_products = random.randrange(0,4)
+        target_wall6_products = random.randrange(0,6)
+        for p in range(0,target_wall6_products):
+            products_in_wall6.append(self.gen_element(37,8,37))
+        target_wall7_products = random.randrange(0,6)
+        for p in range(0,target_wall7_products):
+            products_in_wall7.append(self.gen_element(43,8,37))
+        target_wall8_products = random.randrange(0,6)
+        for p in range(0,target_wall8_products):
+            products_in_wall8.append(self.gen_element(49,8,37))
+        target_wall9_products = random.randrange(0,6)
+        for p in range(0,target_wall9_products):
+            products_in_wall9.append(self.gen_element(55,8,37))
+        target_wall10_products = random.randrange(0,6)
+        for p in range(0,target_wall10_products):
+            products_in_wall10.append(self.gen_element(61,8,37))
+        target_wall11_products = random.randrange(0,6)
         for p in range(0,target_wall11_products):
-            products_in_wall11.append(self.gen_element1(1,8,37))
-        target_wall12_products = random.randrange(0,5)
+            products_in_wall11.append(self.gen_element(67,8,37))
+        target_wall12_products = random.randrange(0,6)
         for p in range(0,target_wall12_products):
-            products_in_wall12.append(self.gen_element2(4,7,81))
-        target_wall13_products = random.randrange(0,5)
+            products_in_wall12.append(self.gen_element(73,8,37))
+        target_wall13_products = random.randrange(0,6)
         for p in range(0,target_wall13_products):
-            products_in_wall13.append(self.gen_element2(41,7,81))
+            products_in_wall13.append(self.gen_element(79,8,37))
+        target_wall14_products = random.randrange(0,6)
+        for p in range(0,target_wall14_products):
+            products_in_wall14.append(self.gen_element1(1,8,37))
+        target_wall15_products = random.randrange(0,6)
+        for p in range(0,target_wall15_products):
+            products_in_wall15.append(self.gen_element2(4,7,81))
+        target_wall16_products = random.randrange(0,6)
+        for p in range(0,target_wall16_products):
+            products_in_wall16.append(self.gen_element2(41,7,81))
 
         self.play_animation = False
         self.pos = 30
         self.mov_pos = 0
         self.source = (1, 1)
-        self.targets = products_in_wall1+products_in_wall2+products_in_wall3+products_in_wall4+products_in_wall5+products_in_wall11+products_in_wall12+products_in_wall13
+        self.targets = products_in_wall1+products_in_wall2+products_in_wall3+products_in_wall4+products_in_wall5+products_in_wall6+products_in_wall7+products_in_wall8+products_in_wall9+products_in_wall10+products_in_wall11+products_in_wall12+products_in_wall13+products_in_wall14+products_in_wall15+products_in_wall16
         self.targets_with_source = []
         self.lenght_targets = len(self.targets)
         self.path = []
-        self.move_right_wall = (1,9,15,21,27,33,39,45,51,57,63,69,75) 
-        self.move_left_wall = (7,13,19,25,31,37,43,49,55,61,67,73)
+        self.move_right_wall = (1,9,15,21,27,33,39,45,51,57,63,69,75,81) 
+        self.move_left_wall = (7,13,19,25,31,37,43,49,55,61,67,73,79)
         self.move_down_wall = 4
         self.move_up_wall = 41
+        #parametro para tomar en cuenta targets solo a lo largo de la pared.
         self.wall_is_vertical = range(8,38)
         #coordenadas para dividir el mapa en secciones verticalmente
         self.sections = [(1,8),(9,14),(15,20),(21,26),(27,32),(33,38),(39,44),(45,50),(51,56),(57,62),(63,68),(69,74),(75,80),(81,82)]
@@ -371,6 +399,9 @@ class Client(object):
             products_in_wall11 = []
             products_in_wall12 = []
             products_in_wall13 = []
+            products_in_wall14 = []
+            products_in_wall15 = []
+            products_in_wall16 = []
 
             # Llenamos las varibles de los productos con coordenadas aleatorias
             target_wall1_products = random.randrange(0,6)
@@ -388,20 +419,43 @@ class Client(object):
             target_wall5_products = random.randrange(0,6)
             for p in range(0,target_wall5_products):
                 products_in_wall5.append(self.gen_element(31,8,37))
-            target_wall11_products = random.randrange(0,4)
+            target_wall6_products = random.randrange(0,6)
+            for p in range(0,target_wall6_products):
+                products_in_wall6.append(self.gen_element(37,8,37))
+            target_wall7_products = random.randrange(0,6)
+            for p in range(0,target_wall7_products):
+                products_in_wall7.append(self.gen_element(43,8,37))
+            target_wall8_products = random.randrange(0,6)
+            for p in range(0,target_wall8_products):
+                products_in_wall8.append(self.gen_element(49,8,37))
+            target_wall9_products = random.randrange(0,6)
+            for p in range(0,target_wall9_products):
+                products_in_wall9.append(self.gen_element(55,8,37))
+            target_wall10_products = random.randrange(0,6)
+            for p in range(0,target_wall10_products):
+                products_in_wall10.append(self.gen_element(61,8,37))
+            target_wall11_products = random.randrange(0,6)
             for p in range(0,target_wall11_products):
-                products_in_wall11.append(self.gen_element1(1,8,37))
-            target_wall12_products = random.randrange(0,5)
+                products_in_wall11.append(self.gen_element(67,8,37))
+            target_wall12_products = random.randrange(0,6)
             for p in range(0,target_wall12_products):
-                products_in_wall12.append(self.gen_element2(4,7,81))
-            target_wall13_products = random.randrange(0,5)
+                products_in_wall12.append(self.gen_element(73,8,37))
+            target_wall13_products = random.randrange(0,6)
             for p in range(0,target_wall13_products):
-                products_in_wall13.append(self.gen_element2(41,7,81))
-            self.targets = products_in_wall1+products_in_wall2+products_in_wall3+products_in_wall4+products_in_wall5+products_in_wall11+products_in_wall12+products_in_wall13
+                products_in_wall13.append(self.gen_element(79,8,37))
+            target_wall14_products = random.randrange(0,6)
+            for p in range(0,target_wall14_products):
+                products_in_wall14.append(self.gen_element1(1,8,37))
+            target_wall15_products = random.randrange(0,6)
+            for p in range(0,target_wall15_products):
+                products_in_wall15.append(self.gen_element2(4,7,81))
+            target_wall16_products = random.randrange(0,6)
+            for p in range(0,target_wall16_products):
+                products_in_wall16.append(self.gen_element2(41,7,81))
+            self.targets = products_in_wall1+products_in_wall2+products_in_wall3+products_in_wall4+products_in_wall5+products_in_wall6+products_in_wall7+products_in_wall8+products_in_wall9+products_in_wall10+products_in_wall11+products_in_wall12+products_in_wall13+products_in_wall14+products_in_wall15+products_in_wall16
             self.targets_with_source = self.targets
             self.targets_with_source = self.gen_path(self.targets_with_source)
             self.targets_with_source = self.gen_path_order(self.targets_with_source)
-
             self.play_animation = False
             self.pos = 30
             self.mov_pos = 0
