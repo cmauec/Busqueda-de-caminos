@@ -158,7 +158,18 @@ class Client(object):
         self.play_animation = False
         self.pos = 30
         self.mov_pos = 0
-        self.source = (1, 1)
+        self.source = (4, 1)
+        self.source_end = (4,1)
+        self.salida_norte = [(89,6),(89,8),(89,10)]
+        self.salida_noreste = [(89,15),(89,17),(89,19)]
+        self.salida_sur = [(89,35),(89,37),(89,39)]
+        self.salida_suroeste = [(89,25),(89,27),(89,29)]
+        if self.source[0]<8:
+            self.salida = self.salida_norte+self.salida_noreste
+            self.salida = random.choice(self.salida)
+        elif self.source[0]>37:
+            self.salida = self.salida_sur+self.salida_suroeste
+            self.salida = random.choice(self.salida)
         self.targets = products_in_wall1+products_in_wall2+products_in_wall3+products_in_wall4+products_in_wall5+products_in_wall6+products_in_wall7+products_in_wall8+products_in_wall9+products_in_wall10+products_in_wall11+products_in_wall12+products_in_wall13+products_in_wall14+products_in_wall15+products_in_wall16
         self.targets_with_source = []
         self.lenght_targets = len(self.targets)
@@ -289,8 +300,8 @@ class Client(object):
             self._draw_target_path()
             self._draw_grid_lines()
             self._draw_path()
-            self._draw_wall([(7,4),(81,4)],'horizontal')
-            self._draw_wall([(7,3),(81,3)],'horizontal')
+            self._draw_wall([(1,4),(81,4)],'horizontal')
+            self._draw_wall([(1,3),(81,3)],'horizontal')
             self._draw_wall([(7,42),(81,42)],'horizontal')
             self._draw_wall([(7,41),(81,41)],'horizontal')
             self._draw_wall([(0,8),(0,37)])
@@ -348,7 +359,7 @@ class Client(object):
             #punto verde dinamico
             if self.play_animation:
                 if not self.init != 0:
-                    time.sleep(2)
+                    time.sleep(0.5)
                 if self.mov_pos < self.length_path:
                         self.source1 = self.targets_with_source[self.mov_pos]
                         x, y = self.source1
@@ -382,6 +393,8 @@ class Client(object):
             self.targets_with_source.insert(0,self.source)
             self.targets_with_source = self.gen_path(self.targets_with_source)
             self.targets_with_source = self.gen_path_order(self.targets_with_source)
+            self.targets_with_source.append(self.salida)
+            self.targets_with_source.append(self.source_end)
             #self.targets_with_source = self.gen_path_order_distance(self.targets_with_source)
             for t in range(len(self.targets_with_source)):
                 if t+1 < len(self.targets_with_source):
@@ -394,6 +407,12 @@ class Client(object):
                     except:
                         pass                         
         elif event.key == K_r:
+            if self.source[0]<8:
+                self.salida = self.salida_norte+self.salida_noreste
+                self.salida = random.choice(self.salida)
+            elif self.source[0]>37:
+                self.salida = self.salida_sur+self.salida_suroeste
+                self.salida = random.choice(self.salida)
             # Creamos variables para guardar coordenadas de los productos en las estanterias
             products_in_wall1 = []
             products_in_wall2 = []
@@ -465,10 +484,11 @@ class Client(object):
             self.targets_with_source = self.targets
             self.targets_with_source = self.gen_path(self.targets_with_source)
             self.targets_with_source = self.gen_path_order(self.targets_with_source)
+            self.targets_with_source.append(self.salida)
             self.play_animation = False
             self.pos = 30
             self.mov_pos = 0
-            self.source = (1, 1)
+            self.source = (4, 1)
             self.play_animation = False
             self.pos = 30
             self.mov_pos = 0
@@ -554,6 +574,11 @@ class Client(object):
         nx, ny = x * NODE_SIZE, y * NODE_SIZE
         pygame.draw.rect(self.screen, self.node_color[SOURCE], 
                 Rect(nx, ny, NODE_SIZE, NODE_SIZE)) 
+
+        x1, y1 = self.salida
+        nx1, ny1 = x1 * NODE_SIZE, y1 * NODE_SIZE
+        pygame.draw.rect(self.screen, self.node_color[SOURCE], 
+                Rect(nx1, ny1, NODE_SIZE, NODE_SIZE)) 
         for target in self.targets:
             x, y = target
             nx, ny = x * NODE_SIZE, y * NODE_SIZE
