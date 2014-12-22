@@ -23,6 +23,7 @@
 import os
 import sys
 import time
+import datetime
 import cPickle
 import threading
 import random
@@ -153,6 +154,7 @@ class Client(object):
         for p in range(0,target_wall16_products):
             products_in_wall16.append(self.gen_element2(41,7,81))
 
+        self.init = 0
         self.play_animation = False
         self.pos = 30
         self.mov_pos = 0
@@ -340,13 +342,16 @@ class Client(object):
             self._draw_wall([(81,8),(81,37)])
             self.length_path = len(self.targets_with_source)
             #punto verde dinamico
-            if self.play_animation: 
+            if self.play_animation:
+                if not self.init != 0:
+                    time.sleep(2)
                 if self.mov_pos < self.length_path:
-                    self.source1 = self.targets_with_source[self.mov_pos]
-                    x, y = self.source1
-                    nx, ny = x*NODE_SIZE, y*NODE_SIZE
-                    pygame.draw.rect(self.screen, self.node_color[SOURCE], Rect(nx, ny, NODE_SIZE, NODE_SIZE))
-                    self.mov_pos += 1
+                        self.source1 = self.targets_with_source[self.mov_pos]
+                        x, y = self.source1
+                        nx, ny = x*NODE_SIZE, y*NODE_SIZE
+                        pygame.draw.rect(self.screen, self.node_color[SOURCE], Rect(nx, ny, NODE_SIZE, NODE_SIZE))
+                        self.mov_pos += 1
+            self.init += self.init
             
             # update screen
             pygame.display.update()
