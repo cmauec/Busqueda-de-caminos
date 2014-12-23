@@ -80,6 +80,7 @@ class Client(object):
                            CLOSED: Color(CLOSED_COLOR),
                            SOURCE: Color(SOURCE_COLOR),
                            TARGET: Color(TARGET_COLOR),
+                           #TARGET_UNO: Color(TARGET_UNO_COLOR),
                            TARGET_PATH_COLOR: Color(TARGET_PATH_COLOR)}
 
         self.node_font = pygame.font.Font(os.path.join(
@@ -154,11 +155,82 @@ class Client(object):
         for p in range(0,target_wall16_products):
             products_in_wall16.append(self.gen_element2(41,7,81))
 
+
+
+        # Creamos variables para guardar coordenadas de los productos en las estanterias
+        products_uno_in_wall1 = []
+        products_uno_in_wall2 = []
+        products_uno_in_wall3 = []
+        products_uno_in_wall4 = []
+        products_uno_in_wall5 = []
+        products_uno_in_wall6 = []
+        products_uno_in_wall7 = []
+        products_uno_in_wall8 = []
+        products_uno_in_wall9 = []
+        products_uno_in_wall10 = []
+        products_uno_in_wall11 = []
+        products_uno_in_wall12 = []
+        products_uno_in_wall13 = []
+        products_uno_in_wall14 = []
+        products_uno_in_wall15 = []
+        products_uno_in_wall16 = []
+
+        # Llenamos las varibles de los productos con coordenadas aleatorias
+        target_uno_wall1_products = random.randrange(0,6)
+        for p in range(0,target_uno_wall1_products):
+            products_uno_in_wall1.append(self.gen_element(7,8,37))
+        target_uno_wall2_products = random.randrange(0,6)
+        for p in range(0,target_uno_wall2_products):
+            products_uno_in_wall2.append(self.gen_element(13,8,37))
+        target_uno_wall3_products = random.randrange(0,6)
+        for p in range(0,target_uno_wall3_products):
+            products_uno_in_wall3.append(self.gen_element(19,8,37))
+        target_uno_wall4_products = random.randrange(0,6)
+        for p in range(0,target_uno_wall4_products):
+            products_uno_in_wall4.append(self.gen_element(25,8,37))
+        target_uno_wall5_products = random.randrange(0,6)
+        for p in range(0,target_uno_wall5_products):
+            products_uno_in_wall5.append(self.gen_element(31,8,37))
+        target_uno_wall6_products = random.randrange(0,6)
+        for p in range(0,target_uno_wall6_products):
+            products_uno_in_wall6.append(self.gen_element(37,8,37))
+        target_uno_wall7_products = random.randrange(0,6)
+        for p in range(0,target_uno_wall7_products):
+            products_uno_in_wall7.append(self.gen_element(43,8,37))
+        target_uno_wall8_products = random.randrange(0,6)
+        for p in range(0,target_uno_wall8_products):
+            products_uno_in_wall8.append(self.gen_element(49,8,37))
+        target_uno_wall9_products = random.randrange(0,6)
+        for p in range(0,target_uno_wall9_products):
+            products_uno_in_wall9.append(self.gen_element(55,8,37))
+        target_uno_wall10_products = random.randrange(0,6)
+        for p in range(0,target_uno_wall10_products):
+            products_uno_in_wall10.append(self.gen_element(61,8,37))
+        target_uno_wall11_products = random.randrange(0,6)
+        for p in range(0,target_uno_wall11_products):
+            products_uno_in_wall11.append(self.gen_element(67,8,37))
+        target_uno_wall12_products = random.randrange(0,6)
+        for p in range(0,target_uno_wall12_products):
+            products_uno_in_wall12.append(self.gen_element(73,8,37))
+        target_uno_wall13_products = random.randrange(0,6)
+        for p in range(0,target_uno_wall13_products):
+            products_uno_in_wall13.append(self.gen_element(79,8,37))
+        target_uno_wall14_products = random.randrange(0,6)
+        for p in range(0,target_uno_wall14_products):
+            products_uno_in_wall14.append(self.gen_element1(1,8,37))
+        target_uno_wall15_products = random.randrange(0,6)
+        for p in range(0,target_uno_wall15_products):
+            products_uno_in_wall15.append(self.gen_element2(4,7,81))
+        target_uno_wall16_products = random.randrange(0,6)
+        for p in range(0,target_uno_wall16_products):
+            products_uno_in_wall16.append(self.gen_element2(41,7,81))
+
         self.init = 0
         self.play_animation = False
         self.pos = 30
         self.mov_pos = 0
         self.source = (4, 1)
+        self.source_uno = (4, 45)
         self.source_end = (4,1)
         self.salida_norte = [(89,6),(89,8),(89,10)]
         self.salida_noreste = [(89,15),(89,17),(89,19)]
@@ -171,9 +243,12 @@ class Client(object):
             self.salida = self.salida_sur+self.salida_suroeste
             self.salida = random.choice(self.salida)
         self.targets = products_in_wall1+products_in_wall2+products_in_wall3+products_in_wall4+products_in_wall5+products_in_wall6+products_in_wall7+products_in_wall8+products_in_wall9+products_in_wall10+products_in_wall11+products_in_wall12+products_in_wall13+products_in_wall14+products_in_wall15+products_in_wall16
+        self.targets_uno= products_uno_in_wall1+products_uno_in_wall2+products_uno_in_wall3+products_uno_in_wall4+products_uno_in_wall5+products_uno_in_wall6+products_uno_in_wall7+products_uno_in_wall8+products_uno_in_wall9+products_uno_in_wall10+products_uno_in_wall11+products_uno_in_wall12+products_uno_in_wall13+products_uno_in_wall14+products_uno_in_wall15+products_uno_in_wall16
         self.targets_with_source = []
-        self.lenght_targets = len(self.targets)
+        self.targets_with_source_uno = []
+        #self.lenght_targets = len(self.targets)
         self.path = []
+        self.path_uno = []
         self.move_right_wall = (1,9,15,21,27,33,39,45,51,57,63,69,75,81) 
         self.move_left_wall = (7,13,19,25,31,37,43,49,55,61,67,73,79)
         self.move_down_wall = 4
@@ -302,8 +377,8 @@ class Client(object):
             self._draw_path()
             self._draw_wall([(1,4),(81,4)],'horizontal')
             self._draw_wall([(1,3),(81,3)],'horizontal')
-            self._draw_wall([(7,42),(81,42)],'horizontal')
-            self._draw_wall([(7,41),(81,41)],'horizontal')
+            self._draw_wall([(1,42),(81,42)],'horizontal')
+            self._draw_wall([(1,41),(81,41)],'horizontal')
             self._draw_wall([(0,8),(0,37)])
             self._draw_wall([(1,8),(1,37)])
             self._draw_wall([(88,3),(88,4)])
@@ -395,7 +470,15 @@ class Client(object):
             self.targets_with_source = self.gen_path_order(self.targets_with_source)
             self.targets_with_source.append(self.salida)
             self.targets_with_source.append(self.source_end)
+
+            self.targets_with_source_uno =self.targets_uno 
+            self.targets_with_source_uno.insert(0,self.source_uno )
+            self.targets_with_source_uno  = self.gen_path(self.targets_with_source_uno )
+            self.targets_with_source_uno  = self.gen_path_order(self.targets_with_source_uno )
+            self.targets_with_source_uno.append(self.salida)
+            self.targets_with_source_uno.append(self.source_uno)
             #self.targets_with_source = self.gen_path_order_distance(self.targets_with_source)
+            #codigo para dibujar el camino continuo entre todas las targets
             for t in range(len(self.targets_with_source)):
                 if t+1 < len(self.targets_with_source):
                     nodes_map_raw = self._get_str_map(self.targets_with_source[t], self.targets_with_source[t+1])
@@ -405,7 +488,19 @@ class Client(object):
                             pass
                         self.path += a.path
                     except:
-                        pass                         
+                        pass 
+
+            #dibuja el camino entre las targets del robot dos
+            for t in range(len(self.targets_with_source_uno)):
+                if t+1 < len(self.targets_with_source_uno):
+                    nodes_map_raw = self._get_str_map(self.targets_with_source_uno[t], self.targets_with_source_uno[t+1])
+                    try:
+                        a = AStar(nodes_map_raw)
+                        for i in a.step():
+                            pass
+                        self.path_uno += a.path
+                    except:
+                        pass                        
         elif event.key == K_r:
             if self.source[0]<8:
                 self.salida = self.salida_norte+self.salida_noreste
@@ -570,20 +665,39 @@ class Client(object):
     def _draw_source_target(self):
         """Source and target nodes are drawed on top of other nodes.
         """
+        #para dibujar robot uno
         x, y = self.source
         nx, ny = x * NODE_SIZE, y * NODE_SIZE
         pygame.draw.rect(self.screen, self.node_color[SOURCE], 
                 Rect(nx, ny, NODE_SIZE, NODE_SIZE)) 
 
+        #para dibujar robot dos
+        x, y = self.source_uno
+        nx, ny = x * NODE_SIZE, y * NODE_SIZE
+        pygame.draw.rect(self.screen, self.node_color[SOURCE], 
+                Rect(nx, ny, NODE_SIZE, NODE_SIZE)) 
+
+        #para dibujar punto de salida del robot uno
         x1, y1 = self.salida
         nx1, ny1 = x1 * NODE_SIZE, y1 * NODE_SIZE
         pygame.draw.rect(self.screen, self.node_color[SOURCE], 
                 Rect(nx1, ny1, NODE_SIZE, NODE_SIZE)) 
+
+        #para dibujar los targets del robot uno
         for target in self.targets:
             x, y = target
             nx, ny = x * NODE_SIZE, y * NODE_SIZE
             pygame.draw.rect(self.screen, self.node_color[TARGET], 
                 Rect(nx, ny, NODE_SIZE, NODE_SIZE))
+
+        #para dibujar los targets del robot dos
+        RED = (250,154,0)
+        for target in self.targets_uno:
+            x, y = target
+            nx, ny = x * NODE_SIZE, y * NODE_SIZE
+            pygame.draw.rect(self.screen, RED, 
+                Rect(nx, ny, NODE_SIZE, NODE_SIZE))
+
 
     def _draw_target_path(self):
         """Source and target nodes are drawed on top of other nodes.
@@ -598,33 +712,15 @@ class Client(object):
             pygame.draw.rect(self.screen, self.node_color[TARGET_PATH_COLOR], 
                 Rect(nx, ny, NODE_SIZE, NODE_SIZE))
 
-    def _draw_source_target1(self):
-        """Source and target nodes are drawed on top of other nodes.
-        """
-        x, y = self.source
-        nx, ny = x * NODE_SIZE, y * NODE_SIZE
-        pygame.draw.rect(self.screen, self.node_color[SOURCE], 
-                Rect(nx, ny, NODE_SIZE, NODE_SIZE)) 
+        ORANGE = (242,196, 131)
+        for target in self.targets_with_source_uno:
+            x, y = target
+            nx, ny = x * NODE_SIZE, y * NODE_SIZE
+            pygame.draw.rect(self.screen, ORANGE, 
+                Rect(nx, ny, NODE_SIZE, NODE_SIZE))
 
-        x, y = self.target1
-        nx, ny = x * NODE_SIZE, y * NODE_SIZE
-        pygame.draw.rect(self.screen, self.node_color[TARGET], 
-                Rect(nx, ny, NODE_SIZE, NODE_SIZE)) 
 
-    def _draw_source_target2(self):
-        """Source and target nodes are drawed on top of other nodes.
-        """
-        x, y = self.source
-        nx, ny = x * NODE_SIZE, y * NODE_SIZE
-        pygame.draw.rect(self.screen, self.node_color[SOURCE], 
-                Rect(nx, ny, NODE_SIZE, NODE_SIZE)) 
-
-        x, y = self.target2
-        nx, ny = x * NODE_SIZE, y * NODE_SIZE
-        pygame.draw.rect(self.screen, self.node_color[TARGET], 
-                Rect(nx, ny, NODE_SIZE, NODE_SIZE)) 
-
-        
+            
     def _draw_node_info(self, node):
         if node.f:
             img = self.node_font.render(str(node.f), True,
@@ -667,6 +763,12 @@ class Client(object):
             seg = [self.nodes[y][x].rect.center 
                     for (x, y) in self.path]
             pygame.draw.lines(self.screen, Color(PATH_COLOR), False,
+                    seg, PATH_WIDTH)
+
+        if self.path_uno:
+            seg = [self.nodes[y][x].rect.center 
+                    for (x, y) in self.path_uno]
+            pygame.draw.lines(self.screen, (204,189,167), False,
                     seg, PATH_WIDTH)
 
 
