@@ -230,6 +230,7 @@ class Client(object):
         self.play_animation = False
         self.pos = 30
         self.mov_pos = 0
+        self.mov_pos_uno = 0
         self.source = (4, 1)
         self.source_uno = (4, 45)
         self.source_end = (4,1)
@@ -448,13 +449,13 @@ class Client(object):
             #punto dinamico para el robot dos
             if self.play_animation:
                 if  self.init_uno == 0:    #para que el retardo en la animacion se ejecute a  partir del segundo ciclo
-                    time.sleep(2)
-                if self.mov_pos < self.length_path_uno:
-                        self.source1_uno = self.targets_with_source_uno[self.mov_pos]
+                    time.sleep(1)
+                if self.mov_pos_uno < self.length_path_uno:
+                        self.source1_uno = self.targets_with_source_uno[self.mov_pos_uno]
                         x, y = self.source1_uno
                         nx, ny = x*NODE_SIZE, y*NODE_SIZE
                         pygame.draw.rect(self.screen, (15,108,125), Rect(nx, ny, NODE_SIZE, NODE_SIZE))
-                        self.mov_pos += 1
+                        self.mov_pos_uno += 1
             self.init_uno += self.init_uno
             
             # update screen
