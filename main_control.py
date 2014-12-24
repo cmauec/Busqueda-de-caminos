@@ -226,6 +226,7 @@ class Client(object):
             products_uno_in_wall16.append(self.gen_element2(41,7,81))
 
         self.init = 0
+        self.init_uno = 0
         self.play_animation = False
         self.pos = 30
         self.mov_pos = 0
@@ -431,10 +432,11 @@ class Client(object):
             self._draw_wall([(80,8),(80,37)])
             self._draw_wall([(81,8),(81,37)])
             self.length_path = len(self.targets_with_source)
+            self.length_path_uno = len(self.targets_with_source_uno) #ve cuantos targets tiene la trayectoria 
             #punto verde dinamico
             if self.play_animation:
-                if not self.init != 0:
-                    time.sleep(0.5)
+                if self.init == 0:    #para que el retardo en la animacion se ejecute a  partir del segundo ciclo
+                    time.sleep(1)
                 if self.mov_pos < self.length_path:
                         self.source1 = self.targets_with_source[self.mov_pos]
                         x, y = self.source1
@@ -442,6 +444,18 @@ class Client(object):
                         pygame.draw.rect(self.screen, self.node_color[SOURCE], Rect(nx, ny, NODE_SIZE, NODE_SIZE))
                         self.mov_pos += 1
             self.init += self.init
+
+            #punto dinamico para el robot dos
+            if self.play_animation:
+                if  self.init_uno == 0:    #para que el retardo en la animacion se ejecute a  partir del segundo ciclo
+                    time.sleep(2)
+                if self.mov_pos < self.length_path_uno:
+                        self.source1_uno = self.targets_with_source_uno[self.mov_pos]
+                        x, y = self.source1_uno
+                        nx, ny = x*NODE_SIZE, y*NODE_SIZE
+                        pygame.draw.rect(self.screen, (15,108,125), Rect(nx, ny, NODE_SIZE, NODE_SIZE))
+                        self.mov_pos += 1
+            self.init_uno += self.init_uno
             
             # update screen
             pygame.display.update()
@@ -674,7 +688,7 @@ class Client(object):
         #para dibujar robot dos
         x, y = self.source_uno
         nx, ny = x * NODE_SIZE, y * NODE_SIZE
-        pygame.draw.rect(self.screen, self.node_color[SOURCE], 
+        pygame.draw.rect(self.screen,(15, 108, 125), 
                 Rect(nx, ny, NODE_SIZE, NODE_SIZE)) 
 
         #para dibujar punto de salida del robot uno
