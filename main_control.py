@@ -80,14 +80,13 @@ class Client(object):
                            CLOSED: Color(CLOSED_COLOR),
                            SOURCE: Color(SOURCE_COLOR),
                            TARGET: Color(TARGET_COLOR),
-                           #TARGET_UNO: Color(TARGET_UNO_COLOR),
                            TARGET_PATH_COLOR: Color(TARGET_PATH_COLOR)}
 
         self.node_font = pygame.font.Font(os.path.join(
             ui_path, FONT_NAME), NODE_INFO_FONT_SIZE)
         
         
-        # Creamos variables para guardar coordenadas de los productos en las estanterias
+        # Creamos variables para guardar coordenadas de los productos en las estanterias(targets)
         products_in_wall1 = []
         products_in_wall2 = []
         products_in_wall3 = []
@@ -105,7 +104,7 @@ class Client(object):
         products_in_wall15 = []
         products_in_wall16 = []
 
-        # Llenamos las varibles de los productos con coordenadas aleatorias
+        # Llenamos las estanterias de los productos con coordenadas aleatorias tomando en cuenta la posicion ( que no este en el centro - self.gen_element)
         target_wall1_products = random.randrange(0,6)
         for p in range(0,target_wall1_products):
             products_in_wall1.append(self.gen_element(7,8,37))
@@ -157,7 +156,7 @@ class Client(object):
 
 
 
-        # Creamos variables para guardar coordenadas de los productos en las estanterias
+        # Creamos variables para guardar coordenadas de los productos en las estanterias(targets) robot dos
         products_uno_in_wall1 = []
         products_uno_in_wall2 = []
         products_uno_in_wall3 = []
@@ -175,7 +174,7 @@ class Client(object):
         products_uno_in_wall15 = []
         products_uno_in_wall16 = []
 
-        # Llenamos las varibles de los productos con coordenadas aleatorias
+        # Llenamos las estanterias de los productos con coordenadas aleatorias tomando en cuenta la posicion ( que no este en el centro - self.gen_element) robot dos
         target_uno_wall1_products = random.randrange(0,6)
         for p in range(0,target_uno_wall1_products):
             products_uno_in_wall1.append(self.gen_element(7,8,37))
@@ -232,32 +231,45 @@ class Client(object):
         self.mov_pos = 0
         self.mov_pos_uno = 0
         self.source = (4, 1)
-        self.source_uno = (4, 45)
+        self.source_uno = (4, 45)  #inicio robot dos
+        #este punto representa el lugar a donde regresa el robot despues de dejar los productos (self.source_end)
         self.source_end = (4,1)
         self.salida_norte = [(89,6),(89,8),(89,10)]
         self.salida_noreste = [(89,15),(89,17),(89,19)]
         self.salida_sur = [(89,35),(89,37),(89,39)]
         self.salida_suroeste = [(89,25),(89,27),(89,29)]
-        if self.source[0]<8:
+        #si el robot esta en la parte de arriba tendra como salida al norte o al noreste
+        if self.source[1]<8:
             self.salida = self.salida_norte+self.salida_noreste
             self.salida = random.choice(self.salida)
-        elif self.source[0]>37:
+        #si el robot esta en la parte inferior tendra como salida al sur o suroeste
+        elif self.source[1]>37:
             self.salida = self.salida_sur+self.salida_suroeste
             self.salida = random.choice(self.salida)
+        #genera punto de salida del robot dos    
+        if self.source_uno[1]<8:
+            self.salida_uno = self.salida_norte+self.salida_noreste
+            self.salida_uno = random.choice(self.salida_uno)
+        elif self.source_uno[1]>37:
+            self.salida_uno = self.salida_sur+self.salida_suroeste
+            self.salida_uno = random.choice(self.salida_uno)
+        #sumamos todos loas productos que se generan aleatoreamente robot uno    
         self.targets = products_in_wall1+products_in_wall2+products_in_wall3+products_in_wall4+products_in_wall5+products_in_wall6+products_in_wall7+products_in_wall8+products_in_wall9+products_in_wall10+products_in_wall11+products_in_wall12+products_in_wall13+products_in_wall14+products_in_wall15+products_in_wall16
+        #producto del robot dos
         self.targets_uno= products_uno_in_wall1+products_uno_in_wall2+products_uno_in_wall3+products_uno_in_wall4+products_uno_in_wall5+products_uno_in_wall6+products_uno_in_wall7+products_uno_in_wall8+products_uno_in_wall9+products_uno_in_wall10+products_uno_in_wall11+products_uno_in_wall12+products_uno_in_wall13+products_uno_in_wall14+products_uno_in_wall15+products_uno_in_wall16
         self.targets_with_source = []
         self.targets_with_source_uno = []
         #self.lenght_targets = len(self.targets)
         self.path = []
         self.path_uno = []
-        self.move_right_wall = (1,9,15,21,27,33,39,45,51,57,63,69,75,81) 
-        self.move_left_wall = (7,13,19,25,31,37,43,49,55,61,67,73,79)
-        self.move_down_wall = 4
-        self.move_up_wall = 41
+        #nos sirve para crear la sombra de los targets
+        self.move_right_wall = (1,9,15,21,27,33,39,45,51,57,63,69,75,81) #aumentamos en x uno
+        self.move_left_wall = (7,13,19,25,31,37,43,49,55,61,67,73,79) #disminuimos en x uno
+        self.move_down_wall = 4 #aumentamos en y uno
+        self.move_up_wall = 41 #disminuimos en Y uno
         #parametro para tomar en cuenta targets solo a lo largo de la pared.
         self.wall_is_vertical = range(8,38)
-        #coordenadas para dividir el mapa en secciones verticalmente
+        #coordenadas para dividir el mapa en secciones verticalmente, son las coordenadas de la pared del centro
         self.sections = [(1,8),(9,14),(15,20),(21,26),(27,32),(33,38),(39,44),(45,50),(51,56),(57,62),(63,68),(69,74),(75,80),(81,82)]
         
 
@@ -268,6 +280,7 @@ class Client(object):
         self.drag = None
 
     def gen_path(self, targets):
+        #generamos la trayectoria pasando por la sombra de los targets
         path = []
         for t in targets:
             if t[1] in self.wall_is_vertical:
@@ -298,12 +311,13 @@ class Client(object):
                     except:  
                         pass
             if len(path)>0:
-                path_section.insert(0,path[-1])
+                path_section.insert(0,path[-1]) #hace que el ultimo punto de la seccion sea el primer punto de la siguiente seccion
             path_section = self.path_order_distance(path_section)
             path = path +path_section
         return path
 
     def path_order_distance(self, targets):
+        #haciendo el sol con cada target
         targets_order = []
         temp = []
         targets_temp = []
@@ -327,10 +341,10 @@ class Client(object):
                         a = AStar(nodes_map_raw)
                         for i in a.step():
                             pass
-                        v1 = len(a.path)
+                        v1 = len(a.path) #tomando el tamano de la trayectoria
                     except:
                         v1 = 0
-                    t = (v1,t[0],t[1])
+                    t = (v1,t[0],t[1]) # tomando el tamano de la distancia menor y su coordenada para tomar como siguiente punto de inicio (sol)
                     temp.append(t)
                     temp.sort()
                 element_near = (temp[0][1],temp[0][2])
@@ -339,8 +353,8 @@ class Client(object):
         return targets_order
 
        
-
-    def gen_element(self,origin,limit_1_y,limit_2_y):
+    #cambiando las targets, dependiendo de la posicion en la pared, para que no quede en el centro 
+    def gen_element(self,origin,limit_1_y,limit_2_y): #para todas las paredes verticales
         mov_right = random.randrange(0,2) 
         if mov_right == 1:
             mov_right = 2
@@ -348,12 +362,12 @@ class Client(object):
         y = random.randrange(limit_1_y,limit_2_y)
         return (x,y)
 
-    def gen_element1(self,origin,limit_1_y,limit_2_y):
+    def gen_element1(self,origin,limit_1_y,limit_2_y): #para pared vertical del fondo(2paredes)
         x = origin
         y = random.randrange(limit_1_y,limit_2_y)
         return (x,y)
 
-    def gen_element2(self,origin,limit_1_x,limit_2_x):
+    def gen_element2(self,origin,limit_1_x,limit_2_x): #cambiando x, para pardes horizontales
         y = origin
         x = random.randrange(limit_1_x,limit_2_x)
         return (x,y)
@@ -437,7 +451,7 @@ class Client(object):
             #punto verde dinamico
             if self.play_animation:
                 if self.init == 0:    #para que el retardo en la animacion se ejecute a  partir del segundo ciclo
-                    time.sleep(1)
+                    time.sleep(0.5)
                 if self.mov_pos < self.length_path:
                         self.source1 = self.targets_with_source[self.mov_pos]
                         x, y = self.source1
@@ -449,7 +463,7 @@ class Client(object):
             #punto dinamico para el robot dos
             if self.play_animation:
                 if  self.init_uno == 0:    #para que el retardo en la animacion se ejecute a  partir del segundo ciclo
-                    time.sleep(1)
+                    time.sleep(0.5)
                 if self.mov_pos_uno < self.length_path_uno:
                         self.source1_uno = self.targets_with_source_uno[self.mov_pos_uno]
                         x, y = self.source1_uno
@@ -479,6 +493,7 @@ class Client(object):
         
         if event.key == K_SPACE:
             self.play_animation = True
+            #intergrando source,targets, punto de salida y punto de llegada a la estacion principal (self.source_end), para que el punto verde recorra todos los puntos
             self.targets_with_source =self.targets
             self.targets_with_source.insert(0,self.source)
             self.targets_with_source = self.gen_path(self.targets_with_source)
@@ -490,7 +505,7 @@ class Client(object):
             self.targets_with_source_uno.insert(0,self.source_uno )
             self.targets_with_source_uno  = self.gen_path(self.targets_with_source_uno )
             self.targets_with_source_uno  = self.gen_path_order(self.targets_with_source_uno )
-            self.targets_with_source_uno.append(self.salida)
+            self.targets_with_source_uno.append(self.salida_uno)
             self.targets_with_source_uno.append(self.source_uno)
             #self.targets_with_source = self.gen_path_order_distance(self.targets_with_source)
             #codigo para dibujar el camino continuo entre todas las targets
@@ -516,14 +531,15 @@ class Client(object):
                         self.path_uno += a.path
                     except:
                         pass                        
-        elif event.key == K_r:
+        elif event.key == K_r: #borrando todo
+            # Borramos los tagets y las trayectorias creadas robot uno
             if self.source[0]<8:
                 self.salida = self.salida_norte+self.salida_noreste
                 self.salida = random.choice(self.salida)
             elif self.source[0]>37:
                 self.salida = self.salida_sur+self.salida_suroeste
                 self.salida = random.choice(self.salida)
-            # Creamos variables para guardar coordenadas de los productos en las estanterias
+            
             products_in_wall1 = []
             products_in_wall2 = []
             products_in_wall3 = []
@@ -541,7 +557,7 @@ class Client(object):
             products_in_wall15 = []
             products_in_wall16 = []
 
-            # Llenamos las varibles de los productos con coordenadas aleatorias
+            
             target_wall1_products = random.randrange(0,6)
             for p in range(0,target_wall1_products):
                 products_in_wall1.append(self.gen_element(7,8,37))
@@ -590,7 +606,9 @@ class Client(object):
             target_wall16_products = random.randrange(0,6)
             for p in range(0,target_wall16_products):
                 products_in_wall16.append(self.gen_element2(41,7,81))
+
             self.targets = products_in_wall1+products_in_wall2+products_in_wall3+products_in_wall4+products_in_wall5+products_in_wall6+products_in_wall7+products_in_wall8+products_in_wall9+products_in_wall10+products_in_wall11+products_in_wall12+products_in_wall13+products_in_wall14+products_in_wall15+products_in_wall16
+
             self.targets_with_source = self.targets
             self.targets_with_source = self.gen_path(self.targets_with_source)
             self.targets_with_source = self.gen_path_order(self.targets_with_source)
@@ -605,6 +623,99 @@ class Client(object):
             targets_with_source = []
             self._reset()
             self.flag = 0
+
+
+            #borrando robot dos
+            if self.source_uno[1]<8:
+                self.salida_uno = self.salida_norte+self.salida_noreste
+                self.salida_uno = random.choice(self.salida_uno)
+            elif self.source_uno[1]>37:
+                self.salida_uno = self.salida_sur+self.salida_suroeste
+                self.salida_uno = random.choice(self.salida_uno)
+            products_uno_in_wall1 = []
+            products_uno_in_wall2 = []
+            products_uno_in_wall3 = []
+            products_uno_in_wall4 = []
+            products_uno_in_wall5 = []
+            products_uno_in_wall6 = []
+            products_uno_in_wall7 = []
+            products_uno_in_wall8 = []
+            products_uno_in_wall9 = []
+            products_uno_in_wall10 = []
+            products_uno_in_wall11 = []
+            products_uno_in_wall12 = []
+            products_uno_in_wall13 = []
+            products_uno_in_wall14 = []
+            products_uno_in_wall15 = []
+            products_uno_in_wall16 = []
+
+            # Llenamos las estanterias de los productos con coordenadas aleatorias tomando en cuenta la posicion ( que no este en el centro - self.gen_element) robot dos
+            target_uno_wall1_products = random.randrange(0,6)
+            for p in range(0,target_uno_wall1_products):
+                products_uno_in_wall1.append(self.gen_element(7,8,37))
+            target_uno_wall2_products = random.randrange(0,6)
+            for p in range(0,target_uno_wall2_products):
+                products_uno_in_wall2.append(self.gen_element(13,8,37))
+            target_uno_wall3_products = random.randrange(0,6)
+            for p in range(0,target_uno_wall3_products):
+                products_uno_in_wall3.append(self.gen_element(19,8,37))
+            target_uno_wall4_products = random.randrange(0,6)
+            for p in range(0,target_uno_wall4_products):
+                products_uno_in_wall4.append(self.gen_element(25,8,37))
+            target_uno_wall5_products = random.randrange(0,6)
+            for p in range(0,target_uno_wall5_products):
+                products_uno_in_wall5.append(self.gen_element(31,8,37))
+            target_uno_wall6_products = random.randrange(0,6)
+            for p in range(0,target_uno_wall6_products):
+                products_uno_in_wall6.append(self.gen_element(37,8,37))
+            target_uno_wall7_products = random.randrange(0,6)
+            for p in range(0,target_uno_wall7_products):
+                products_uno_in_wall7.append(self.gen_element(43,8,37))
+            target_uno_wall8_products = random.randrange(0,6)
+            for p in range(0,target_uno_wall8_products):
+                products_uno_in_wall8.append(self.gen_element(49,8,37))
+            target_uno_wall9_products = random.randrange(0,6)
+            for p in range(0,target_uno_wall9_products):
+                products_uno_in_wall9.append(self.gen_element(55,8,37))
+            target_uno_wall10_products = random.randrange(0,6)
+            for p in range(0,target_uno_wall10_products):
+                products_uno_in_wall10.append(self.gen_element(61,8,37))
+            target_uno_wall11_products = random.randrange(0,6)
+            for p in range(0,target_uno_wall11_products):
+                products_uno_in_wall11.append(self.gen_element(67,8,37))
+            target_uno_wall12_products = random.randrange(0,6)
+            for p in range(0,target_uno_wall12_products):
+                products_uno_in_wall12.append(self.gen_element(73,8,37))
+            target_uno_wall13_products = random.randrange(0,6)
+            for p in range(0,target_uno_wall13_products):
+                products_uno_in_wall13.append(self.gen_element(79,8,37))
+            target_uno_wall14_products = random.randrange(0,6)
+            for p in range(0,target_uno_wall14_products):
+                products_uno_in_wall14.append(self.gen_element1(1,8,37))
+            target_uno_wall15_products = random.randrange(0,6)
+            for p in range(0,target_uno_wall15_products):
+                products_uno_in_wall15.append(self.gen_element2(4,7,81))
+            target_uno_wall16_products = random.randrange(0,6)
+            for p in range(0,target_uno_wall16_products):
+                products_uno_in_wall16.append(self.gen_element2(41,7,81))
+
+            self.targets_uno= products_uno_in_wall1+products_uno_in_wall2+products_uno_in_wall3+products_uno_in_wall4+products_uno_in_wall5+products_uno_in_wall6+products_uno_in_wall7+products_uno_in_wall8+products_uno_in_wall9+products_uno_in_wall10+products_uno_in_wall11+products_uno_in_wall12+products_uno_in_wall13+products_uno_in_wall14+products_uno_in_wall15+products_uno_in_wall16
+
+            self.targets_with_source_uno = self.targets_uno
+            self.targets_with_source_uno = self.gen_path(self.targets_with_source_uno)
+            self.targets_with_source_uno = self.gen_path_order(self.targets_with_source_uno)
+            self.targets_with_source_uno.append(self.salida_uno)
+            self.play_animation = False
+            self.pos = 30
+            self.mov_pos_uno = 0
+            self.source_uno = (4, 1)
+            self.play_animation = False
+            self.pos = 30
+            self.mov_pos_uno = 0
+            targets_with_source_uno = []
+            self._reset()
+            self.flag = 0
+
         elif event.key == K_ESCAPE:
             self._quit()
         elif event.key == K_s:
@@ -698,6 +809,12 @@ class Client(object):
         pygame.draw.rect(self.screen, self.node_color[SOURCE], 
                 Rect(nx1, ny1, NODE_SIZE, NODE_SIZE)) 
 
+         #para dibujar punto de salida del robot dos
+        x1, y1 = self.salida_uno
+        nx1, ny1 = x1 * NODE_SIZE, y1 * NODE_SIZE
+        pygame.draw.rect(self.screen, (15, 108, 125), 
+                Rect(nx1, ny1, NODE_SIZE, NODE_SIZE)) 
+
         #para dibujar los targets del robot uno
         for target in self.targets:
             x, y = target
@@ -721,12 +838,14 @@ class Client(object):
         nx, ny = x * NODE_SIZE, y * NODE_SIZE
         pygame.draw.rect(self.screen, self.node_color[SOURCE], 
                 Rect(nx, ny, NODE_SIZE, NODE_SIZE)) 
+        #dibujando la trayectoria del robot uno
         for target in self.targets_with_source:
             x, y = target
             nx, ny = x * NODE_SIZE, y * NODE_SIZE
             pygame.draw.rect(self.screen, self.node_color[TARGET_PATH_COLOR], 
                 Rect(nx, ny, NODE_SIZE, NODE_SIZE))
 
+        #dibujando la trayectoria del robot dos
         ORANGE = (242,196, 131)
         for target in self.targets_with_source_uno:
             x, y = target
