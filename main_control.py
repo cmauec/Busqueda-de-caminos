@@ -34,7 +34,8 @@ from const.constants import *
 from algo.astar import *
 
 from ui.ui import *
-from robot.robot import *
+from lib.robot import *
+from lib.pedido import *
 
 
 class Client(object):
@@ -42,144 +43,15 @@ class Client(object):
     def __init__(self, ui_path):
 
         self.ui = UI(ui_path)
+        self.pedido = Pedido()
+        self.pedido_uno = Pedido()
+        self.targets = self.pedido.targets
+        self.targets_uno = self.pedido_uno.targets
+        self.robot = Robot((4, 1))
+        self.source = self.robot.source
+        self.robot_uno = Robot((4, 45))
+        self.source_uno = self.robot_uno.source 
         self.flag = 0
-        # Creamos variables para guardar coordenadas de los productos en las estanterias(targets)
-        products_in_wall1 = []
-        products_in_wall2 = []
-        products_in_wall3 = []
-        products_in_wall4 = []
-        products_in_wall5 = []
-        products_in_wall6 = []
-        products_in_wall7 = []
-        products_in_wall8 = []
-        products_in_wall9 = []
-        products_in_wall10 = []
-        products_in_wall11 = []
-        products_in_wall12 = []
-        products_in_wall13 = []
-        products_in_wall14 = []
-        products_in_wall15 = []
-        products_in_wall16 = []
-
-        # Llenamos las estanterias de los productos con coordenadas aleatorias tomando en cuenta la posicion ( que no este en el centro - self.gen_element)
-        target_wall1_products = random.randrange(0,6)
-        for p in range(0,target_wall1_products):
-            products_in_wall1.append(self.gen_element(7,8,37))
-        target_wall2_products = random.randrange(0,6)
-        for p in range(0,target_wall2_products):
-            products_in_wall2.append(self.gen_element(13,8,37))
-        target_wall3_products = random.randrange(0,6)
-        for p in range(0,target_wall3_products):
-            products_in_wall3.append(self.gen_element(19,8,37))
-        target_wall4_products = random.randrange(0,6)
-        for p in range(0,target_wall4_products):
-            products_in_wall4.append(self.gen_element(25,8,37))
-        target_wall5_products = random.randrange(0,6)
-        for p in range(0,target_wall5_products):
-            products_in_wall5.append(self.gen_element(31,8,37))
-        target_wall6_products = random.randrange(0,6)
-        for p in range(0,target_wall6_products):
-            products_in_wall6.append(self.gen_element(37,8,37))
-        target_wall7_products = random.randrange(0,6)
-        for p in range(0,target_wall7_products):
-            products_in_wall7.append(self.gen_element(43,8,37))
-        target_wall8_products = random.randrange(0,6)
-        for p in range(0,target_wall8_products):
-            products_in_wall8.append(self.gen_element(49,8,37))
-        target_wall9_products = random.randrange(0,6)
-        for p in range(0,target_wall9_products):
-            products_in_wall9.append(self.gen_element(55,8,37))
-        target_wall10_products = random.randrange(0,6)
-        for p in range(0,target_wall10_products):
-            products_in_wall10.append(self.gen_element(61,8,37))
-        target_wall11_products = random.randrange(0,6)
-        for p in range(0,target_wall11_products):
-            products_in_wall11.append(self.gen_element(67,8,37))
-        target_wall12_products = random.randrange(0,6)
-        for p in range(0,target_wall12_products):
-            products_in_wall12.append(self.gen_element(73,8,37))
-        target_wall13_products = random.randrange(0,6)
-        for p in range(0,target_wall13_products):
-            products_in_wall13.append(self.gen_element(79,8,37))
-        target_wall14_products = random.randrange(0,6)
-        for p in range(0,target_wall14_products):
-            products_in_wall14.append(self.gen_element1(1,8,37))
-        target_wall15_products = random.randrange(0,6)
-        for p in range(0,target_wall15_products):
-            products_in_wall15.append(self.gen_element2(4,7,81))
-        target_wall16_products = random.randrange(0,6)
-        for p in range(0,target_wall16_products):
-            products_in_wall16.append(self.gen_element2(41,7,81))
-
-
-
-        # Creamos variables para guardar coordenadas de los productos en las estanterias(targets) robot dos
-        products_uno_in_wall1 = []
-        products_uno_in_wall2 = []
-        products_uno_in_wall3 = []
-        products_uno_in_wall4 = []
-        products_uno_in_wall5 = []
-        products_uno_in_wall6 = []
-        products_uno_in_wall7 = []
-        products_uno_in_wall8 = []
-        products_uno_in_wall9 = []
-        products_uno_in_wall10 = []
-        products_uno_in_wall11 = []
-        products_uno_in_wall12 = []
-        products_uno_in_wall13 = []
-        products_uno_in_wall14 = []
-        products_uno_in_wall15 = []
-        products_uno_in_wall16 = []
-
-        # Llenamos las estanterias de los productos con coordenadas aleatorias tomando en cuenta la posicion ( que no este en el centro - self.gen_element) robot dos
-        target_uno_wall1_products = random.randrange(0,6)
-        for p in range(0,target_uno_wall1_products):
-            products_uno_in_wall1.append(self.gen_element(7,8,37))
-        target_uno_wall2_products = random.randrange(0,6)
-        for p in range(0,target_uno_wall2_products):
-            products_uno_in_wall2.append(self.gen_element(13,8,37))
-        target_uno_wall3_products = random.randrange(0,6)
-        for p in range(0,target_uno_wall3_products):
-            products_uno_in_wall3.append(self.gen_element(19,8,37))
-        target_uno_wall4_products = random.randrange(0,6)
-        for p in range(0,target_uno_wall4_products):
-            products_uno_in_wall4.append(self.gen_element(25,8,37))
-        target_uno_wall5_products = random.randrange(0,6)
-        for p in range(0,target_uno_wall5_products):
-            products_uno_in_wall5.append(self.gen_element(31,8,37))
-        target_uno_wall6_products = random.randrange(0,6)
-        for p in range(0,target_uno_wall6_products):
-            products_uno_in_wall6.append(self.gen_element(37,8,37))
-        target_uno_wall7_products = random.randrange(0,6)
-        for p in range(0,target_uno_wall7_products):
-            products_uno_in_wall7.append(self.gen_element(43,8,37))
-        target_uno_wall8_products = random.randrange(0,6)
-        for p in range(0,target_uno_wall8_products):
-            products_uno_in_wall8.append(self.gen_element(49,8,37))
-        target_uno_wall9_products = random.randrange(0,6)
-        for p in range(0,target_uno_wall9_products):
-            products_uno_in_wall9.append(self.gen_element(55,8,37))
-        target_uno_wall10_products = random.randrange(0,6)
-        for p in range(0,target_uno_wall10_products):
-            products_uno_in_wall10.append(self.gen_element(61,8,37))
-        target_uno_wall11_products = random.randrange(0,6)
-        for p in range(0,target_uno_wall11_products):
-            products_uno_in_wall11.append(self.gen_element(67,8,37))
-        target_uno_wall12_products = random.randrange(0,6)
-        for p in range(0,target_uno_wall12_products):
-            products_uno_in_wall12.append(self.gen_element(73,8,37))
-        target_uno_wall13_products = random.randrange(0,6)
-        for p in range(0,target_uno_wall13_products):
-            products_uno_in_wall13.append(self.gen_element(79,8,37))
-        target_uno_wall14_products = random.randrange(0,6)
-        for p in range(0,target_uno_wall14_products):
-            products_uno_in_wall14.append(self.gen_element1(1,8,37))
-        target_uno_wall15_products = random.randrange(0,6)
-        for p in range(0,target_uno_wall15_products):
-            products_uno_in_wall15.append(self.gen_element2(4,7,81))
-        target_uno_wall16_products = random.randrange(0,6)
-        for p in range(0,target_uno_wall16_products):
-            products_uno_in_wall16.append(self.gen_element2(41,7,81))
 
 
         self.init = 0
@@ -187,9 +59,7 @@ class Client(object):
         self.play_animation = False
         self.pos = 30
         self.mov_pos = 0
-        self.mov_pos_uno = 0
-        self.source = (4, 1)
-        self.source_uno = (4, 45)  #inicio robot dos
+        self.mov_pos_uno = 0 #inicio robot dos
         #este punto representa el lugar a donde regresa el robot despues de dejar los productos (self.source_end)
         self.source_end = (4,1)
         self.salida_norte = [(89,6),(89,8),(89,10)]
@@ -211,10 +81,6 @@ class Client(object):
         elif self.source_uno[1]>37:
             self.salida_uno = self.salida_sur+self.salida_suroeste
             self.salida_uno = random.choice(self.salida_uno)
-        #sumamos todos loas productos que se generan aleatoreamente robot uno    
-        self.targets = products_in_wall1+products_in_wall2+products_in_wall3+products_in_wall4+products_in_wall5+products_in_wall6+products_in_wall7+products_in_wall8+products_in_wall9+products_in_wall10+products_in_wall11+products_in_wall12+products_in_wall13+products_in_wall14+products_in_wall15+products_in_wall16
-        #producto del robot dos
-        self.targets_uno= products_uno_in_wall1+products_uno_in_wall2+products_uno_in_wall3+products_uno_in_wall4+products_uno_in_wall5+products_uno_in_wall6+products_uno_in_wall7+products_uno_in_wall8+products_uno_in_wall9+products_uno_in_wall10+products_uno_in_wall11+products_uno_in_wall12+products_uno_in_wall13+products_uno_in_wall14+products_uno_in_wall15+products_uno_in_wall16
         self.targets_with_source = []
         self.targets_with_source_uno = []
         #self.lenght_targets = len(self.targets)
@@ -312,28 +178,10 @@ class Client(object):
                 targets_temp.remove(element_near)
         return targets_order
 
-       
-    #cambiando las targets, dependiendo de la posicion en la pared, para que no quede en el centro 
-    def gen_element(self,origin,limit_1_y,limit_2_y): #para todas las paredes verticales
-        mov_right = random.randrange(0,2) 
-        if mov_right == 1:
-            mov_right = 2
-        x = origin+mov_right
-        y = random.randrange(limit_1_y,limit_2_y)
-        return (x,y)
-
-    def gen_element1(self,origin,limit_1_y,limit_2_y): #para pared vertical del fondo(2paredes)
-        x = origin
-        y = random.randrange(limit_1_y,limit_2_y)
-        return (x,y)
-
-    def gen_element2(self,origin,limit_1_x,limit_2_x): #cambiando x, para pardes horizontales
-        y = origin
-        x = random.randrange(limit_1_x,limit_2_x)
-        return (x,y)
 
     def run(self):
-        """Iniciamos el bucle principal
+        """
+        Iniciamos el bucle principal
         """
         # handle events
         while self.status != EXIT:
@@ -350,7 +198,11 @@ class Client(object):
             self.ui._draw_map_init()
             #Dibujamos las lineas separadoras de cada nodo
             #self.ui._draw_grid_lines()
-            self._draw_source_target()
+            self.pedido.dibujarProductos(self.ui.screen,self.ui.node_color[TARGET])
+            self.pedido_uno.dibujarProductos(self.ui.screen,(250,154,0))
+            self.robot.dibujarRobot(self.ui.screen,self.ui.node_color[SOURCE])
+            self.robot_uno.dibujarRobot(self.ui.screen,(15, 108, 125))
+            self._draw_source()
             self._draw_target_path()
             self._draw_path()
             self.length_path = len(self.targets_with_source)
@@ -629,20 +481,9 @@ class Client(object):
             self._reset()
             self.flag = 0
 
-    def _draw_source_target(self):
+    def _draw_source(self):
         """Source and target nodes are drawed on top of other nodes.
         """
-        #para dibujar robot uno
-        x, y = self.source
-        nx, ny = x * NODE_SIZE, y * NODE_SIZE
-        pygame.draw.rect(self.ui.screen, self.ui.node_color[SOURCE], 
-                Rect(nx, ny, NODE_SIZE, NODE_SIZE)) 
-
-        #para dibujar robot dos
-        x, y = self.source_uno
-        nx, ny = x * NODE_SIZE, y * NODE_SIZE
-        pygame.draw.rect(self.ui.screen,(15, 108, 125), 
-                Rect(nx, ny, NODE_SIZE, NODE_SIZE)) 
 
         #para dibujar punto de salida del robot uno
         x1, y1 = self.salida
@@ -655,21 +496,6 @@ class Client(object):
         nx1, ny1 = x1 * NODE_SIZE, y1 * NODE_SIZE
         pygame.draw.rect(self.ui.screen, (15, 108, 125), 
                 Rect(nx1, ny1, NODE_SIZE, NODE_SIZE)) 
-
-        #para dibujar los targets del robot uno
-        for target in self.targets:
-            x, y = target
-            nx, ny = x * NODE_SIZE, y * NODE_SIZE
-            pygame.draw.rect(self.ui.screen, self.ui.node_color[TARGET], 
-                Rect(nx, ny, NODE_SIZE, NODE_SIZE))
-
-        #para dibujar los targets del robot dos
-        RED = (250,154,0)
-        for target in self.targets_uno:
-            x, y = target
-            nx, ny = x * NODE_SIZE, y * NODE_SIZE
-            pygame.draw.rect(self.ui.screen, RED, 
-                Rect(nx, ny, NODE_SIZE, NODE_SIZE))
 
     def _draw_target_path(self):
         """Source and target nodes are drawed on top of other nodes.
