@@ -51,7 +51,6 @@ class UI(object):
 
         self.node_font = pygame.font.Font(os.path.join(
             ui_path, FONT_NAME), NODE_INFO_FONT_SIZE)
-        self._draw_map_init()
 
     def _draw_wall(self,wall,direction='vertical'):
             """dibujas las paredes. Se pasa como parametro el punto inicial y el punto final de la pared y la orientacion

@@ -34,20 +34,7 @@ from const.constants import *
 from algo.astar import *
 
 from ui.ui import *
-
-
-class _Node(object):
-    def __init__(self, (x, y)):
-        self.pos = x, y
-        left = x * NODE_SIZE
-        top = y * NODE_SIZE
-        self.rect = Rect(left, top, NODE_SIZE, NODE_SIZE)
-        self.status = NORMAL
-        self.parent = None
-        self.f = None
-        self.g = None
-        self.h = None
-
+from robot.robot import *
 
 
 class Client(object):
