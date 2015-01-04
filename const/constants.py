@@ -68,7 +68,7 @@ STOPPED = 1
 # =======================================
 # used by GUI
 # =======================================
-CAPTION = 'Path Finding 0.1.1'
+CAPTION = 'Tienda'
 
 NODE_SIZE  = 15
 RESOLUTION = (1350, 700)

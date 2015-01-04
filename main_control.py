@@ -36,6 +36,7 @@ from algo.astar import *
 from ui.ui import *
 from lib.robot import *
 from lib.pedido import *
+from lib.control import *
 
 
 class Client(object):
@@ -43,14 +44,15 @@ class Client(object):
     def __init__(self, ui_path):
 
         self.ui = UI(ui_path)
-        self.pedido = Pedido()
-        self.pedido_uno = Pedido()
-        self.targets = self.pedido.targets
-        self.targets_uno = self.pedido_uno.targets
-        self.robot = Robot((4, 1))
+        self.robot = Robot((4, 1),'gina')
+        self.robot_uno = Robot((4, 45),'mile')
+        self.robot_dos = Robot((5, 1),'mauro')
         self.source = self.robot.source
-        self.robot_uno = Robot((4, 45))
-        self.source_uno = self.robot_uno.source 
+        self.source_uno = self.robot_uno.source
+        self.control = Control()
+        self.control.agregarRobot(self.robot)
+        self.control.agregarRobot(self.robot_uno)
+        self.control.agregarRobot(self.robot_dos)
         self.flag = 0
 
 
@@ -198,13 +200,15 @@ class Client(object):
             self.ui._draw_map_init()
             #Dibujamos las lineas separadoras de cada nodo
             #self.ui._draw_grid_lines()
-            self.pedido.dibujarProductos(self.ui.screen,self.ui.node_color[TARGET])
-            self.pedido_uno.dibujarProductos(self.ui.screen,(250,154,0))
+            #self.pedido.dibujarProductos(self.ui.screen,self.ui.node_color[TARGET])
+            #self.pedido_uno.dibujarProductos(self.ui.screen,(250,154,0))
             self.robot.dibujarRobot(self.ui.screen,self.ui.node_color[SOURCE])
             self.robot_uno.dibujarRobot(self.ui.screen,(15, 108, 125))
-            self._draw_source()
-            self._draw_target_path()
-            self._draw_path()
+            self.robot_dos.dibujarRobot(self.ui.screen,(15, 108, 125))
+            #self.control.dibujarPedidos()
+            #self._draw_source()
+            #self._draw_target_path()
+            #self._draw_path()
             self.length_path = len(self.targets_with_source)
             self.length_path_uno = len(self.targets_with_source_uno) #ve cuantos targets tiene la trayectoria 
             #punto verde dinamico
@@ -251,247 +255,27 @@ class Client(object):
         """
         
         if event.key == K_SPACE:
-            self.play_animation = True
-            #intergrando source,targets, punto de salida y punto de llegada a la estacion principal (self.source_end), para que el punto verde recorra todos los puntos
-            self.targets_with_source =self.targets
-            self.targets_with_source.insert(0,self.source)
-            self.targets_with_source = self.gen_path(self.targets_with_source)
-            self.targets_with_source = self.gen_path_order(self.targets_with_source)
-            self.targets_with_source.append(self.salida)
-            self.targets_with_source.append(self.source_end)
-
-            self.targets_with_source_uno =self.targets_uno 
-            self.targets_with_source_uno.insert(0,self.source_uno )
-            self.targets_with_source_uno  = self.gen_path(self.targets_with_source_uno )
-            self.targets_with_source_uno  = self.gen_path_order(self.targets_with_source_uno )
-            self.targets_with_source_uno.append(self.salida_uno)
-            self.targets_with_source_uno.append(self.source_uno)
-            #self.targets_with_source = self.gen_path_order_distance(self.targets_with_source)
-            #codigo para dibujar el camino continuo entre todas las targets
-            for t in range(len(self.targets_with_source)):
-                if t+1 < len(self.targets_with_source):
-                    nodes_map_raw = self._get_str_map(self.targets_with_source[t], self.targets_with_source[t+1])
-                    try:
-                        a = AStar(nodes_map_raw)
-                        for i in a.step():
-                            pass
-                        self.path += a.path
-                    except:
-                        pass 
-
-            #dibuja el camino entre las targets del robot dos
-            for t in range(len(self.targets_with_source_uno)):
-                if t+1 < len(self.targets_with_source_uno):
-                    nodes_map_raw = self._get_str_map(self.targets_with_source_uno[t], self.targets_with_source_uno[t+1])
-                    try:
-                        a = AStar(nodes_map_raw)
-                        for i in a.step():
-                            pass
-                        self.path_uno += a.path
-                    except:
-                        pass                        
+            self.pedido = Pedido()
+            self.control.agregarPedido(self.pedido)
+            
         elif event.key == K_r: #borrando todo
-            # Borramos los tagets y las trayectorias creadas robot uno
-            if self.source[0]<8:
-                self.salida = self.salida_norte+self.salida_noreste
-                self.salida = random.choice(self.salida)
-            elif self.source[0]>37:
-                self.salida = self.salida_sur+self.salida_suroeste
-                self.salida = random.choice(self.salida)
-            
-            products_in_wall1 = []
-            products_in_wall2 = []
-            products_in_wall3 = []
-            products_in_wall4 = []
-            products_in_wall5 = []
-            products_in_wall6 = []
-            products_in_wall7 = []
-            products_in_wall8 = []
-            products_in_wall9 = []
-            products_in_wall10 = []
-            products_in_wall11 = []
-            products_in_wall12 = []
-            products_in_wall13 = []
-            products_in_wall14 = []
-            products_in_wall15 = []
-            products_in_wall16 = []
+            print self.robot.state
+            print self.robot_uno.state
+            print self.robot_dos.state
+            print self.control.pedidos
 
-            
-            target_wall1_products = random.randrange(0,6)
-            for p in range(0,target_wall1_products):
-                products_in_wall1.append(self.gen_element(7,8,37))
-            target_wall2_products = random.randrange(0,6)
-            for p in range(0,target_wall2_products):
-                products_in_wall2.append(self.gen_element(13,8,37))
-            target_wall3_products = random.randrange(0,6)
-            for p in range(0,target_wall3_products):
-                products_in_wall3.append(self.gen_element(19,8,37))
-            target_wall4_products = random.randrange(0,6)
-            for p in range(0,target_wall4_products):
-                products_in_wall4.append(self.gen_element(25,8,37))
-            target_wall5_products = random.randrange(0,6)
-            for p in range(0,target_wall5_products):
-                products_in_wall5.append(self.gen_element(31,8,37))
-            target_wall6_products = random.randrange(0,6)
-            for p in range(0,target_wall6_products):
-                products_in_wall6.append(self.gen_element(37,8,37))
-            target_wall7_products = random.randrange(0,6)
-            for p in range(0,target_wall7_products):
-                products_in_wall7.append(self.gen_element(43,8,37))
-            target_wall8_products = random.randrange(0,6)
-            for p in range(0,target_wall8_products):
-                products_in_wall8.append(self.gen_element(49,8,37))
-            target_wall9_products = random.randrange(0,6)
-            for p in range(0,target_wall9_products):
-                products_in_wall9.append(self.gen_element(55,8,37))
-            target_wall10_products = random.randrange(0,6)
-            for p in range(0,target_wall10_products):
-                products_in_wall10.append(self.gen_element(61,8,37))
-            target_wall11_products = random.randrange(0,6)
-            for p in range(0,target_wall11_products):
-                products_in_wall11.append(self.gen_element(67,8,37))
-            target_wall12_products = random.randrange(0,6)
-            for p in range(0,target_wall12_products):
-                products_in_wall12.append(self.gen_element(73,8,37))
-            target_wall13_products = random.randrange(0,6)
-            for p in range(0,target_wall13_products):
-                products_in_wall13.append(self.gen_element(79,8,37))
-            target_wall14_products = random.randrange(0,6)
-            for p in range(0,target_wall14_products):
-                products_in_wall14.append(self.gen_element1(1,8,37))
-            target_wall15_products = random.randrange(0,6)
-            for p in range(0,target_wall15_products):
-                products_in_wall15.append(self.gen_element2(4,7,81))
-            target_wall16_products = random.randrange(0,6)
-            for p in range(0,target_wall16_products):
-                products_in_wall16.append(self.gen_element2(41,7,81))
-
-            self.targets = products_in_wall1+products_in_wall2+products_in_wall3+products_in_wall4+products_in_wall5+products_in_wall6+products_in_wall7+products_in_wall8+products_in_wall9+products_in_wall10+products_in_wall11+products_in_wall12+products_in_wall13+products_in_wall14+products_in_wall15+products_in_wall16
-
-            self.targets_with_source = self.targets
-            self.targets_with_source = self.gen_path(self.targets_with_source)
-            self.targets_with_source = self.gen_path_order(self.targets_with_source)
-            self.targets_with_source.append(self.salida)
-            self.play_animation = False
-            self.pos = 30
-            self.mov_pos = 0
-            self.source = (4, 1)
-            self.play_animation = False
-            self.pos = 30
-            self.mov_pos = 0
-            targets_with_source = []
-            self._reset()
-            self.flag = 0
-
-
-            #borrando robot dos
-            if self.source_uno[1]<8:
-                self.salida_uno = self.salida_norte+self.salida_noreste
-                self.salida_uno = random.choice(self.salida_uno)
-            elif self.source_uno[1]>37:
-                self.salida_uno = self.salida_sur+self.salida_suroeste
-                self.salida_uno = random.choice(self.salida_uno)
-            products_uno_in_wall1 = []
-            products_uno_in_wall2 = []
-            products_uno_in_wall3 = []
-            products_uno_in_wall4 = []
-            products_uno_in_wall5 = []
-            products_uno_in_wall6 = []
-            products_uno_in_wall7 = []
-            products_uno_in_wall8 = []
-            products_uno_in_wall9 = []
-            products_uno_in_wall10 = []
-            products_uno_in_wall11 = []
-            products_uno_in_wall12 = []
-            products_uno_in_wall13 = []
-            products_uno_in_wall14 = []
-            products_uno_in_wall15 = []
-            products_uno_in_wall16 = []
-
-            # Llenamos las estanterias de los productos con coordenadas aleatorias tomando en cuenta la posicion ( que no este en el centro - self.gen_element) robot dos
-            target_uno_wall1_products = random.randrange(0,6)
-            for p in range(0,target_uno_wall1_products):
-                products_uno_in_wall1.append(self.gen_element(7,8,37))
-            target_uno_wall2_products = random.randrange(0,6)
-            for p in range(0,target_uno_wall2_products):
-                products_uno_in_wall2.append(self.gen_element(13,8,37))
-            target_uno_wall3_products = random.randrange(0,6)
-            for p in range(0,target_uno_wall3_products):
-                products_uno_in_wall3.append(self.gen_element(19,8,37))
-            target_uno_wall4_products = random.randrange(0,6)
-            for p in range(0,target_uno_wall4_products):
-                products_uno_in_wall4.append(self.gen_element(25,8,37))
-            target_uno_wall5_products = random.randrange(0,6)
-            for p in range(0,target_uno_wall5_products):
-                products_uno_in_wall5.append(self.gen_element(31,8,37))
-            target_uno_wall6_products = random.randrange(0,6)
-            for p in range(0,target_uno_wall6_products):
-                products_uno_in_wall6.append(self.gen_element(37,8,37))
-            target_uno_wall7_products = random.randrange(0,6)
-            for p in range(0,target_uno_wall7_products):
-                products_uno_in_wall7.append(self.gen_element(43,8,37))
-            target_uno_wall8_products = random.randrange(0,6)
-            for p in range(0,target_uno_wall8_products):
-                products_uno_in_wall8.append(self.gen_element(49,8,37))
-            target_uno_wall9_products = random.randrange(0,6)
-            for p in range(0,target_uno_wall9_products):
-                products_uno_in_wall9.append(self.gen_element(55,8,37))
-            target_uno_wall10_products = random.randrange(0,6)
-            for p in range(0,target_uno_wall10_products):
-                products_uno_in_wall10.append(self.gen_element(61,8,37))
-            target_uno_wall11_products = random.randrange(0,6)
-            for p in range(0,target_uno_wall11_products):
-                products_uno_in_wall11.append(self.gen_element(67,8,37))
-            target_uno_wall12_products = random.randrange(0,6)
-            for p in range(0,target_uno_wall12_products):
-                products_uno_in_wall12.append(self.gen_element(73,8,37))
-            target_uno_wall13_products = random.randrange(0,6)
-            for p in range(0,target_uno_wall13_products):
-                products_uno_in_wall13.append(self.gen_element(79,8,37))
-            target_uno_wall14_products = random.randrange(0,6)
-            for p in range(0,target_uno_wall14_products):
-                products_uno_in_wall14.append(self.gen_element1(1,8,37))
-            target_uno_wall15_products = random.randrange(0,6)
-            for p in range(0,target_uno_wall15_products):
-                products_uno_in_wall15.append(self.gen_element2(4,7,81))
-            target_uno_wall16_products = random.randrange(0,6)
-            for p in range(0,target_uno_wall16_products):
-                products_uno_in_wall16.append(self.gen_element2(41,7,81))
-
-            self.targets_uno= products_uno_in_wall1+products_uno_in_wall2+products_uno_in_wall3+products_uno_in_wall4+products_uno_in_wall5+products_uno_in_wall6+products_uno_in_wall7+products_uno_in_wall8+products_uno_in_wall9+products_uno_in_wall10+products_uno_in_wall11+products_uno_in_wall12+products_uno_in_wall13+products_uno_in_wall14+products_uno_in_wall15+products_uno_in_wall16
-
-            self.targets_with_source_uno = self.targets_uno
-            self.targets_with_source_uno = self.gen_path(self.targets_with_source_uno)
-            self.targets_with_source_uno = self.gen_path_order(self.targets_with_source_uno)
-            self.targets_with_source_uno.append(self.salida_uno)
-            self.play_animation = False
-            self.pos = 30
-            self.mov_pos_uno = 0
-            self.source_uno = (4, 1)
-            self.play_animation = False
-            self.pos = 30
-            self.mov_pos_uno = 0
-            targets_with_source_uno = []
-            self._reset()
-            self.flag = 0
+        elif event.key == K_s: #borrando todo
+            self.robot.state = 'libre'
+            self.robot.notificacion_libre(self.control)
 
         elif event.key == K_ESCAPE:
             self._quit()
-        elif event.key == K_s:
-            self._reset()
-            self.flag = 0
 
     def _draw_source(self):
         """Source and target nodes are drawed on top of other nodes.
         """
 
-        #para dibujar punto de salida del robot uno
-        x1, y1 = self.salida
-        nx1, ny1 = x1 * NODE_SIZE, y1 * NODE_SIZE
-        pygame.draw.rect(self.ui.screen, self.ui.node_color[SOURCE], 
-                Rect(nx1, ny1, NODE_SIZE, NODE_SIZE)) 
-
-         #para dibujar punto de salida del robot dos
+        #para dibujar punto de salida del robot dos
         x1, y1 = self.salida_uno
         nx1, ny1 = x1 * NODE_SIZE, y1 * NODE_SIZE
         pygame.draw.rect(self.ui.screen, (15, 108, 125), 
