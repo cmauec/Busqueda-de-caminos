@@ -205,6 +205,7 @@ class Client(object):
             self.robot.dibujarRobot(self.ui.screen,self.ui.node_color[SOURCE])
             self.robot_uno.dibujarRobot(self.ui.screen,(15, 108, 125))
             self.robot_dos.dibujarRobot(self.ui.screen,(15, 108, 125))
+            self.control.dibujarPedidos(self.ui.screen)
             #self.control.dibujarPedidos()
             #self._draw_source()
             #self._draw_target_path()
@@ -257,14 +258,15 @@ class Client(object):
         if event.key == K_SPACE:
             self.pedido = Pedido()
             self.control.agregarPedido(self.pedido)
+
             
-        elif event.key == K_r: #borrando todo
+        elif event.key == K_r: 
             print self.robot.state
             print self.robot_uno.state
             print self.robot_dos.state
             print self.control.pedidos
 
-        elif event.key == K_s: #borrando todo
+        elif event.key == K_s: 
             self.robot.state = 'libre'
             self.robot.notificacion_libre(self.control)
 
