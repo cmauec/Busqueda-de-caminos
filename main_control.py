@@ -28,6 +28,7 @@ import cPickle
 import threading
 import random
 import pygame
+import uuid
 
 from pygame.locals import *
 from const.constants import * 
@@ -44,12 +45,12 @@ class Client(object):
     def __init__(self, ui_path):
 
         self.ui = UI(ui_path)
-        self.robot = Robot((4, 1),'gina')
-        self.robot_uno = Robot((4, 45),'mile')
-        self.robot_dos = Robot((5, 1),'mauro')
+        self.robot = Robot((4, 1),'gina', self.ui.node_color[SOURCE])
+        self.robot_uno = Robot((4, 45),'mile',(15, 108, 125))
+        self.robot_dos = Robot((5, 1),'mauro',(15, 108, 125))
         self.source = self.robot.source
         self.source_uno = self.robot_uno.source
-        self.control = Control()
+        self.control = Control(self.ui.nodes)
         self.control.agregarRobot(self.robot)
         self.control.agregarRobot(self.robot_uno)
         self.control.agregarRobot(self.robot_dos)
@@ -61,124 +62,18 @@ class Client(object):
         self.play_animation = False
         self.pos = 30
         self.mov_pos = 0
-        self.mov_pos_uno = 0 #inicio robot dos
-        #este punto representa el lugar a donde regresa el robot despues de dejar los productos (self.source_end)
-        self.source_end = (4,1)
-        self.salida_norte = [(89,6),(89,8),(89,10)]
-        self.salida_noreste = [(89,15),(89,17),(89,19)]
-        self.salida_sur = [(89,35),(89,37),(89,39)]
-        self.salida_suroeste = [(89,25),(89,27),(89,29)]
-        #si el robot esta en la parte de arriba tendra como salida al norte o al noreste
-        if self.source[1]<8:
-            self.salida = self.salida_norte+self.salida_noreste
-            self.salida = random.choice(self.salida)
-        #si el robot esta en la parte inferior tendra como salida al sur o suroeste
-        elif self.source[1]>37:
-            self.salida = self.salida_sur+self.salida_suroeste
-            self.salida = random.choice(self.salida)
-        #genera punto de salida del robot dos    
-        if self.source_uno[1]<8:
-            self.salida_uno = self.salida_norte+self.salida_noreste
-            self.salida_uno = random.choice(self.salida_uno)
-        elif self.source_uno[1]>37:
-            self.salida_uno = self.salida_sur+self.salida_suroeste
-            self.salida_uno = random.choice(self.salida_uno)
+        self.mov_pos_uno = 0 
         self.targets_with_source = []
         self.targets_with_source_uno = []
-        #self.lenght_targets = len(self.targets)
         self.path = []
         self.path_uno = []
-        #nos sirve para crear la sombra de los targets
-        self.move_right_wall = (1,9,15,21,27,33,39,45,51,57,63,69,75,81) #aumentamos en x uno
-        self.move_left_wall = (7,13,19,25,31,37,43,49,55,61,67,73,79) #disminuimos en x uno
-        self.move_down_wall = 4 #aumentamos en y uno
-        self.move_up_wall = 41 #disminuimos en Y uno
-        #parametro para tomar en cuenta targets solo a lo largo de la pared.
-        self.wall_is_vertical = range(8,38)
-        #coordenadas para dividir el mapa en secciones verticalmente, son las coordenadas de la pared del centro
-        self.sections = [(1,8),(9,14),(15,20),(21,26),(27,32),(33,38),(39,44),(45,50),(51,56),(57,62),(63,68),(69,74),(75,80),(81,82)]
-        
+                
 
         # general status
         self.status = DRAWING
         self.editable = False
         self.erasing = False
         self.drag = None
-
-        
-
-    def gen_path(self, targets):
-        #generamos la trayectoria pasando por la sombra de los targets
-        path = []
-        for t in targets:
-            if t[1] in self.wall_is_vertical:
-                if t[0] in self.move_right_wall:
-                    t = (t[0]+1,t[1])
-                elif t[0] in self.move_left_wall:
-                    t = (t[0]-1,t[1]) 
-            else:
-                if t[1] == self.move_down_wall:
-                    t = (t[0],t[1]+1)
-                elif t[1] == self.move_up_wall:
-                    t = (t[0],t[1]-1)
-             
-            path.append(t)
-        return path
-
-
-    # Para ordenar los targets de menor a mayor (por seccion)    
-    def gen_path_order(self, targets):
-        path = []
-        for s in self.sections:
-            path_section = []
-            for t in targets:
-                if t[0] in range(s[0], s[1]+1):
-                    try:
-                        #path.append(t)
-                        path_section.append(t)
-                    except:  
-                        pass
-            if len(path)>0:
-                path_section.insert(0,path[-1]) #hace que el ultimo punto de la seccion sea el primer punto de la siguiente seccion
-            path_section = self.path_order_distance(path_section)
-            path = path +path_section
-        return path
-
-    def path_order_distance(self, targets):
-        #haciendo el sol con cada target
-        targets_order = []
-        temp = []
-        targets_temp = []
-        for t in targets:
-            targets_temp.append(t)
-        for t1 in targets:
-            if len(targets_order) == 0: 
-                element = targets_temp[0]
-                targets_order.append(targets_temp[0])
-                targets_temp.remove(element)
-            else:
-                element = targets_order[-1]
-            temp = []
-            targets_temp_order = []
-            for t2 in targets_temp:
-                targets_temp_order.append(t2)
-            if len(targets_temp_order)>0:
-                for t in targets_temp_order:
-                    nodes_map_raw = self._get_str_map(element, t)
-                    try:
-                        a = AStar(nodes_map_raw)
-                        for i in a.step():
-                            pass
-                        v1 = len(a.path) #tomando el tamano de la trayectoria
-                    except:
-                        v1 = 0
-                    t = (v1,t[0],t[1]) # tomando el tamano de la distancia menor y su coordenada para tomar como siguiente punto de inicio (sol)
-                    temp.append(t)
-                    temp.sort()
-                element_near = (temp[0][1],temp[0][2])
-                targets_order.append(element_near)
-                targets_temp.remove(element_near)
-        return targets_order
 
 
     def run(self):
@@ -202,10 +97,11 @@ class Client(object):
             #self.ui._draw_grid_lines()
             #self.pedido.dibujarProductos(self.ui.screen,self.ui.node_color[TARGET])
             #self.pedido_uno.dibujarProductos(self.ui.screen,(250,154,0))
-            self.robot.dibujarRobot(self.ui.screen,self.ui.node_color[SOURCE])
-            self.robot_uno.dibujarRobot(self.ui.screen,(15, 108, 125))
-            self.robot_dos.dibujarRobot(self.ui.screen,(15, 108, 125))
+            self.robot.dibujarRobot(self.ui.screen)
+            self.robot_uno.dibujarRobot(self.ui.screen)
+            self.robot_dos.dibujarRobot(self.ui.screen)
             self.control.dibujarPedidos(self.ui.screen)
+            self.robot.dibujarRuta(self.ui.screen, self.ui.nodes)
             #self.control.dibujarPedidos()
             #self._draw_source()
             #self._draw_target_path()
@@ -256,8 +152,10 @@ class Client(object):
         """
         
         if event.key == K_SPACE:
-            self.pedido = Pedido()
+            nombre = uuid.uuid4()
+            self.pedido = Pedido(nombre)
             self.control.agregarPedido(self.pedido)
+            print self.pedido.nombre
 
             
         elif event.key == K_r: 
@@ -269,6 +167,16 @@ class Client(object):
         elif event.key == K_s: 
             self.robot.state = 'libre'
             self.robot.notificacion_libre(self.control)
+
+        elif event.key == K_t:
+                  
+            self.p1 = self.control.pedidosDibujar[0]
+            self.control.quitarPedidoConcluido(self.p1)
+
+        elif event.key == K_y:
+            print self.robot.path
+
+
 
         elif event.key == K_ESCAPE:
             self._quit()
