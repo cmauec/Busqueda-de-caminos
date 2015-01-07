@@ -106,32 +106,20 @@ class Client(object):
             #self._draw_source()
             #self._draw_target_path()
             #self._draw_path()
-            self.length_path = len(self.targets_with_source)
-            self.length_path_uno = len(self.targets_with_source_uno) #ve cuantos targets tiene la trayectoria 
+            self.length_path = len(self.robot.path)
             #punto verde dinamico
             if self.play_animation:
-                if self.init == 0:    #para que el retardo en la animacion se ejecute a  partir del segundo ciclo
-                    time.sleep(0.5)
+                #if self.init == 0:    #para que el retardo en la animacion se ejecute a  partir del segundo ciclo
+                    #time.sleep(0.5)
                 if self.mov_pos < self.length_path:
-                        self.source1 = self.targets_with_source[self.mov_pos]
+                        self.source1 = self.robot.path[self.mov_pos]
                         x, y = self.source1
                         nx, ny = x*NODE_SIZE, y*NODE_SIZE
-                        pygame.draw.rect(self.ui.screen, self.ui.node_color[SOURCE], Rect(nx, ny, NODE_SIZE, NODE_SIZE))
+                        pygame.draw.rect(self.ui.screen, self.robot.color, Rect(nx, ny, NODE_SIZE, NODE_SIZE))
                         self.mov_pos += 1
             self.init += self.init
 
-            #punto dinamico para el robot dos
-            if self.play_animation:
-                if  self.init_uno == 0:    #para que el retardo en la animacion se ejecute a  partir del segundo ciclo
-                    time.sleep(0.5)
-                if self.mov_pos_uno < self.length_path_uno:
-                        self.source1_uno = self.targets_with_source_uno[self.mov_pos_uno]
-                        x, y = self.source1_uno
-                        nx, ny = x*NODE_SIZE, y*NODE_SIZE
-                        pygame.draw.rect(self.ui.screen, (15,108,125), Rect(nx, ny, NODE_SIZE, NODE_SIZE))
-                        self.mov_pos_uno += 1
-            self.init_uno += self.init_uno
-            
+                       
             # update screen
             pygame.display.update()
 
@@ -155,6 +143,7 @@ class Client(object):
             nombre = uuid.uuid4()
             self.pedido = Pedido(nombre)
             self.control.agregarPedido(self.pedido)
+            self.play_animation = True 
             print self.pedido.nombre
 
             

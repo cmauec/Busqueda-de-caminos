@@ -46,7 +46,18 @@ class Control(object):
                 self.path = self.gen_path_order(self.path)
                 self.path.append(self.salida)
                 self.path.append(r.source)
-                r.agregarRuta(self.path)
+                self.pathRobot = []
+                for t in range(len(self.path)):
+                    if t+1 < len(self.path):
+                        nodes_map_raw = self._get_str_map(self.path[t], self.path[t+1])
+                        try:
+                            a = AStar(nodes_map_raw)
+                            for i in a.step():
+                                pass
+                            self.pathRobot += a.path
+                        except:
+                            pass 
+                r.agregarRuta(self.pathRobot)
                 r.state = 'ocupado'
                 return
             else:
