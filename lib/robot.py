@@ -1,19 +1,27 @@
 from const.constants import * 
 import pygame
 from pygame.locals import *
+import random
 
-coloresRuta = [(207,23,23),(168,19,19),(133,15,15),(94,10,10),(59,6,6),(230,39,39),(237,111,111),(235,75,75),(242,148,148)]
+colorRobot = [(235,56,211),(255,109,5),(59,57,55),(36,90,240),(0,255,4),(49,18,204),(119,5,176)]
+colorRobotTemp = []
 
 
 class Robot(object):
 
-    def __init__(self,source,nombre, color):
+    def __init__(self,source,nombre):
         #Punto donde sale el robot
+        self.colorRandom = random.choice(colorRobot)
+        self.index_colorRandom = colorRobot.index(self.colorRandom)
+        colorRobot.pop(self.index_colorRandom)
         self.source = source
         self.state = 'libre'
         self.nombre = nombre
         self.path = []
-        self.color = color 
+        self.color = self.colorRandom 
+        self.init = 0
+        self.pos = 30
+        self.mov_pos =0
 
 
     def dibujarRobot(self,screen):
@@ -38,5 +46,20 @@ class Robot(object):
                     for (x, y) in self.path]
             pygame.draw.lines(screen, self.color, False,
                     seg, PATH_WIDTH)
+
+    def RobotAnimarCamino(self, screen):
+        self.length_path = len(self.path)
+        #punto verde dinamico
+        #if self.init == 0:    #para que el retardo en la animacion se ejecute a  partir del segundo ciclo
+            #time.sleep(0.5)
+        if self.mov_pos < self.length_path:
+            self.source1 = self.path[self.mov_pos]
+            x, y = self.source1
+            nx, ny = x*NODE_SIZE, y*NODE_SIZE
+            pygame.draw.rect(screen, self.color, Rect(nx, ny, NODE_SIZE, NODE_SIZE))
+            self.mov_pos += 1
+        self.init += self.init
+
+
 
     

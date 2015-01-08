@@ -89,7 +89,31 @@ class Control(object):
         if len(self.pedidos)>0:
             for r in self.robots:
                 if r.nombre == nombre and r.state == 'libre':
-                    r.agregarRuta('ruta')
+                    if r.source[1]<8:
+                        self.salida = self.salida_norte+self.salida_noreste
+                        self.salida = random.choice(self.salida)
+                    #si el robot esta en la parte inferior tendra como salida al sur o suroeste
+                    elif r.source[1]>37:
+                        self.salida = self.salida_sur+self.salida_suroeste
+                        self.salida = random.choice(self.salida)
+                    self.path = self.pedidos[0].productos
+                    self.path.insert(0, r.source)
+                    self.path = self.gen_path(self.path)
+                    self.path = self.gen_path_order(self.path)
+                    self.path.append(self.salida)
+                    self.path.append(r.source)
+                    self.pathRobot = []
+                    for t in range(len(self.path)):
+                        if t+1 < len(self.path):
+                            nodes_map_raw = self._get_str_map(self.path[t], self.path[t+1])
+                            try:
+                                a = AStar(nodes_map_raw)
+                                for i in a.step():
+                                    pass
+                                self.pathRobot += a.path
+                            except:
+                                pass 
+                    r.agregarRuta(self.pathRobot)
                     r.state = 'ocupado'
                     self.pedidos.pop(0)
                     return

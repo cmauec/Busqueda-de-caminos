@@ -45,9 +45,9 @@ class Client(object):
     def __init__(self, ui_path):
 
         self.ui = UI(ui_path)
-        self.robot = Robot((4, 1),'gina', self.ui.node_color[SOURCE])
-        self.robot_uno = Robot((4, 45),'mile',(15, 108, 125))
-        self.robot_dos = Robot((5, 1),'mauro',(15, 108, 125))
+        self.robot = Robot((4, 1),'gina')
+        self.robot_uno = Robot((4, 45),'mile')
+        self.robot_dos = Robot((5, 1),'mauro')
         self.source = self.robot.source
         self.source_uno = self.robot_uno.source
         self.control = Control(self.ui.nodes)
@@ -57,12 +57,8 @@ class Client(object):
         self.flag = 0
 
 
-        self.init = 0
-        self.init_uno = 0
+
         self.play_animation = False
-        self.pos = 30
-        self.mov_pos = 0
-        self.mov_pos_uno = 0 
         self.targets_with_source = []
         self.targets_with_source_uno = []
         self.path = []
@@ -102,24 +98,19 @@ class Client(object):
             self.robot_dos.dibujarRobot(self.ui.screen)
             self.control.dibujarPedidos(self.ui.screen)
             self.robot.dibujarRuta(self.ui.screen, self.ui.nodes)
+            self.robot_uno.dibujarRuta(self.ui.screen, self.ui.nodes)
+            self.robot_dos.dibujarRuta(self.ui.screen, self.ui.nodes)
             #self.control.dibujarPedidos()
             #self._draw_source()
             #self._draw_target_path()
             #self._draw_path()
-            self.length_path = len(self.robot.path)
-            #punto verde dinamico
             if self.play_animation:
-                #if self.init == 0:    #para que el retardo en la animacion se ejecute a  partir del segundo ciclo
-                    #time.sleep(0.5)
-                if self.mov_pos < self.length_path:
-                        self.source1 = self.robot.path[self.mov_pos]
-                        x, y = self.source1
-                        nx, ny = x*NODE_SIZE, y*NODE_SIZE
-                        pygame.draw.rect(self.ui.screen, self.robot.color, Rect(nx, ny, NODE_SIZE, NODE_SIZE))
-                        self.mov_pos += 1
-            self.init += self.init
+                self.robot.RobotAnimarCamino(self.ui.screen)
+                self.robot_uno.RobotAnimarCamino(self.ui.screen)
+                self.robot_dos.RobotAnimarCamino(self.ui.screen)
 
-                       
+
+                                  
             # update screen
             pygame.display.update()
 
