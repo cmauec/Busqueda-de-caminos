@@ -47,6 +47,15 @@ class Robot(object):
             pygame.draw.lines(screen, self.color, False,
                     seg, PATH_WIDTH)
 
+
+    def BorrarRuta(self, screen, nodes):
+        if self.path:
+            seg = [nodes[y][x].rect.center 
+                    for (x, y) in self.path]
+            pygame.draw.lines(screen,(255,255,255) , False,
+                    seg, PATH_WIDTH)
+
+
     def RobotAnimarCamino(self, screen):
         self.length_path = len(self.path)
         #punto verde dinamico
@@ -59,6 +68,23 @@ class Robot(object):
             pygame.draw.rect(screen, self.color, Rect(nx, ny, NODE_SIZE, NODE_SIZE))
             self.mov_pos += 1
         self.init += self.init
+
+
+    def PosicionActualRobot(self):  
+        '''Funcion para saber la posicion actual del robot'''
+        self.source1 = 0
+        self.length_path = len(self.path)
+        #punto verde dinamico
+        #if self.init == 0:    #para que el retardo en la animacion se ejecute a  partir del segundo ciclo
+            #time.sleep(0.5)
+        if self.mov_pos < self.length_path:
+            self.source1 = self.path[self.mov_pos]
+            self.mov_pos += 1
+        self.init += self.init
+        return self.source1
+
+
+
 
 
 

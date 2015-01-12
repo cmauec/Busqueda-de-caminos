@@ -54,7 +54,8 @@ class Client(object):
         self.control.agregarRobot(self.robot)
         self.control.agregarRobot(self.robot_uno)
         self.control.agregarRobot(self.robot_dos)
-        self.flag = 0
+        self.posicionesRobot = []
+
 
 
 
@@ -91,8 +92,6 @@ class Client(object):
             self.ui._draw_map_init()
             #Dibujamos las lineas separadoras de cada nodo
             #self.ui._draw_grid_lines()
-            #self.pedido.dibujarProductos(self.ui.screen,self.ui.node_color[TARGET])
-            #self.pedido_uno.dibujarProductos(self.ui.screen,(250,154,0))
             self.robot.dibujarRobot(self.ui.screen)
             self.robot_uno.dibujarRobot(self.ui.screen)
             self.robot_dos.dibujarRobot(self.ui.screen)
@@ -100,10 +99,22 @@ class Client(object):
             self.robot.dibujarRuta(self.ui.screen, self.ui.nodes)
             self.robot_uno.dibujarRuta(self.ui.screen, self.ui.nodes)
             self.robot_dos.dibujarRuta(self.ui.screen, self.ui.nodes)
-            #self.control.dibujarPedidos()
-            #self._draw_source()
-            #self._draw_target_path()
-            #self._draw_path()
+            self.posicionesRobot.append(self.robot.PosicionActualRobot())
+
+            '''if self.robot.PosicionActualRobot() == (self.robot.source[0]+ 1,self.robot.source[1]):
+                print 'funciono - ' + str(self.robot.PosicionActualRobot())
+                self.robot.state = 'libre'
+                self.robot.path = []
+                self.robot.notificacion_libre(self.control)
+                self.p1 = self.control.pedidosDibujar[0]
+                self.control.quitarPedidoConcluido(self.p1)'''
+
+            if self.robot.state == 'libre':
+                self.robot.BorrarRuta(self.ui.screen, self.ui.nodes)
+            if self.robot_uno.state == 'libre':
+                self.robot_uno.BorrarRuta(self.ui.screen, self.ui.nodes)
+            if self.robot_dos.state == 'libre':
+                self.robot_dos.BorrarRuta(self.ui.screen, self.ui.nodes)
             if self.play_animation:
                 self.robot.RobotAnimarCamino(self.ui.screen)
                 self.robot_uno.RobotAnimarCamino(self.ui.screen)
@@ -145,8 +156,24 @@ class Client(object):
             print self.control.pedidos
 
         elif event.key == K_s: 
-            self.robot.state = 'libre'
-            self.robot.notificacion_libre(self.control)
+            
+
+            self.robot_uno.state = 'libre'
+            self.robot_uno.path = []
+            self.robot_uno.notificacion_libre(self.control)
+            self.p2 = self.control.pedidosDibujar[0]
+            self.control.quitarPedidoConcluido(self.p2)
+
+            self.robot_dos.state = 'libre'
+            self.robot_dos.path = []
+            self.robot_dos.notificacion_libre(self.control)
+            self.p3 = self.control.pedidosDibujar[0]
+            self.control.quitarPedidoConcluido(self.p3)
+
+
+
+
+            
 
         elif event.key == K_t:
                   
@@ -154,57 +181,15 @@ class Client(object):
             self.control.quitarPedidoConcluido(self.p1)
 
         elif event.key == K_y:
-            print self.robot.path
+            #print self.robot.path
+            print self.posicionesRobot
 
 
 
         elif event.key == K_ESCAPE:
             self._quit()
 
-    def _draw_source(self):
-        """Source and target nodes are drawed on top of other nodes.
-        """
-
-        #para dibujar punto de salida del robot dos
-        x1, y1 = self.salida_uno
-        nx1, ny1 = x1 * NODE_SIZE, y1 * NODE_SIZE
-        pygame.draw.rect(self.ui.screen, (15, 108, 125), 
-                Rect(nx1, ny1, NODE_SIZE, NODE_SIZE)) 
-
-    def _draw_target_path(self):
-        """Source and target nodes are drawed on top of other nodes.
-        """
-        x, y = self.source
-        nx, ny = x * NODE_SIZE, y * NODE_SIZE
-        pygame.draw.rect(self.ui.screen, self.ui.node_color[SOURCE], 
-                Rect(nx, ny, NODE_SIZE, NODE_SIZE)) 
-        #dibujando la trayectoria del robot uno
-        for target in self.targets_with_source:
-            x, y = target
-            nx, ny = x * NODE_SIZE, y * NODE_SIZE
-            pygame.draw.rect(self.ui.screen, self.ui.node_color[TARGET_PATH_COLOR], 
-                Rect(nx, ny, NODE_SIZE, NODE_SIZE))
-
-        #dibujando la trayectoria del robot dos
-        ORANGE = (242,196, 131)
-        for target in self.targets_with_source_uno:
-            x, y = target
-            nx, ny = x * NODE_SIZE, y * NODE_SIZE
-            pygame.draw.rect(self.ui.screen, ORANGE, 
-                Rect(nx, ny, NODE_SIZE, NODE_SIZE))
-
-    def _draw_path(self):
-        if self.path:
-            seg = [self.ui.nodes[y][x].rect.center 
-                    for (x, y) in self.path]
-            pygame.draw.lines(self.ui.screen, Color(PATH_COLOR), False,
-                    seg, PATH_WIDTH)
-
-        if self.path_uno:
-            seg = [self.ui.nodes[y][x].rect.center 
-                    for (x, y) in self.path_uno]
-            pygame.draw.lines(self.ui.screen, (204,189,167), False,
-                    seg, PATH_WIDTH)
+    
 
     def _reset(self):
         """Reset all nodes to be NORMAL and clear the node infos
@@ -231,38 +216,10 @@ class Client(object):
                 node.h = None
                 node.parent = None
 
-    def _get_str_map(self,sourceA,targetA):
-        """Generate a string represented map from the current nodes' status.
-        """
-        final_str = []
-        for row in self.ui.nodes:
-            str = []
-            for node in row:
-                if node.pos == sourceA:
-                    str.append(SOURCE)
-                elif node.pos == targetA :
-                    str.append(TARGET)
-                else: 
-                    str.append(node.status)
-            str.append('\n')
-            final_str.append(''.join(str))
-        return ''.join(final_str)
-
-    
+       
 if __name__ == '__main__':
    
-    import getopt
-    try:
-        opts, args = getopt.getopt(sys.argv[1:], 'ha:p:', ['help'])
-        for o, a in opts:
-            if o in ('-h', '--help'):
-                print_help()
-                raise SystemExit
-           
-    except (getopt.GetoptError, ValueError):
-        print 'Argumentos invalidos\n'
-        print_help()
-        raise SystemExit
+    
     cur_path = os.path.abspath(os.path.dirname(__file__))
     ui_path = os.path.join(cur_path, 'ui')
     

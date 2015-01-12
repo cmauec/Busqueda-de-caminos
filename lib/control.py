@@ -114,6 +114,7 @@ class Control(object):
                             except:
                                 pass 
                     r.agregarRuta(self.pathRobot)
+                    print self.pathRobot
                     r.state = 'ocupado'
                     self.pedidos.pop(0)
                     return
