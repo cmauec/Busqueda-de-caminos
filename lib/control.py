@@ -32,20 +32,22 @@ class Control(object):
         self.totalrobotlibres = len(self.robots)
         for r in self.robots:
             if r.state == 'libre':
-                #si el robot esta en la parte de arriba tendra como salida al norte o al noreste
+                # si el robot esta en la parte de arriba tendra como salida al norte o al noreste
                 if r.source[1]<8:
                     self.salida = self.salida_norte+self.salida_noreste
                     self.salida = random.choice(self.salida)
-                #si el robot esta en la parte inferior tendra como salida al sur o suroeste
+                # si el robot esta en la parte inferior tendra como salida al sur o suroeste
                 elif r.source[1]>37:
                     self.salida = self.salida_sur+self.salida_suroeste
                     self.salida = random.choice(self.salida)
+
                 self.path = pedido.productos
-                self.path.insert(0, r.source)
+                self.path.insert(0, (r.source))
                 self.path = self.gen_path(self.path)
                 self.path = self.gen_path_order(self.path)
                 self.path.append(self.salida)
-                self.path.append(r.source)
+                self.path.append((r.source))
+                #print self.path
                 self.pathRobot = []
                 for t in range(len(self.path)):
                     if t+1 < len(self.path):
@@ -57,7 +59,8 @@ class Control(object):
                             self.pathRobot += a.path
                         except:
                             pass 
-                r.agregarRuta(self.pathRobot)
+                #print self.pathRobot
+                r.agregarRuta(self.pathRobot,pedido)
                 r.state = 'ocupado'
                 return
             else:
@@ -80,14 +83,11 @@ class Control(object):
                 pygame.draw.rect(screen, color, 
                     Rect(nx, ny, NODE_SIZE, NODE_SIZE))
         
-    
-
-    def cambiarEstadoRobot(self,robot):
-        print 'cambiar'
 
     def asignarPedidoRobot(self,nombre):
         if len(self.pedidos)>0:
             for r in self.robots:
+                print r.state
                 if r.nombre == nombre and r.state == 'libre':
                     if r.source[1]<8:
                         self.salida = self.salida_norte+self.salida_noreste
@@ -113,8 +113,7 @@ class Control(object):
                                 self.pathRobot += a.path
                             except:
                                 pass 
-                    r.agregarRuta(self.pathRobot)
-                    print self.pathRobot
+                    r.agregarRuta(self.pathRobot,self.pedidos[0])
                     r.state = 'ocupado'
                     self.pedidos.pop(0)
                     return

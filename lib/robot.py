@@ -22,6 +22,7 @@ class Robot(object):
         self.init = 0
         self.pos = 30
         self.mov_pos =0
+        self.pedido_actual = None
 
 
     def dibujarRobot(self,screen):
@@ -29,14 +30,19 @@ class Robot(object):
         nx, ny = x * NODE_SIZE, y * NODE_SIZE
         pygame.draw.rect(screen, self.color, Rect(nx, ny, NODE_SIZE, NODE_SIZE))
 
-    def agregarRuta(self,ruta):
+    def agregarRuta(self,ruta,pedido):
         self.path = ruta
+        self.pedido_actual = pedido
         
 
     def iniciarRuta(self):
         print 'Iniciar'
 
     def notificacion_libre(self,control):
+        self.path = []
+        self.state = 'libre'
+        self.mov_pos = 0
+        self.pedido_actual = None
         control.asignarPedidoRobot(self.nombre)
 
 
@@ -58,30 +64,13 @@ class Robot(object):
 
     def RobotAnimarCamino(self, screen):
         self.length_path = len(self.path)
-        #punto verde dinamico
-        #if self.init == 0:    #para que el retardo en la animacion se ejecute a  partir del segundo ciclo
-            #time.sleep(0.5)
         if self.mov_pos < self.length_path:
             self.source1 = self.path[self.mov_pos]
             x, y = self.source1
             nx, ny = x*NODE_SIZE, y*NODE_SIZE
             pygame.draw.rect(screen, self.color, Rect(nx, ny, NODE_SIZE, NODE_SIZE))
             self.mov_pos += 1
-        self.init += self.init
-
-
-    def PosicionActualRobot(self):  
-        '''Funcion para saber la posicion actual del robot'''
-        self.source1 = 0
-        self.length_path = len(self.path)
-        #punto verde dinamico
-        #if self.init == 0:    #para que el retardo en la animacion se ejecute a  partir del segundo ciclo
-            #time.sleep(0.5)
-        if self.mov_pos < self.length_path:
-            self.source1 = self.path[self.mov_pos]
-            self.mov_pos += 1
-        self.init += self.init
-        return self.source1
+            return self.source1
 
 
 

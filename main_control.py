@@ -46,31 +46,23 @@ class Client(object):
 
         self.ui = UI(ui_path)
         self.robot = Robot((4, 1),'gina')
-        self.robot_uno = Robot((4, 45),'mile')
-        self.robot_dos = Robot((5, 1),'mauro')
+        #self.robot_uno = Robot((4, 45),'mile')
+        #self.robot_dos = Robot((5, 1),'mauro')
         self.source = self.robot.source
-        self.source_uno = self.robot_uno.source
+        #self.source_uno = self.robot_uno.source
         self.control = Control(self.ui.nodes)
         self.control.agregarRobot(self.robot)
-        self.control.agregarRobot(self.robot_uno)
-        self.control.agregarRobot(self.robot_dos)
-        self.posicionesRobot = []
+        #self.control.agregarRobot(self.robot_uno)
+        #self.control.agregarRobot(self.robot_dos)
 
 
 
 
         self.play_animation = False
-        self.targets_with_source = []
-        self.targets_with_source_uno = []
-        self.path = []
-        self.path_uno = []
                 
 
         # general status
-        self.status = DRAWING
-        self.editable = False
-        self.erasing = False
-        self.drag = None
+        self.status = ''
 
 
     def run(self):
@@ -86,39 +78,33 @@ class Client(object):
                 elif event.type == KEYDOWN:
                     self._handle_keyboard(event)
             
-            #Dibujamos el color de fondo para el mapa
+            # Dibujamos el color de fondo para el mapa
             self.ui._draw_background()
-            #Dibujamos el mapa inicial
+
+            # Dibujamos el mapa inicial
             self.ui._draw_map_init()
-            #Dibujamos las lineas separadoras de cada nodo
+
+            # Dibujamos las lineas separadoras de cada nodo
             #self.ui._draw_grid_lines()
-            self.robot.dibujarRobot(self.ui.screen)
-            self.robot_uno.dibujarRobot(self.ui.screen)
-            self.robot_dos.dibujarRobot(self.ui.screen)
+
+            # Dibujamos todos los pedidos pendientes de entrega
             self.control.dibujarPedidos(self.ui.screen)
-            self.robot.dibujarRuta(self.ui.screen, self.ui.nodes)
-            self.robot_uno.dibujarRuta(self.ui.screen, self.ui.nodes)
-            self.robot_dos.dibujarRuta(self.ui.screen, self.ui.nodes)
-            self.posicionesRobot.append(self.robot.PosicionActualRobot())
+            
+            #self.robot_uno.dibujarRuta(self.ui.screen, self.ui.nodes)
+            #self.robot_dos.dibujarRuta(self.ui.screen, self.ui.nodes)
 
-            '''if self.robot.PosicionActualRobot() == (self.robot.source[0]+ 1,self.robot.source[1]):
-                print 'funciono - ' + str(self.robot.PosicionActualRobot())
-                self.robot.state = 'libre'
-                self.robot.path = []
-                self.robot.notificacion_libre(self.control)
-                self.p1 = self.control.pedidosDibujar[0]
-                self.control.quitarPedidoConcluido(self.p1)'''
-
-            if self.robot.state == 'libre':
-                self.robot.BorrarRuta(self.ui.screen, self.ui.nodes)
-            if self.robot_uno.state == 'libre':
-                self.robot_uno.BorrarRuta(self.ui.screen, self.ui.nodes)
-            if self.robot_dos.state == 'libre':
-                self.robot_dos.BorrarRuta(self.ui.screen, self.ui.nodes)
+            
             if self.play_animation:
-                self.robot.RobotAnimarCamino(self.ui.screen)
-                self.robot_uno.RobotAnimarCamino(self.ui.screen)
-                self.robot_dos.RobotAnimarCamino(self.ui.screen)
+                self.robot.dibujarRuta(self.ui.screen, self.ui.nodes)
+                if  self.robot.RobotAnimarCamino(self.ui.screen) == (self.robot.source[0]+1,self.robot.source[1]):
+                    self.control.quitarPedidoConcluido(self.robot.pedido_actual)
+                    self.robot.notificacion_libre(self.control)
+
+
+            # Dibujamos a los robots en pantalla
+            self.robot.dibujarRobot(self.ui.screen)
+            #self.robot_uno.dibujarRobot(self.ui.screen)
+            #self.robot_dos.dibujarRobot(self.ui.screen)
 
 
                                   
@@ -151,38 +137,21 @@ class Client(object):
             
         elif event.key == K_r: 
             print self.robot.state
-            print self.robot_uno.state
-            print self.robot_dos.state
+            #print self.robot_uno.state
+            #print self.robot_dos.state
             print self.control.pedidos
+            print self.control.pedidosDibujar
 
         elif event.key == K_s: 
-            
-
-            self.robot_uno.state = 'libre'
-            self.robot_uno.path = []
-            self.robot_uno.notificacion_libre(self.control)
-            self.p2 = self.control.pedidosDibujar[0]
-            self.control.quitarPedidoConcluido(self.p2)
-
-            self.robot_dos.state = 'libre'
-            self.robot_dos.path = []
-            self.robot_dos.notificacion_libre(self.control)
-            self.p3 = self.control.pedidosDibujar[0]
-            self.control.quitarPedidoConcluido(self.p3)
-
-
-
-
-            
+            print self.robot.path
 
         elif event.key == K_t:
-                  
-            self.p1 = self.control.pedidosDibujar[0]
-            self.control.quitarPedidoConcluido(self.p1)
+            pass      
+            
 
         elif event.key == K_y:
             #print self.robot.path
-            print self.posicionesRobot
+            pass
 
 
 
