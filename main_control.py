@@ -40,23 +40,43 @@ from lib.pedido import *
 from lib.control import *
 
 
+posicionRobot = [(4, 1), (6, 1), (8, 1), (4, 45), (6, 45), (8, 45)]
+
+
+def CrearRobots(robots):
+    listaRobots = [] 
+    for n in range(robots):
+        posicionRobotRandom = random.choice(posicionRobot)
+        index_posicionRobotRandom = posicionRobot.index(posicionRobotRandom)
+        posicionRobot.pop(index_posicionRobotRandom)
+        robot = Robot(posicionRobotRandom, uuid.uuid4())
+        listaRobots.append(robot)
+    return listaRobots
+
+
 class Client(object):
     
     def __init__(self, ui_path):
 
         self.ui = UI(ui_path)
-        self.robot = Robot((4, 1),'gina')
-        #self.robot_uno = Robot((4, 45),'mile')
-        #self.robot_dos = Robot((5, 1),'mauro')
-        self.source = self.robot.source
-        #self.source_uno = self.robot_uno.source
+
+        # Creamos robots
+        self.robots = CrearRobots(6)
+        '''self.robot = Robot((4, 1),'gina')
+        self.robot_uno = Robot((4, 45),'mile')
+        self.robot_dos = Robot((5, 1),'mauro')
+        self.robot_3 = Robot((6, 45),'carlos')'''
+         
+        # Creacion del control del sistema
         self.control = Control(self.ui.nodes)
-        self.control.agregarRobot(self.robot)
-        #self.control.agregarRobot(self.robot_uno)
-        #self.control.agregarRobot(self.robot_dos)
-
-
-
+        
+        # Agragamos robots al control
+        for robot in self.robots:
+            self.control.agregarRobot(robot)
+        '''self.control.agregarRobot(self.robot)
+        self.control.agregarRobot(self.robot_uno)
+        self.control.agregarRobot(self.robot_dos)
+        self.control.agregarRobot(self.robot_3)'''
 
         self.play_animation = False
                 
@@ -89,22 +109,46 @@ class Client(object):
 
             # Dibujamos todos los pedidos pendientes de entrega
             self.control.dibujarPedidos(self.ui.screen)
-            
-            #self.robot_uno.dibujarRuta(self.ui.screen, self.ui.nodes)
-            #self.robot_dos.dibujarRuta(self.ui.screen, self.ui.nodes)
 
-            
+            # Dibuajamos la animacion del robot y notificamos al control cuando el robot finalizo su trabajo
             if self.play_animation:
-                self.robot.dibujarRuta(self.ui.screen, self.ui.nodes)
-                if  self.robot.RobotAnimarCamino(self.ui.screen) == (self.robot.source[0]+1,self.robot.source[1]):
-                    self.control.quitarPedidoConcluido(self.robot.pedido_actual)
-                    self.robot.notificacion_libre(self.control)
+                for robot in self.robots:
+                    robot.dibujarRuta(self.ui.screen, self.ui.nodes)
+                    # Dibuajamos al robot en una posicion y la comparamos con la posicion final del robot.
+                    if  robot.RobotAnimarCamino(self.ui.screen) == (robot.source[0]+1,robot.source[1]):
+                        self.control.quitarPedidoConcluido(robot.pedido_actual)
+                        robot.notificacion_libre(self.control)
+
+
+            '''if self.play_animation:
+                self.robot_uno.dibujarRuta(self.ui.screen, self.ui.nodes)
+                if  self.robot_uno.RobotAnimarCamino(self.ui.screen) == (self.robot_uno.source[0]+1,self.robot_uno.source[1]):
+                    self.control.quitarPedidoConcluido(self.robot_uno.pedido_actual)
+                    self.robot_uno.notificacion_libre(self.control)
+
+
+            if self.play_animation:
+                self.robot_dos.dibujarRuta(self.ui.screen, self.ui.nodes)
+                if  self.robot_dos.RobotAnimarCamino(self.ui.screen) == (self.robot_dos.source[0]+1,self.robot_dos.source[1]):
+                    self.control.quitarPedidoConcluido(self.robot_dos.pedido_actual)
+                    self.robot_dos.notificacion_libre(self.control)
+
+
+            if self.play_animation:
+                self.robot_3.dibujarRuta(self.ui.screen, self.ui.nodes)
+                if  self.robot_3.RobotAnimarCamino(self.ui.screen) == (self.robot_3.source[0]+1,self.robot_3.source[1]):
+                    self.control.quitarPedidoConcluido(self.robot_3.pedido_actual)
+                    self.robot_3.notificacion_libre(self.control)'''
 
 
             # Dibujamos a los robots en pantalla
-            self.robot.dibujarRobot(self.ui.screen)
-            #self.robot_uno.dibujarRobot(self.ui.screen)
-            #self.robot_dos.dibujarRobot(self.ui.screen)
+            for robot in self.robots:
+                robot.dibujarRobot(self.ui.screen)
+            '''self.robot.dibujarRobot(self.ui.screen)
+            self.robot_uno.dibujarRobot(self.ui.screen)
+            self.robot_dos.dibujarRobot(self.ui.screen)
+            self.robot_3.dibujarRobot(self.ui.screen)'''
+
 
 
                                   
@@ -133,57 +177,10 @@ class Client(object):
             self.control.agregarPedido(self.pedido)
             self.play_animation = True 
             print self.pedido.nombre
-
-            
-        elif event.key == K_r: 
-            print self.robot.state
-            #print self.robot_uno.state
-            #print self.robot_dos.state
-            print self.control.pedidos
-            print self.control.pedidosDibujar
-
-        elif event.key == K_s: 
-            print self.robot.path
-
-        elif event.key == K_t:
-            pass      
-            
-
-        elif event.key == K_y:
-            #print self.robot.path
-            pass
-
-
+        
 
         elif event.key == K_ESCAPE:
             self._quit()
-
-    
-
-    def _reset(self):
-        """Reset all nodes to be NORMAL and clear the node infos
-        """
-        self.path = []
-        for row in self.nodes:
-            for node in row:
-                node.status = NORMAL
-                node.f = None
-                node.g = None
-                node.h = None
-                node.parent = None
-
-    def _reset_except_block(self):
-        """Same as _reset, but does not clear the blocked nodes
-        """
-        self.path = []
-        for row in self.ui.nodes:
-            for node in row:
-                if node.status != BLOCKED:
-                    node.status = NORMAL
-                node.f = None
-                node.g = None
-                node.h = None
-                node.parent = None
 
        
 if __name__ == '__main__':

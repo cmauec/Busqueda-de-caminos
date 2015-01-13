@@ -77,6 +77,7 @@ class Control(object):
     def dibujarPedidos(self, screen):
         for p in self.pedidosDibujar:
             color = p.color
+            p.productos.append(self.salida)
             for producto in p.productos:
                 x, y = producto
                 nx, ny = x * NODE_SIZE, y * NODE_SIZE

@@ -23,6 +23,7 @@ class Robot(object):
         self.pos = 30
         self.mov_pos =0
         self.pedido_actual = None
+        #self.salida = None
 
 
     def dibujarRobot(self,screen):
@@ -33,6 +34,9 @@ class Robot(object):
     def agregarRuta(self,ruta,pedido):
         self.path = ruta
         self.pedido_actual = pedido
+
+
+
         
 
     def iniciarRuta(self):
