@@ -53,6 +53,18 @@ def CrearRobots(robots):
         listaRobots.append(robot)
     return listaRobots
 
+def CrearRobot():
+    try: 
+        posicionRobotRandom = random.choice(posicionRobot)
+        index_posicionRobotRandom = posicionRobot.index(posicionRobotRandom)
+        posicionRobot.pop(index_posicionRobotRandom)
+        robot = Robot(posicionRobotRandom, uuid.uuid4())
+        return robot 
+    except:
+        return False
+
+
+
 
 class Client(object):
     
@@ -61,22 +73,15 @@ class Client(object):
         self.ui = UI(ui_path)
 
         # Creamos robots
-        self.robots = CrearRobots(6)
-        '''self.robot = Robot((4, 1),'gina')
-        self.robot_uno = Robot((4, 45),'mile')
-        self.robot_dos = Robot((5, 1),'mauro')
-        self.robot_3 = Robot((6, 45),'carlos')'''
-         
+        self.robots = CrearRobots(2)
+             
         # Creacion del control del sistema
         self.control = Control(self.ui.nodes)
         
         # Agragamos robots al control
         for robot in self.robots:
             self.control.agregarRobot(robot)
-        '''self.control.agregarRobot(self.robot)
-        self.control.agregarRobot(self.robot_uno)
-        self.control.agregarRobot(self.robot_dos)
-        self.control.agregarRobot(self.robot_3)'''
+        
 
         self.play_animation = False
                 
@@ -120,37 +125,11 @@ class Client(object):
                         robot.notificacion_libre(self.control)
 
 
-            '''if self.play_animation:
-                self.robot_uno.dibujarRuta(self.ui.screen, self.ui.nodes)
-                if  self.robot_uno.RobotAnimarCamino(self.ui.screen) == (self.robot_uno.source[0]+1,self.robot_uno.source[1]):
-                    self.control.quitarPedidoConcluido(self.robot_uno.pedido_actual)
-                    self.robot_uno.notificacion_libre(self.control)
-
-
-            if self.play_animation:
-                self.robot_dos.dibujarRuta(self.ui.screen, self.ui.nodes)
-                if  self.robot_dos.RobotAnimarCamino(self.ui.screen) == (self.robot_dos.source[0]+1,self.robot_dos.source[1]):
-                    self.control.quitarPedidoConcluido(self.robot_dos.pedido_actual)
-                    self.robot_dos.notificacion_libre(self.control)
-
-
-            if self.play_animation:
-                self.robot_3.dibujarRuta(self.ui.screen, self.ui.nodes)
-                if  self.robot_3.RobotAnimarCamino(self.ui.screen) == (self.robot_3.source[0]+1,self.robot_3.source[1]):
-                    self.control.quitarPedidoConcluido(self.robot_3.pedido_actual)
-                    self.robot_3.notificacion_libre(self.control)'''
-
-
+            
             # Dibujamos a los robots en pantalla
             for robot in self.robots:
                 robot.dibujarRobot(self.ui.screen)
-            '''self.robot.dibujarRobot(self.ui.screen)
-            self.robot_uno.dibujarRobot(self.ui.screen)
-            self.robot_dos.dibujarRobot(self.ui.screen)
-            self.robot_3.dibujarRobot(self.ui.screen)'''
-
-
-
+            
                                   
             # update screen
             pygame.display.update()
@@ -177,10 +156,39 @@ class Client(object):
             self.control.agregarPedido(self.pedido)
             self.play_animation = True 
             print self.pedido.nombre
+
+
+        elif event.key == K_s:
+            self.robotNuevo = CrearRobot()
+            if self.robotNuevo:
+                self.robots.append(self.robotNuevo)
+                self.control.agregarRobot(self.robotNuevo)
+
+
+        elif event.key == K_a:
+            for robot in self.robots:
+                if robot.state == 'libre':
+                    indexRobot = self.robots.index(robot)
+                    self.robots.pop(indexRobot)
+                    posicionRobot.append(robot.source)
+                    self.control.quitarRobot(robot)
+                    colorRobot.append(robot.color)
+                    return
+
+
+        elif event.key == K_e:
+            print colorRobot
+             
+
+            
+
+
         
 
         elif event.key == K_ESCAPE:
             self._quit()
+
+
 
        
 if __name__ == '__main__':

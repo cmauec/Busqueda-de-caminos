@@ -127,6 +127,11 @@ class Control(object):
         self.pedidosDibujar.pop(indexPedido)
 
 
+    def quitarRobot(self, robot):
+        indexRobot = self.robots.index(robot)
+        self.robots.pop(indexRobot)
+
+
 
     def gen_path(self, targets):
         #generamos la trayectoria pasando por la sombra de los targets
