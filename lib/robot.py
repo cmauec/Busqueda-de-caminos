@@ -21,22 +21,38 @@ class Robot(object):
         self.color = self.colorRandom 
         self.init = 0
         self.pos = 30
-        self.mov_pos =0
+        self.mov_pos = 0
         self.pedido_actual = None
+        self.play_animation = False
+        self.play_animation_ruta = False
+        # esta variable puede tener el valor movimiento, representa el estado dinamico del robot
+        self.estado_dinamico = 'estatico'
         #self.salida = None
 
 
     def dibujarRobot(self,screen):
-        x, y = self.source
-        nx, ny = x * NODE_SIZE, y * NODE_SIZE
-        pygame.draw.rect(screen, self.color, Rect(nx, ny, NODE_SIZE, NODE_SIZE))
+        if self.estado_dinamico == 'estatico':
+            self.source1 = self.source
+            x, y = self.source1
+            nx, ny = x * NODE_SIZE, y * NODE_SIZE
+            pygame.draw.rect(screen, self.color, Rect(nx, ny, NODE_SIZE, NODE_SIZE))
+            return self.source1
+        elif self.play_animation:
+            self.length_path = len(self.path)
+            if self.mov_pos < self.length_path:
+                self.source1 = self.path[self.mov_pos]
+                x, y = self.source1
+                nx, ny = x * NODE_SIZE, y * NODE_SIZE
+                pygame.draw.rect(screen, self.color, Rect(nx, ny, NODE_SIZE, NODE_SIZE))
+                self.mov_pos += 1
+                self.path.pop(0)
+                return self.source1
+
+
 
     def agregarRuta(self,ruta,pedido):
         self.path = ruta
         self.pedido_actual = pedido
-
-
-
         
 
     def iniciarRuta(self):
@@ -47,15 +63,19 @@ class Robot(object):
         self.state = 'libre'
         self.mov_pos = 0
         self.pedido_actual = None
+        self.play_animation = False
+        self.play_animation_ruta = False
+        self.estado_dinamico = 'estatico'
         control.asignarPedidoRobot(self.nombre)
 
 
     def dibujarRuta(self, screen, nodes):
-        if self.path:
-            seg = [nodes[y][x].rect.center 
-                    for (x, y) in self.path]
-            pygame.draw.lines(screen, self.color, False,
-                    seg, PATH_WIDTH)
+        if self.play_animation_ruta:
+            if self.path:
+                seg = [nodes[y][x].rect.center 
+                        for (x, y) in self.path]
+                pygame.draw.lines(screen, self.color, False,
+                        seg, PATH_WIDTH)
 
 
     def BorrarRuta(self, screen, nodes):
@@ -67,14 +87,15 @@ class Robot(object):
 
 
     def RobotAnimarCamino(self, screen):
-        self.length_path = len(self.path)
-        if self.mov_pos < self.length_path:
-            self.source1 = self.path[self.mov_pos]
-            x, y = self.source1
-            nx, ny = x*NODE_SIZE, y*NODE_SIZE
-            pygame.draw.rect(screen, self.color, Rect(nx, ny, NODE_SIZE, NODE_SIZE))
-            self.mov_pos += 1
-            return self.source1
+        if self.play_animation:
+            self.length_path = len(self.path)
+            if self.mov_pos < self.length_path:
+                self.source1 = self.path[self.mov_pos]
+                x, y = self.source1
+                nx, ny = x*NODE_SIZE, y*NODE_SIZE
+                pygame.draw.rect(screen, self.color, Rect(nx, ny, NODE_SIZE, NODE_SIZE))
+                self.mov_pos += 1
+                return self.source1
 
 
 

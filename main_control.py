@@ -116,19 +116,22 @@ class Client(object):
             self.control.dibujarPedidos(self.ui.screen)
 
             # Dibuajamos la animacion del robot y notificamos al control cuando el robot finalizo su trabajo
-            if self.play_animation:
-                for robot in self.robots:
-                    robot.dibujarRuta(self.ui.screen, self.ui.nodes)
-                    # Dibuajamos al robot en una posicion y la comparamos con la posicion final del robot.
-                    if  robot.RobotAnimarCamino(self.ui.screen) == (robot.source[0]+1,robot.source[1]):
-                        self.control.quitarPedidoConcluido(robot.pedido_actual)
-                        robot.notificacion_libre(self.control)
+            for robot in self.robots:
+                robot.dibujarRuta(self.ui.screen, self.ui.nodes)
+                # Dibuajamos al robot en una posicion y la comparamos con la posicion final del robot.
+                if robot.estado_dinamico == 'estatico':
+                    robot.dibujarRobot(self.ui.screen)
+                elif  robot.dibujarRobot(self.ui.screen) == (robot.source[0]+1,robot.source[1]):
+                    # al finalizar el recorrido imprime los puntos de la trayectoria
+                    #print robot.path
+                    self.control.quitarPedidoConcluido(robot.pedido_actual)
+                    robot.notificacion_libre(self.control)
 
 
             
             # Dibujamos a los robots en pantalla
-            for robot in self.robots:
-                robot.dibujarRobot(self.ui.screen)
+            '''for robot in self.robots:
+                robot.dibujarRobot(self.ui.screen)'''
             
                                   
             # update screen
@@ -154,7 +157,7 @@ class Client(object):
             nombre = uuid.uuid4()
             self.pedido = Pedido(nombre)
             self.control.agregarPedido(self.pedido)
-            self.play_animation = True 
+            self.play_animation = True
             print self.pedido.nombre
 
 
@@ -177,11 +180,11 @@ class Client(object):
 
 
         elif event.key == K_e:
-            print colorRobot
+            for robot in self.robots:
+                if robot.play_animation:
+                    robot.estado_dinamico = 'estatico'
+                    robot.play_animation = False
              
-
-            
-
 
         
 

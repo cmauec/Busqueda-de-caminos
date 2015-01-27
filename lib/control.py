@@ -62,6 +62,9 @@ class Control(object):
                 #print self.pathRobot
                 r.agregarRuta(self.pathRobot,pedido)
                 r.state = 'ocupado'
+                r.play_animation = True
+                r.play_animation_ruta = True
+                r.estado_dinamico = 'movimiento'
                 return
             else:
                 self.totalrobotlibres = self.totalrobotlibres - 1
@@ -116,6 +119,9 @@ class Control(object):
                                 pass 
                     r.agregarRuta(self.pathRobot,self.pedidos[0])
                     r.state = 'ocupado'
+                    r.play_animation = True
+                    r.play_animation_ruta = True
+                    r.estado_dinamico = 'movimiento'
                     self.pedidos.pop(0)
                     return
         else:
