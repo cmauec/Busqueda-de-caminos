@@ -114,14 +114,14 @@ class Client(object):
 
             # Dibujamos todos los pedidos pendientes de entrega
             self.control.dibujarPedidos(self.ui.screen)
+            if self.robots[0].rec_colision.colliderect(self.robots[1].rec_colision):
+               print 'los robots se chocaron'
 
             # Dibuajamos la animacion del robot y notificamos al control cuando el robot finalizo su trabajo
             for robot in self.robots:
                 robot.dibujarRuta(self.ui.screen, self.ui.nodes)
-                # Dibuajamos al robot en una posicion y la comparamos con la posicion final del robot.
-                if robot.estado_dinamico == 'estatico':
-                    robot.dibujarRobot(self.ui.screen)
-                elif  robot.dibujarRobot(self.ui.screen) == (robot.source[0]+1,robot.source[1]):
+                robot.dibujarRobot(self.ui.screen)              
+                if robot.PosicionActual(self.ui.screen) == (robot.source[0]+1,robot.source[1]):
                     # al finalizar el recorrido imprime los puntos de la trayectoria
                     #print robot.path
                     self.control.quitarPedidoConcluido(robot.pedido_actual)
@@ -181,9 +181,17 @@ class Client(object):
 
         elif event.key == K_e:
             for robot in self.robots:
-                if robot.play_animation:
-                    robot.estado_dinamico = 'estatico'
-                    robot.play_animation = False
+                robot.play_animation = False
+
+        elif event.key == K_r:
+            for robot in self.robots:
+                robot.play_animation = True
+
+
+        elif event.key == K_t:
+            for robot in self.robots:
+                print robot.rec_colision
+                
              
 
         

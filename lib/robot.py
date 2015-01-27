@@ -25,29 +25,22 @@ class Robot(object):
         self.pedido_actual = None
         self.play_animation = False
         self.play_animation_ruta = False
+        self.posicion_actual = source
+        x, y = self.source
+        nx, ny = x * NODE_SIZE, y * NODE_SIZE
+        self.rec_colision = pygame.Rect(nx, ny, NODE_SIZE, NODE_SIZE)
         # esta variable puede tener el valor movimiento, representa el estado dinamico del robot
         self.estado_dinamico = 'estatico'
         #self.salida = None
 
 
     def dibujarRobot(self,screen):
-        if self.estado_dinamico == 'estatico':
-            self.source1 = self.source
-            x, y = self.source1
-            nx, ny = x * NODE_SIZE, y * NODE_SIZE
-            pygame.draw.rect(screen, self.color, Rect(nx, ny, NODE_SIZE, NODE_SIZE))
-            return self.source1
-        elif self.play_animation:
-            self.length_path = len(self.path)
-            if self.mov_pos < self.length_path:
-                self.source1 = self.path[self.mov_pos]
-                x, y = self.source1
-                nx, ny = x * NODE_SIZE, y * NODE_SIZE
-                pygame.draw.rect(screen, self.color, Rect(nx, ny, NODE_SIZE, NODE_SIZE))
-                self.mov_pos += 1
-                self.path.pop(0)
-                return self.source1
-
+        self.source1 = self.posicion_actual
+        x, y = self.source1
+        nx, ny = x * NODE_SIZE, y * NODE_SIZE
+        pygame.draw.rect(screen, self.color, Rect(nx, ny, NODE_SIZE, NODE_SIZE))
+        return self.source1
+       
 
 
     def agregarRuta(self,ruta,pedido):
@@ -61,6 +54,7 @@ class Robot(object):
     def notificacion_libre(self,control):
         self.path = []
         self.state = 'libre'
+        self.posicion_actual = self.source
         self.mov_pos = 0
         self.pedido_actual = None
         self.play_animation = False
@@ -86,15 +80,16 @@ class Robot(object):
                     seg, PATH_WIDTH)
 
 
-    def RobotAnimarCamino(self, screen):
+    def PosicionActual(self, screen):
         if self.play_animation:
             self.length_path = len(self.path)
             if self.mov_pos < self.length_path:
                 self.source1 = self.path[self.mov_pos]
-                x, y = self.source1
-                nx, ny = x*NODE_SIZE, y*NODE_SIZE
-                pygame.draw.rect(screen, self.color, Rect(nx, ny, NODE_SIZE, NODE_SIZE))
                 self.mov_pos += 1
+                self.posicion_actual = self.source1
+                x, y = self.source1
+                nx, ny = x * NODE_SIZE, y * NODE_SIZE
+                self.rec_colision = pygame.Rect(nx, ny, NODE_SIZE, NODE_SIZE)
                 return self.source1
 
 
