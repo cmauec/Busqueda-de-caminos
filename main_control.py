@@ -110,12 +110,32 @@ class Client(object):
             self.ui._draw_map_init()
 
             # Dibujamos las lineas separadoras de cada nodo
-            #self.ui._draw_grid_lines()
+            self.ui._draw_grid_lines()
 
             # Dibujamos todos los pedidos pendientes de entrega
             self.control.dibujarPedidos(self.ui.screen)
             if self.robots[0].rec_colision.colliderect(self.robots[1].rec_colision):
-               print 'los robots se chocaron'
+                print 'los robots se chocaron'                   
+                self.robots[0].play_animation = False
+                self.robots[1].play_animation = False
+                if self.robots[0].posicion_actual[0] in robot_move_right_wall:
+                    self.robots[0].posicion_actual = (self.robots[0].posicion_actual[0]+1, self.robots[0].posicion_actual[1] )
+
+                elif self.robots[0].posicion_actual[0] in robot_move_left_wall:
+                    self.robots[0].posicion_actual = (self.robots[0].posicion_actual[0]-1, self.robots[0].posicion_actual[1] )
+
+                elif self.robots[0].posicion_actual[1] in robot_move_down_wall:
+                    self.robots[0].posicion_actual = (self.robots[0].posicion_actual[0], self.robots[0].posicion_actual[1] +1)
+
+                elif self.robots[0].posicion_actual[1] in robot_move_up_wall:
+                    self.robots[0].posicion_actual = (self.robots[0].posicion_actual[0], self.robots[0].posicion_actual[1] -1)
+
+                x, y = self.robots[0].posicion_actual
+                nx, ny = x * NODE_SIZE, y * NODE_SIZE
+                self.robots[0].rec_colision = pygame.Rect(nx, ny, NODE_SIZE, NODE_SIZE)
+                
+
+
 
             # Dibuajamos la animacion del robot y notificamos al control cuando el robot finalizo su trabajo
             for robot in self.robots:
@@ -128,12 +148,7 @@ class Client(object):
                     robot.notificacion_libre(self.control)
 
 
-            
-            # Dibujamos a los robots en pantalla
-            '''for robot in self.robots:
-                robot.dibujarRobot(self.ui.screen)'''
-            
-                                  
+                                              
             # update screen
             pygame.display.update()
 

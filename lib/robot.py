@@ -5,6 +5,10 @@ import random
 
 colorRobot = [(235,56,211),(255,109,5),(59,57,55),(36,90,240),(0,255,4),(49,18,204),(119,5,176)]
 colorRobotTemp = []
+robot_move_right_wall = (2,10,16,22,28,34,40,46,52,58,64,70,76,82) 
+robot_move_left_wall = (6,12,18,24,30,36,42,48,54,60,66,74,78) 
+robot_move_down_wall = 5 
+robot_move_up_wall = 40
 
 
 class Robot(object):
@@ -32,7 +36,7 @@ class Robot(object):
         # esta variable puede tener el valor movimiento, representa el estado dinamico del robot
         self.estado_dinamico = 'estatico'
         #self.salida = None
-
+        
 
     def dibujarRobot(self,screen):
         self.source1 = self.posicion_actual
