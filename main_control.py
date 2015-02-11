@@ -114,9 +114,9 @@ class Client(object):
 
             # Dibujamos todos los pedidos pendientes de entrega
             self.control.dibujarPedidos(self.ui.screen)
-            if self.robots[0].rec_colision.colliderect(self.robots[1].rec_colision):
+            if self.robots[0].posicion_actual == self.robots[1].posicion_actual:
                 print 'los robots se chocaron'  
-                print self.robots[0].posicion_actual
+                '''print self.robots[0].posicion_actual
                 print self.robots[1].posicion_actual                  
                 self.robots[0].play_animation = False                
                 index_posicion_actual = self.robots[0].path.index(self.robots[0].posicion_actual)
@@ -143,10 +143,10 @@ class Client(object):
 
                 x, y = self.robots[0].posicion_actual
                 nx, ny = x * NODE_SIZE, y * NODE_SIZE
-                self.robots[0].rec_colision = pygame.Rect(nx, ny, NODE_SIZE, NODE_SIZE)
+                self.robots[0].rec_colision = pygame.Rect(nx, ny, NODE_SIZE, NODE_SIZE)'''
 
 
-            if self.robots[1].rec_colision.colliderect(self.robots[0].rec_colision):
+            '''if self.robots[1].rec_colision.colliderect(self.robots[0].rec_colision):
                 print 'los robots se chocaron'  
                 print self.robots[0].posicion_actual
                 print self.robots[1].posicion_actual                  
@@ -175,7 +175,7 @@ class Client(object):
 
                 x, y = self.robots[1].posicion_actual
                 nx, ny = x * NODE_SIZE, y * NODE_SIZE
-                self.robots[1].rec_colision = pygame.Rect(nx, ny, NODE_SIZE, NODE_SIZE)
+                self.robots[1].rec_colision = pygame.Rect(nx, ny, NODE_SIZE, NODE_SIZE)'''
                 
 
 
@@ -184,7 +184,7 @@ class Client(object):
             for robot in self.robots:
                 robot.dibujarRuta(self.ui.screen, self.ui.nodes)
                 robot.dibujarRobot(self.ui.screen)              
-                if robot.PosicionActual(self.ui.screen) == (robot.source[0]+1,robot.source[1]):
+                if robot.PosicionActual() == (robot.source[0]+1,robot.source[1]):
                     # al finalizar el recorrido imprime los puntos de la trayectoria
                     #print robot.path
                     self.control.quitarPedidoConcluido(robot.pedido_actual)
@@ -247,8 +247,7 @@ class Client(object):
 
 
         elif event.key == K_t:
-            for robot in self.robots:
-                print robot.rec_colision
+            print self.robots[0].direccionRobot('posterior')
                 
              
 

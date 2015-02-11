@@ -84,7 +84,7 @@ class Robot(object):
                     seg, PATH_WIDTH)
 
 
-    def PosicionActual(self, screen):
+    def PosicionActual(self):
         if self.play_animation:
             self.length_path = len(self.path)
             if self.mov_pos < self.length_path:
@@ -95,6 +95,38 @@ class Robot(object):
                 nx, ny = x * NODE_SIZE, y * NODE_SIZE
                 self.rec_colision = pygame.Rect(nx, ny, NODE_SIZE, NODE_SIZE)
                 return self.source1
+
+
+    def direccionRobot(self, sentido):
+        index = self.path.index(self.posicion_actual)
+        if sentido == 'posterior':
+            direccion = self.path[index + 1]
+            if direccion[1] < self.posicion_actual[1] and direccion[0] == self.posicion_actual[0]:
+                dic_robot = 'arriba'
+            elif direccion[1] < self.posicion_actual[1] and direccion[0] > self.posicion_actual[0]:
+                dic_robot = 'arriba_diagonal_der'
+            elif direccion[1] == self.posicion_actual[1] and direccion[0] > self.posicion_actual[0]:
+                dic_robot = 'derecha'
+            elif direccion[1] > self.posicion_actual[1] and direccion[0] > self.posicion_actual[0]:
+                dic_robot = 'abajo_diagonal_der'
+            elif direccion[1] > self.posicion_actual[1] and direccion[0] == self.posicion_actual[0]:
+                dic_robot = 'abajo'
+            elif direccion[1] > self.posicion_actual[1] and direccion[0] < self.posicion_actual[0]:
+                dic_robot = 'abajo_diagonal_izq'
+            elif direccion[1] == self.posicion_actual[1] and direccion[0] < self.posicion_actual[0]:
+                dic_robot = 'izquierda'
+            elif direccion[1] < self.posicion_actual[1] and direccion[0] < self.posicion_actual[0]:
+                dic_robot = 'arriba_diagonal_izq'                
+            else:
+                dic_robot = 'bloque 3'
+            return dic_robot
+
+
+        #elif sentido == 'anterior':
+            #direccion = self.posicion_actual(index - 1)
+
+
+
 
 
 
