@@ -180,7 +180,7 @@ class Client(object):
 
 
 
-            # Dibuajamos la animacion del robot y notificamos al control cuando el robot finalizo su trabajo
+            # Dibuajamos la animacion del robot 
             for robot in self.robots:
                 robot.dibujarRuta(self.ui.screen, self.ui.nodes)
                 robot.dibujarRobot(self.ui.screen)              
@@ -189,6 +189,8 @@ class Client(object):
                     #print robot.path
                     self.control.quitarPedidoConcluido(robot.pedido_actual)
                     robot.notificacion_libre(self.control)
+                
+
 
 
                                               

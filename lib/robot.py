@@ -22,6 +22,7 @@ class Robot(object):
         self.state = 'libre'
         self.nombre = nombre
         self.path = []
+        self.path_restante = []
         self.color = self.colorRandom 
         self.init = 0
         self.pos = 30
@@ -49,6 +50,8 @@ class Robot(object):
 
     def agregarRuta(self,ruta,pedido):
         self.path = ruta
+        for n in self.path:
+            self.path_restante.append(n)
         self.pedido_actual = pedido
         
 
@@ -94,13 +97,13 @@ class Robot(object):
                 x, y = self.source1
                 nx, ny = x * NODE_SIZE, y * NODE_SIZE
                 self.rec_colision = pygame.Rect(nx, ny, NODE_SIZE, NODE_SIZE)
+                self.path_restante.pop(0)
                 return self.source1
 
 
     def direccionRobot(self, sentido):
-        index = self.path.index(self.posicion_actual)
         if sentido == 'posterior':
-            direccion = self.path[index + 1]
+            direccion = self.path_restante[0]
             if direccion[1] < self.posicion_actual[1] and direccion[0] == self.posicion_actual[0]:
                 dic_robot = 'arriba'
             elif direccion[1] < self.posicion_actual[1] and direccion[0] > self.posicion_actual[0]:
