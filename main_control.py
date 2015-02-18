@@ -180,15 +180,25 @@ class Client(object):
 
 
 
-            # Dibuajamos la animacion del robot 
+            '''if self.robots[0].play_animation == True:
+                try: 
+                    direccion_robot = self.robots[0].direccionRobot('posterior')
+                    if not direccion_robot in ['arriba', 'derecha', 'abajo','izquierda']:
+                        print 'diagonal'
+                except:
+                    pass'''
+            # Dibuajamos la animacion del robot
+            if self.robots[0].PosicionActual() != None:
+                print self.robots[0].posicion_actual
             for robot in self.robots:
                 robot.dibujarRuta(self.ui.screen, self.ui.nodes)
-                robot.dibujarRobot(self.ui.screen)              
-                if robot.PosicionActual() == (robot.source[0]+1,robot.source[1]):
+                robot.dibujarRobot(self.ui.screen)
+                             
+                '''if robot.PosicionActual() == (robot.source[0]+1,robot.source[1]):
                     # al finalizar el recorrido imprime los puntos de la trayectoria
                     #print robot.path
                     self.control.quitarPedidoConcluido(robot.pedido_actual)
-                    robot.notificacion_libre(self.control)
+                    robot.notificacion_libre(self.control)'''
                 
 
 
@@ -250,6 +260,7 @@ class Client(object):
 
         elif event.key == K_t:
             print self.robots[0].direccionRobot('posterior')
+            print self.robots[0].posicion_actual
                 
              
 
