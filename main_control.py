@@ -81,14 +81,12 @@ class Client(object):
         # Agragamos robots al control
         for robot in self.robots:
             self.control.agregarRobot(robot)
-        
-
-        self.play_animation = False
                 
 
         # general status
         self.status = ''
 
+        
 
     def run(self):
         """
@@ -96,12 +94,12 @@ class Client(object):
         """
         # handle events
         while self.status != EXIT:
-
             for event in pygame.event.get():
                 if event.type == QUIT:
                     self._quit()
                 elif event.type == KEYDOWN:
                     self._handle_keyboard(event)
+            
             
             # Dibujamos el color de fondo para el mapa
             self.ui._draw_background()
@@ -180,30 +178,27 @@ class Client(object):
 
 
 
-            '''if self.robots[0].play_animation == True:
+            if self.robots[0].play_animation == True:
                 try: 
                     direccion_robot = self.robots[0].direccionRobot('posterior')
-                    if not direccion_robot in ['arriba', 'derecha', 'abajo','izquierda']:
+                    if not direccion_robot in ['arriba', 'derecha', 'abajo','izquierda','bloque 3']:
+                        print self.robots[0].posicion_actual
                         print 'diagonal'
                 except:
-                    pass'''
+                    pass
+            # print self.robots[0].posicion_actual
             # Dibuajamos la animacion del robot
-            if self.robots[0].PosicionActual() != None:
-                print self.robots[0].posicion_actual
             for robot in self.robots:
                 robot.dibujarRuta(self.ui.screen, self.ui.nodes)
                 robot.dibujarRobot(self.ui.screen)
-                             
-                '''if robot.PosicionActual() == (robot.source[0]+1,robot.source[1]):
+                if robot.play_animation == True:
+                    robot.Mover()    
+                if robot.posicion_actual == (robot.source[0]+1,robot.source[1]):
                     # al finalizar el recorrido imprime los puntos de la trayectoria
                     #print robot.path
                     self.control.quitarPedidoConcluido(robot.pedido_actual)
-                    robot.notificacion_libre(self.control)'''
-                
-
-
-
-                                              
+                    robot.notificacion_libre(self.control)
+                                                 
             # update screen
             pygame.display.update()
 
@@ -227,7 +222,6 @@ class Client(object):
             nombre = uuid.uuid4()
             self.pedido = Pedido(nombre)
             self.control.agregarPedido(self.pedido)
-            self.play_animation = True
             print self.pedido.nombre
 
 
@@ -251,11 +245,11 @@ class Client(object):
 
         elif event.key == K_e:
             for robot in self.robots:
-                robot.play_animation = False
+                robot.stop()
 
         elif event.key == K_r:
             for robot in self.robots:
-                robot.play_animation = True
+                robot.play()
 
 
         elif event.key == K_t:

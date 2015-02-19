@@ -4,6 +4,7 @@ from pygame.locals import *
 from lib.pedido import *
 import random 
 from algo.astar import *
+import collections
 
 
 
@@ -28,6 +29,7 @@ class Control(object):
         self.nodes = nodes
 
     def agregarPedido(self,pedido):
+        inicio_robot = True
         self.pedidosDibujar.append(pedido)
         self.totalrobotlibres = len(self.robots)
         for r in self.robots:
@@ -49,22 +51,26 @@ class Control(object):
                 self.path.append((r.source))
                 #print self.path
                 self.pathRobot = []
-                for t in range(len(self.path)):
-                    if t+1 < len(self.path):
+                for t in range(len(self.path)-1):
+                    try:
                         nodes_map_raw = self._get_str_map(self.path[t], self.path[t+1])
-                        try:
-                            a = AStar(nodes_map_raw)
-                            for i in a.step():
-                                pass
-                            self.pathRobot += a.path
-                        except:
-                            pass 
+                        a = AStar(nodes_map_raw)
+                        for i in a.step():
+                            pass
+                        # para que el robot se para un momento en cada producto.
+                        # repetimos el punto del producto las veces que necesitemos para que el robot se pare en el producto, mientras mas alto el rango mas tiempo se para
+                        if not inicio_robot:
+                            for a1 in range(1):
+                                a.path.insert(0,a.path[0])
+                        # fin
+                        self.pathRobot += a.path
+                    except:
+                            pass
+                    inicio_robot = False
                 #print self.pathRobot
                 r.agregarRuta(self.pathRobot,pedido)
                 r.state = 'ocupado'
-                r.play_animation = True
-                r.play_animation_ruta = True
-                r.estado_dinamico = 'movimiento'
+                r.play()
                 return
             else:
                 self.totalrobotlibres = self.totalrobotlibres - 1
@@ -119,9 +125,7 @@ class Control(object):
                                 pass 
                     r.agregarRuta(self.pathRobot,self.pedidos[0])
                     r.state = 'ocupado'
-                    r.play_animation = True
-                    r.play_animation_ruta = True
-                    r.estado_dinamico = 'movimiento'
+                    r.play()
                     self.pedidos.pop(0)
                     return
         else:
@@ -140,7 +144,7 @@ class Control(object):
 
 
     def gen_path(self, targets):
-        #generamos la trayectoria pasando por la sombra de los targets
+        # cambiamos la posicion de los puntos de los productos para que esten fuera de la estanteria, para crear el camino del robot, ya que un robotno puede estar sobre la estanteria solo junto   
         path = []
         for t in targets:
             if t[1] in self.wall_is_vertical:
@@ -153,8 +157,8 @@ class Control(object):
                     t = (t[0],t[1]+1)
                 elif t[1] == self.move_up_wall:
                     t = (t[0],t[1]-1)
-             
             path.append(t)
+        path = list(collections.OrderedDict.fromkeys(path))
         return path
 
 
@@ -166,7 +170,6 @@ class Control(object):
             for t in targets:
                 if t[0] in range(s[0], s[1]+1):
                     try:
-                        #path.append(t)
                         path_section.append(t)
                     except:  
                         pass
@@ -174,6 +177,7 @@ class Control(object):
                 path_section.insert(0,path[-1]) #hace que el ultimo punto de la seccion sea el primer punto de la siguiente seccion
             path_section = self.path_order_distance(path_section)
             path = path +path_section
+        path = list(collections.OrderedDict.fromkeys(path))
         return path
 
     def path_order_distance(self, targets):
@@ -210,6 +214,7 @@ class Control(object):
                 element_near = (temp[0][1],temp[0][2])
                 targets_order.append(element_near)
                 targets_temp.remove(element_near)
+        path = list(collections.OrderedDict.fromkeys(targets_order))
         return targets_order
 
     def _get_str_map(self,sourceA,targetA):

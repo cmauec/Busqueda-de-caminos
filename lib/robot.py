@@ -29,34 +29,28 @@ class Robot(object):
         self.mov_pos = 0
         self.pedido_actual = None
         self.play_animation = False
-        self.play_animation_ruta = False
         self.posicion_actual = source
         x, y = self.source
         nx, ny = x * NODE_SIZE, y * NODE_SIZE
         self.rec_colision = pygame.Rect(nx, ny, NODE_SIZE, NODE_SIZE)
-        # esta variable puede tener el valor movimiento, representa el estado dinamico del robot
-        self.estado_dinamico = 'estatico'
         #self.salida = None
         
 
     def dibujarRobot(self,screen):
-        self.source1 = self.posicion_actual
-        x, y = self.source1
+        x, y = self.posicion_actual
         nx, ny = x * NODE_SIZE, y * NODE_SIZE
         pygame.draw.rect(screen, self.color, Rect(nx, ny, NODE_SIZE, NODE_SIZE))
-        return self.source1
        
-
-
     def agregarRuta(self,ruta,pedido):
         self.path = ruta
-        for n in self.path:
-            self.path_restante.append(n)
+        self.path_restante = list(self.path)
         self.pedido_actual = pedido
-        
 
-    def iniciarRuta(self):
-        print 'Iniciar'
+    def play(self):
+        self.play_animation = True
+
+    def stop(self):
+        self.play_animation = False
 
     def notificacion_libre(self,control):
         self.path = []
@@ -64,19 +58,16 @@ class Robot(object):
         self.posicion_actual = self.source
         self.mov_pos = 0
         self.pedido_actual = None
-        self.play_animation = False
-        self.play_animation_ruta = False
-        self.estado_dinamico = 'estatico'
+        self.stop()
         control.asignarPedidoRobot(self.nombre)
 
 
     def dibujarRuta(self, screen, nodes):
-        if self.play_animation_ruta:
-            if self.path:
-                seg = [nodes[y][x].rect.center 
-                        for (x, y) in self.path]
-                pygame.draw.lines(screen, self.color, False,
-                        seg, PATH_WIDTH)
+        if self.path:
+            seg = [nodes[y][x].rect.center 
+                    for (x, y) in self.path]
+            pygame.draw.lines(screen, self.color, False,
+                    seg, PATH_WIDTH)
 
 
     def BorrarRuta(self, screen, nodes):
@@ -87,7 +78,7 @@ class Robot(object):
                     seg, PATH_WIDTH)
 
 
-    def PosicionActual(self):
+    def Mover(self):
         if self.play_animation:
             self.length_path = len(self.path)
             if self.mov_pos < self.length_path:
@@ -98,12 +89,12 @@ class Robot(object):
                 nx, ny = x * NODE_SIZE, y * NODE_SIZE
                 self.rec_colision = pygame.Rect(nx, ny, NODE_SIZE, NODE_SIZE)
                 self.path_restante.pop(0)
-                return self.source1
+                self.posicion_actual = self.path_restante[0]
 
 
     def direccionRobot(self, sentido):
         if sentido == 'posterior':
-            direccion = self.path_restante[0]
+            direccion = self.path_restante[1]
             if direccion[1] < self.posicion_actual[1] and direccion[0] == self.posicion_actual[0]:
                 dic_robot = 'arriba'
             elif direccion[1] < self.posicion_actual[1] and direccion[0] > self.posicion_actual[0]:
