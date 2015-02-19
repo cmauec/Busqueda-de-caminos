@@ -74,7 +74,7 @@ NODE_SIZE  = 15
 RESOLUTION = (1350, 700)
 MAP_SIZE = (1350, 700)
 
-FPS_LIMIT  = 1
+FPS_LIMIT  = 2
 
 FONT_NAME = 'freesansbold.ttf'
 
