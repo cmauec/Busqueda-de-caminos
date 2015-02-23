@@ -47,6 +47,7 @@ class Control(object):
                 self.path.insert(0, (r.source))
                 self.path = self.gen_path(self.path)
                 self.path = self.gen_path_order(self.path)
+                r.coordenadas_producto = self.path
                 self.path.append(self.salida)
                 self.path.append((r.source))
                 #print self.path
@@ -110,6 +111,7 @@ class Control(object):
                     self.path.insert(0, r.source)
                     self.path = self.gen_path(self.path)
                     self.path = self.gen_path_order(self.path)
+                    r.coordenadas_producto = self.path
                     self.path.append(self.salida)
                     self.path.append(r.source)
                     self.pathRobot = []
@@ -144,7 +146,7 @@ class Control(object):
 
 
     def gen_path(self, targets):
-        # cambiamos la posicion de los puntos de los productos para que esten fuera de la estanteria, para crear el camino del robot, ya que un robotno puede estar sobre la estanteria solo junto   
+        # cambiamos la posicion de los puntos de los productos para que esten fuera de la estanteria, para crear el camino del robot, ya que un robot no puede estar sobre la estanteria   
         path = []
         for t in targets:
             if t[1] in self.wall_is_vertical:

@@ -23,6 +23,7 @@ class Robot(object):
         self.nombre = nombre
         self.path = []
         self.path_restante = []
+        self.coordenadas_producto = []     #es el punto del camino no el de la pared
         self.color = self.colorRandom 
         self.init = 0
         self.pos = 30
@@ -115,10 +116,22 @@ class Robot(object):
                 dic_robot = 'bloque 3'
             return dic_robot
 
+    def esperandoProducto(self):
+        #quitamos el punto inicial(porq no es un producto, sino donde comienza el robot) de los productos
+        
+        if self.posicion_actual in self.coordenadas_producto:
+            if self.posicion_actual == self.path_restante[1]:
+                return True
+            else:
+                return False
+        else:
+            return False
 
-        #elif sentido == 'anterior':
-            #direccion = self.posicion_actual(index - 1)
 
+
+
+
+        
 
 
 

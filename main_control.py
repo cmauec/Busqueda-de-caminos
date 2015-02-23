@@ -112,7 +112,9 @@ class Client(object):
 
             # Dibujamos todos los pedidos pendientes de entrega
             self.control.dibujarPedidos(self.ui.screen)
-            
+            if len(self.robots[0].coordenadas_producto) > 0:
+                print self.robots[0].esperandoProducto()
+
             if self.robots[0].play_animation == True and self.robots[1].play_animation == True:
                 if (self.robots[0].direccionRobot('posterior') == 'arriba' and self.robots[1].direccionRobot('posterior') == 'abajo') or (self.robots[0].direccionRobot('posterior') == 'abajo' and self.robots[1].direccionRobot('posterior') == 'arriba'):
                     if self.robots[0].path_restante[1] == self.robots[1].path_restante[1]:
@@ -121,6 +123,9 @@ class Client(object):
                         print 'Se chocaron'
                 elif (self.robots[0].direccionRobot('posterior') == 'derecha' and self.robots[1].direccionRobot('posterior') == 'izquierda') or (self.robots[0].direccionRobot('posterior') == 'izquierda' and self.robots[1].direccionRobot('posterior') == 'derecha'):
                     pass
+                elif (self.robots[0].esperandoProducto() and (self.robots[1].direccionRobot('posterior') == 'abajo') or (self.robots[0].esperandoProducto() and self.robots[1].direccionRobot('posterior') == 'arriba'):
+                    print 
+
 
             # if self.robots[0].posicion_actual == self.robots[1].posicion_actual:
             #     print 'los robots se chocaron'  
