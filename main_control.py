@@ -112,19 +112,45 @@ class Client(object):
 
             # Dibujamos todos los pedidos pendientes de entrega
             self.control.dibujarPedidos(self.ui.screen)
-            if len(self.robots[0].coordenadas_producto) > 0:
-                print self.robots[0].esperandoProducto()
+        
 
             if self.robots[0].play_animation == True and self.robots[1].play_animation == True:
                 if (self.robots[0].direccionRobot('posterior') == 'arriba' and self.robots[1].direccionRobot('posterior') == 'abajo') or (self.robots[0].direccionRobot('posterior') == 'abajo' and self.robots[1].direccionRobot('posterior') == 'arriba'):
                     if self.robots[0].path_restante[1] == self.robots[1].path_restante[1]:
+
+                        if self.robots[0].posicion_actual[0] in robot_move_right_wall:
+                            self.robots[0].posicion_actual = (self.robots[0].posicion_actual[0]+1, self.robots[0].posicion_actual[1] )
+
+                        elif self.robots[0].posicion_actual[0] in robot_move_left_wall:
+                            self.robots[0].posicion_actual = (self.robots[0].posicion_actual[0]-1, self.robots[0].posicion_actual[1])
                         print 'Se van a chocar en la siguiente posicion'
+
                     elif (self.robots[0].path_restante[0] == self.robots[1].path_restante[1]) or (self.robots[0].path_restante[1] == self.robots[1].path_restante[0]):
+                        if self.robots[0].posicion_actual[0] in robot_move_right_wall:
+                            self.robots[0].posicion_actual = (self.robots[0].posicion_actual[0]+1, self.robots[0].posicion_actual[1] )
+
+                        elif self.robots[0].posicion_actual[0] in robot_move_left_wall:
+                            self.robots[0].posicion_actual = (self.robots[0].posicion_actual[0]-1, self.robots[0].posicion_actual[1])
                         print 'Se chocaron'
+
                 elif (self.robots[0].direccionRobot('posterior') == 'derecha' and self.robots[1].direccionRobot('posterior') == 'izquierda') or (self.robots[0].direccionRobot('posterior') == 'izquierda' and self.robots[1].direccionRobot('posterior') == 'derecha'):
                     pass
-                elif (self.robots[0].esperandoProducto() and (self.robots[1].direccionRobot('posterior') == 'abajo') or (self.robots[0].esperandoProducto() and self.robots[1].direccionRobot('posterior') == 'arriba'):
-                    print 
+                elif ((self.robots[0].esperandoProducto() and self.robots[1].direccionRobot('posterior') == 'abajo') or (self.robots[0].esperandoProducto() and self.robots[1].direccionRobot('posterior') == 'arriba')) or ((self.robots[1].esperandoProducto() and self.robots[0].direccionRobot('posterior') == 'abajo') or (self.robots[1].esperandoProducto() and self.robots[0].direccionRobot('posterior') == 'arriba')):
+                    if self.robots[0].path_restante[1] == self.robots[1].path_restante[1]:
+                        if self.robots[0].posicion_actual[0] in robot_move_right_wall:
+                            self.robots[0].posicion_actual = (self.robots[0].posicion_actual[0]+1, self.robots[0].posicion_actual[1] )
+
+                        elif self.robots[0].posicion_actual[0] in robot_move_left_wall:
+                            self.robots[0].posicion_actual = (self.robots[0].posicion_actual[0]-1, self.robots[0].posicion_actual[1])
+                        print 'Se van a chocar en la siguiente posicion2 '
+                    elif (self.robots[0].path_restante[0] == self.robots[1].path_restante[1]) or (self.robots[0].path_restante[1] == self.robots[1].path_restante[0]):
+                        if self.robots[0].posicion_actual[0] in robot_move_right_wall:
+                            self.robots[0].posicion_actual = (self.robots[0].posicion_actual[0]+1, self.robots[0].posicion_actual[1] )
+
+                        elif self.robots[0].posicion_actual[0] in robot_move_left_wall:
+                            self.robots[0].posicion_actual = (self.robots[0].posicion_actual[0]-1, self.robots[0].posicion_actual[1])
+                        print 'Se chocaron2'
+
 
 
             # if self.robots[0].posicion_actual == self.robots[1].posicion_actual:

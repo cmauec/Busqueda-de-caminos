@@ -123,9 +123,9 @@ class Robot(object):
             if self.posicion_actual == self.path_restante[1]:
                 return True
             else:
-                return False
+                return 
         else:
-            return False
+            return 
 
 
 
