@@ -61,7 +61,7 @@ class Control(object):
                         # para que el robot se para un momento en cada producto.
                         # repetimos el punto del producto las veces que necesitemos para que el robot se pare en el producto, mientras mas alto el rango mas tiempo se para
                         if not inicio_robot:
-                            for a1 in range(1):
+                            for a1 in range(TIEMPO_ESPERA_PRODUCTO):
                                 a.path.insert(0,a.path[0])
                         # fin
                         self.pathRobot += a.path
