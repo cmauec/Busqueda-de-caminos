@@ -6,6 +6,31 @@ import random
 from algo.astar import *
 import collections
 
+OpcionesChoque = {
+    (0, 1):'Se chocaron abajo',
+    (0, -1): 'Se chocaron arriba',
+    (0, 2): 'Se van a chocar abajo',
+    (0, -2): 'se van a chocar arriba',
+    (1, 0): 'Se chocaron derecha',
+    (-1, 0): 'Se chocaron izquierda',
+    (2, 0): 'Se van a chocar derecha',
+    (-2, 0): 'Se van a chocar izquierda',
+    (1, -1):'Se chocaron diagonal superior derecha',
+    (1, 1): 'Se chocaron diagonal inferior derecha',
+    (-1, 1): 'Se chocaron diagonal inferior izquierda',
+    (-1, -1): 'Se chocaron diagonal superior izquierda',
+    (2, -2):'Se van a chocar diagonal superior derecha',
+    (2, 2): 'Se van a chocar diagonal inferior derecha',
+    (-2, 2): 'Se van a chocar diagonal inferior izquierda',
+    (-2, -2): 'Se van a chocar diagonal superior izquierda'
+}
+
+def posibleChoque(p1, p2):
+    x = p2[0] - p1[0]
+    y = p2[1] - p1[1]
+    return (x, y)
+
+
 
 
 class Control(object):
@@ -235,5 +260,8 @@ class Control(object):
             str.append('\n')
             final_str.append(''.join(str))
         return ''.join(final_str)
+
+
+
 
 

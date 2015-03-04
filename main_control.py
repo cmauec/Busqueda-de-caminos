@@ -114,129 +114,27 @@ class Client(object):
             self.control.dibujarPedidos(self.ui.screen)
 
 
-            if self.robots[0].play_animation  and self.robots[1].play_animation: 
-                if (self.robots[0].direccionRobot('posterior') == 'arriba' and self.robots[1].direccionRobot('posterior') == 'abajo') or (self.robots[0].direccionRobot('posterior') == 'abajo' and self.robots[1].direccionRobot('posterior') == 'arriba'):
-                    if self.robots[0].path_restante[1] == self.robots[1].path_restante[1]: #primer caso de choque
-
-                        if self.robots[0].posicion_actual[0] in robot_move_right_wall:
-                            self.robots[0].posicion_actual = (self.robots[0].posicion_actual[0]+1, self.robots[0].posicion_actual[1] )
-                            for i in range(TIEMPO_ESPERA_COLISION):
-                                self.robots[0].path_restante.insert(0, self.robots[0].posicion_actual)     
-
-                        elif self.robots[0].posicion_actual[0] in robot_move_left_wall:
-                            self.robots[0].posicion_actual = (self.robots[0].posicion_actual[0]-1, self.robots[0].posicion_actual[1])
-                            for i in range(TIEMPO_ESPERA_COLISION):
-                                self.robots[0].path_restante.insert(0, self.robots[0].posicion_actual)
-                                
-                        print 'Se van a chocar en la siguiente posicion'
-
-                    elif (self.robots[0].path_restante[0] == self.robots[1].path_restante[1]) or (self.robots[0].path_restante[1] == self.robots[1].path_restante[0]):
-                        if self.robots[0].posicion_actual[0] in robot_move_right_wall:
-                            self.robots[0].posicion_actual = (self.robots[0].posicion_actual[0]+1, self.robots[0].posicion_actual[1] )
-                            for i in range(TIEMPO_ESPERA_COLISION):
-                                self.robots[0].path_restante.insert(0, self.robots[0].posicion_actual)
-
-                        elif self.robots[0].posicion_actual[0] in robot_move_left_wall:
-                            self.robots[0].posicion_actual = (self.robots[0].posicion_actual[0]-1, self.robots[0].posicion_actual[1])
-                            for i in range(TIEMPO_ESPERA_COLISION):
-                                self.robots[0].path_restante.insert(0, self.robots[0].posicion_actual)
-                        print 'Se chocaron'
-
-                elif (self.robots[0].direccionRobot('posterior') == 'derecha' and self.robots[1].direccionRobot('posterior') == 'izquierda') or (self.robots[0].direccionRobot('posterior') == 'izquierda' and self.robots[1].direccionRobot('posterior') == 'derecha'):
-                    pass
-                elif ((self.robots[0].esperandoProducto() and self.robots[1].direccionRobot('posterior') == 'abajo') or (self.robots[0].esperandoProducto() and self.robots[1].direccionRobot('posterior') == 'arriba')) or ((self.robots[1].esperandoProducto() and self.robots[0].direccionRobot('posterior') == 'abajo') or (self.robots[1].esperandoProducto() and self.robots[0].direccionRobot('posterior') == 'arriba')):                    
-                    if self.robots[0].path_restante[1] == self.robots[1].path_restante[1]:
-                        if self.robots[0].posicion_actual[0] in robot_move_right_wall:
-                            self.robots[0].posicion_actual = (self.robots[0].posicion_actual[0]+1, self.robots[0].posicion_actual[1] )
-
-                        elif self.robots[0].posicion_actual[0] in robot_move_left_wall:
-                            self.robots[0].posicion_actual = (self.robots[0].posicion_actual[0]-1, self.robots[0].posicion_actual[1])
-                        print 'Se van a chocar en la siguiente posicion2 '
-                    elif (self.robots[0].path_restante[0] == self.robots[1].path_restante[1]) or (self.robots[0].path_restante[1] == self.robots[1].path_restante[0]):
-                        if self.robots[0].posicion_actual[0] in robot_move_right_wall:
-                            self.robots[0].posicion_actual = (self.robots[0].posicion_actual[0]+1, self.robots[0].posicion_actual[1] )
-
-                        elif self.robots[0].posicion_actual[0] in robot_move_left_wall:
-                            self.robots[0].posicion_actual = (self.robots[0].posicion_actual[0]-1, self.robots[0].posicion_actual[1])
-                        print 'Se chocaron2'
+            self.robots_movimiento = []
+            self.robots_alerta = []
+            self.robots_choque =[]   #Es el vector donde entran los robots que con seguridad se van a chocar
+            for robot in self.robots:
+                if robot.play_animation:
+                    self.robots_movimiento.append(robot)
+            self.robots_temporal = self.robots_movimiento[1:]
+            for robot0 in self.robots_movimiento:
+                for robot1 in self.robots_temporal:
+                    comparacion = posibleChoque(robot0.posicion_actual, robot1.posicion_actual)
+                    if OpcionesChoque.has_key(comparacion):
+                        if robot0.path_restante[1] == robot1.path_restante[1]:
+                            print 'Se van a chocar'
+                        elif robot0.path_restante[0] == robot1.path_restante[1] and robot0.path_restante[1] == robot1.path_restante[0] :
+                            print 'Se chocaron'            
+                    try: 
+                        self.robots_temporal.pop(0)
+                    except:
+                        pass
 
 
-
-            # if self.robots[0].posicion_actual == self.robots[1].posicion_actual:
-            #     print 'los robots se chocaron'  
-                '''print self.robots[0].posicion_actual
-                print self.robots[1].posicion_actual                  
-                self.robots[0].play_animation = False                
-                index_posicion_actual = self.robots[0].path.index(self.robots[0].posicion_actual)
-                punto_anterior_robot = self.robots[0].path[index_posicion_actual - 1]
-                if self.robots[0].posicion_actual[1] > punto_anterior_robot[1]:
-                    print 'robot desde arriba'
-                    self.robots[0].posicion_actual = (self.robots[0].posicion_actual[0], self.robots[0].posicion_actual[1] - 1)
-                elif self.robots[0].posicion_actual[1] <punto_anterior_robot[1]: 
-                    print 'robot desde abajo'
-                    self.robots[0].posicion_actual = (self.robots[0].posicion_actual[0], self.robots[0].posicion_actual[1] + 1)                
-
-                if self.robots[0].posicion_actual[0] in robot_move_right_wall:
-                    self.robots[0].posicion_actual = (self.robots[0].posicion_actual[0]+1, self.robots[0].posicion_actual[1] )
-
-                elif self.robots[0].posicion_actual[0] in robot_move_left_wall:
-                    self.robots[0].posicion_actual = (self.robots[0].posicion_actual[0]-1, self.robots[0].posicion_actual[1] )
-
-                elif self.robots[0].posicion_actual[1] == robot_move_down_wall:
-                    self.robots[0].posicion_actual = (self.robots[0].posicion_actual[0], self.robots[0].posicion_actual[1] +1)
-
-                elif self.robots[0].posicion_actual[1] == robot_move_up_wall:
-                    self.robots[0].posicion_actual = (self.robots[0].posicion_actual[0], self.robots[0].posicion_actual[1] -1)
-                self.robots[0].play_animation = True
-
-                x, y = self.robots[0].posicion_actual
-                nx, ny = x * NODE_SIZE, y * NODE_SIZE
-                self.robots[0].rec_colision = pygame.Rect(nx, ny, NODE_SIZE, NODE_SIZE)'''
-
-
-            '''if self.robots[1].rec_colision.colliderect(self.robots[0].rec_colision):
-                print 'los robots se chocaron'  
-                print self.robots[0].posicion_actual
-                print self.robots[1].posicion_actual                  
-                self.robots[1].play_animation = False                
-                index_posicion_actual = self.robots[1].path.index(self.robots[1].posicion_actual)
-                punto_anterior_robot = self.robots[1].path[index_posicion_actual - 1]
-                if self.robots[1].posicion_actual[1] > punto_anterior_robot[1]:
-                    print 'robot desde arriba'
-                    self.robots[1].posicion_actual = (self.robots[1].posicion_actual[0], self.robots[1].posicion_actual[1] - 1)
-                elif self.robots[1].posicion_actual[1] <punto_anterior_robot[1]: 
-                    print 'robot desde abajo'
-                    self.robots[1].posicion_actual = (self.robots[1].posicion_actual[0], self.robots[1].posicion_actual[1] + 1)                
-
-                if self.robots[1].posicion_actual[0] in robot_move_right_wall:
-                    self.robots[1].posicion_actual = (self.robots[1].posicion_actual[0]+1, self.robots[1].posicion_actual[1] )
-
-                elif self.robots[1].posicion_actual[0] in robot_move_left_wall:
-                    self.robots[1].posicion_actual = (self.robots[1].posicion_actual[0]-1, self.robots[1].posicion_actual[1] )
-
-                elif self.robots[1].posicion_actual[1] == robot_move_down_wall:
-                    self.robots[1].posicion_actual = (self.robots[1].posicion_actual[0], self.robots[1].posicion_actual[1] +1)
-
-                elif self.robots[1].posicion_actual[1] == robot_move_up_wall:
-                    self.robots[1].posicion_actual = (self.robots[1].posicion_actual[0], self.robots[1].posicion_actual[1] -1)
-                self.robots[1].play_animation = True
-
-                x, y = self.robots[1].posicion_actual
-                nx, ny = x * NODE_SIZE, y * NODE_SIZE
-                self.robots[1].rec_colision = pygame.Rect(nx, ny, NODE_SIZE, NODE_SIZE)'''
-                
-
-
-
-            if self.robots[0].play_animation == True:
-                try: 
-                    direccion_robot = self.robots[0].direccionRobot('posterior')
-                    if not direccion_robot in ['arriba', 'derecha', 'abajo','izquierda','bloque 3']:
-                        print self.robots[0].posicion_actual
-                        print 'diagonal'
-                except:
-                    pass
-            # print self.robots[0].posicion_actual
             # Dibuajamos la animacion del robot
             for robot in self.robots:
                 robot.dibujarRuta(self.ui.screen, self.ui.nodes)
