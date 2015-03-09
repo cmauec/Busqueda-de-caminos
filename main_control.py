@@ -38,6 +38,8 @@ from ui.ui import *
 from lib.robot import *
 from lib.pedido import *
 from lib.control import *
+from threading import Timer
+
 
 
 posicionRobot = [(4, 1), (6, 1), (8, 1), (4, 45), (6, 45), (8, 45)]
@@ -127,12 +129,78 @@ class Client(object):
                     if OpcionesChoque.has_key(comparacion):
                         if robot0.path_restante[1] == robot1.path_restante[1]:
                             print 'Se van a chocar'
+                            print OpcionesChoque[comparacion].split('$')[0]
+
+                            if OpcionesChoque[comparacion].split('$')[0] == '3':
+                                robot0.posicion_actual = (robot0.posicion_actual[0] + 1, robot0.posicion_actual[1])
+                                robot0.esperando_producto = True
+                                '''if (robot0.posicion_actual[1] - robot1.posicion_actual[1]) > 0:
+                                    robot0.esperando_producto = False
+                                    robot0.posicion_actual = (robot0.posicion_actual[0] - 1, robot0.posicion_actual[1])'''
+                                pass
+                            elif OpcionesChoque[comparacion].split('$')[0] == '4':
+                                robot0.posicion_actual = (robot0.posicion_actual[0] + 1, robot0.posicion_actual[1])                           
+                                robot0.esperando_producto = True
+                                '''if (robot0.posicion_actual[1] - robot1.posicion_actual[1]) < 0:
+                                    robot0.esperando_producto = False
+                                    robot0.posicion_actual = (robot0.posicion_actual[0] - 1, robot0.posicion_actual[1])'''
+                                pass
+                            elif OpcionesChoque[comparacion].split('$')[0] == '7':
+                                passs
+                            elif OpcionesChoque[comparacion].split('$')[0] == '8':
+                                pass
+                            elif OpcionesChoque[comparacion].split('$')[0] == '11':
+                                pass
+                            elif OpcionesChoque[comparacion].split('$')[0] == '12':
+                                pass
+                            elif OpcionesChoque[comparacion].split('$')[0] == '15':
+                                pass
+                            elif OpcionesChoque[comparacion].split('$')[0] == '16':
+                                pass
+                           
                         elif robot0.path_restante[0] == robot1.path_restante[1] and robot0.path_restante[1] == robot1.path_restante[0] :
-                            print 'Se chocaron'            
+                            print 'Se chocaron' 
+                            print OpcionesChoque[comparacion].split('$')[0] 
+
+                            if OpcionesChoque[comparacion].split('$')[0] == '1':
+                                robot0.posicion_actual = (robot0.posicion_actual[0] + 1, robot0.posicion_actual[1])
+                                robot0.esperando_producto = True
+                                '''if (robot0.posicion_actual[1] - robot1.posicion_actual[1]) > 0:
+                                    robot0.esperando_producto = False
+                                    robot0.posicion_actual = (robot0.posicion_actual[0] - 1, robot0.posicion_actual[1])'''
+                                pass
+                            elif OpcionesChoque[comparacion].split('$')[0] == '2':
+                                robot0.posicion_actual = (robot0.posicion_actual[0] + 1, robot0.posicion_actual[1])
+                                robot0.esperando_producto = True
+                                '''if (robot0.posicion_actual[1] - robot1.posicion_actual[1]) < 0:
+                                    robot0.esperando_producto = False
+                                    robot0.posicion_actual = (robot0.posicion_actual[0] -1, robot0.posicion_actual[1])'''
+                                pass
+                            elif OpcionesChoque[comparacion].split('$')[0] == '5':
+                                pass
+                            elif OpcionesChoque[comparacion].split('$')[0] == '6':
+                                pass
+                            elif OpcionesChoque[comparacion].split('$')[0] == '9':
+                                pass
+                            elif OpcionesChoque[comparacion].split('$')[0] == '10':
+                                pass
+                            elif OpcionesChoque[comparacion].split('$')[0] == '13':
+                                pass
+                            elif OpcionesChoque[comparacion].split('$')[0] == '14':
+                                pass          
                     try: 
                         self.robots_temporal.pop(0)
                     except:
                         pass
+
+
+            '''for robot in self.robots:
+                if len(robot.coordenadas_producto) > 0:
+                    if robot.posicion_actual == robot.coordenadas_producto[0]:
+                        robot.esperando_producto = True
+                        robot.coordenadas_producto.pop(0)
+                        Timer(2,robot.estadoEsperandoProducto).start()   #Hace que el robot se detenga 3 segundos para recoger roductos'''
+
 
 
             # Dibuajamos la animacion del robot
