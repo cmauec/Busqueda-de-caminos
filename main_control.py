@@ -126,68 +126,14 @@ class Client(object):
             for robot0 in self.robots_movimiento:
                 for robot1 in self.robots_temporal:
                     comparacion = posibleChoque(robot0.posicion_actual, robot1.posicion_actual)
-                    if OpcionesChoque.has_key(comparacion):
-                        if robot0.path_restante[1] == robot1.path_restante[1]:
-                            print 'Se van a chocar'
-                            print OpcionesChoque[comparacion].split('$')[0]
+                    if OpcionesChoque.has_key(comparacion):                        
+                        if 1 in comparacion or -1 in comparacion:
+                            if robot0.path_restante[0] == robot1.path_restante[1] and robot0.path_restante[1] == robot1.path_restante[0] :
+                                print 'Se chocaron'
+                        elif 2 in comparacion or -2 in comparacion:
+                            if robot0.path_restante[1] == robot1.path_restante[1]:
+                                print 'Se van a chocar'
 
-                            if OpcionesChoque[comparacion].split('$')[0] == '3':
-                                robot0.posicion_actual = (robot0.posicion_actual[0] + 1, robot0.posicion_actual[1])
-                                robot0.esperando_producto = True
-                                '''if (robot0.posicion_actual[1] - robot1.posicion_actual[1]) > 0:
-                                    robot0.esperando_producto = False
-                                    robot0.posicion_actual = (robot0.posicion_actual[0] - 1, robot0.posicion_actual[1])'''
-                                pass
-                            elif OpcionesChoque[comparacion].split('$')[0] == '4':
-                                robot0.posicion_actual = (robot0.posicion_actual[0] + 1, robot0.posicion_actual[1])                           
-                                robot0.esperando_producto = True
-                                '''if (robot0.posicion_actual[1] - robot1.posicion_actual[1]) < 0:
-                                    robot0.esperando_producto = False
-                                    robot0.posicion_actual = (robot0.posicion_actual[0] - 1, robot0.posicion_actual[1])'''
-                                pass
-                            elif OpcionesChoque[comparacion].split('$')[0] == '7':
-                                passs
-                            elif OpcionesChoque[comparacion].split('$')[0] == '8':
-                                pass
-                            elif OpcionesChoque[comparacion].split('$')[0] == '11':
-                                pass
-                            elif OpcionesChoque[comparacion].split('$')[0] == '12':
-                                pass
-                            elif OpcionesChoque[comparacion].split('$')[0] == '15':
-                                pass
-                            elif OpcionesChoque[comparacion].split('$')[0] == '16':
-                                pass
-                           
-                        elif robot0.path_restante[0] == robot1.path_restante[1] and robot0.path_restante[1] == robot1.path_restante[0] :
-                            print 'Se chocaron' 
-                            print OpcionesChoque[comparacion].split('$')[0] 
-
-                            if OpcionesChoque[comparacion].split('$')[0] == '1':
-                                robot0.posicion_actual = (robot0.posicion_actual[0] + 1, robot0.posicion_actual[1])
-                                robot0.esperando_producto = True
-                                '''if (robot0.posicion_actual[1] - robot1.posicion_actual[1]) > 0:
-                                    robot0.esperando_producto = False
-                                    robot0.posicion_actual = (robot0.posicion_actual[0] - 1, robot0.posicion_actual[1])'''
-                                pass
-                            elif OpcionesChoque[comparacion].split('$')[0] == '2':
-                                robot0.posicion_actual = (robot0.posicion_actual[0] + 1, robot0.posicion_actual[1])
-                                robot0.esperando_producto = True
-                                '''if (robot0.posicion_actual[1] - robot1.posicion_actual[1]) < 0:
-                                    robot0.esperando_producto = False
-                                    robot0.posicion_actual = (robot0.posicion_actual[0] -1, robot0.posicion_actual[1])'''
-                                pass
-                            elif OpcionesChoque[comparacion].split('$')[0] == '5':
-                                pass
-                            elif OpcionesChoque[comparacion].split('$')[0] == '6':
-                                pass
-                            elif OpcionesChoque[comparacion].split('$')[0] == '9':
-                                pass
-                            elif OpcionesChoque[comparacion].split('$')[0] == '10':
-                                pass
-                            elif OpcionesChoque[comparacion].split('$')[0] == '13':
-                                pass
-                            elif OpcionesChoque[comparacion].split('$')[0] == '14':
-                                pass          
                     try: 
                         self.robots_temporal.pop(0)
                     except:
