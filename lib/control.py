@@ -7,22 +7,22 @@ from algo.astar import *
 import collections
 
 OpcionesChoque = {
-    (0, 1):'Se chocaron abajo',
-    (0, -1): 'Se chocaron arriba',
-    (0, 2): 'Se van a chocar abajo',
-    (0, -2): 'se van a chocar arriba',
-    (1, 0): 'Se chocaron derecha',
-    (-1, 0): 'Se chocaron izquierda',
-    (2, 0): 'Se van a chocar derecha',
-    (-2, 0): 'Se van a chocar izquierda',
-    (1, -1):'Se chocaron diagonal superior derecha',
-    (1, 1): 'Se chocaron diagonal inferior derecha',
-    (-1, 1): 'Se chocaron diagonal inferior izquierda',
-    (-1, -1): 'Se chocaron diagonal superior izquierda',
-    (2, -2):'Se van a chocar diagonal superior derecha',
-    (2, 2): 'Se van a chocar diagonal inferior derecha',
-    (-2, 2): 'Se van a chocar diagonal inferior izquierda',
-    (-2, -2): 'Se van a chocar diagonal superior izquierda'
+    (0, 1): '1$Se chocaron abajo',
+    (0, -1): '2$Se chocaron arriba',
+    (0, 2): '3$Se van a chocar abajo',
+    (0, -2): '4$se van a chocar arriba',
+    (1, 0): '5$Se chocaron derecha',
+    (-1, 0): '6$Se chocaron izquierda',
+    (2, 0): '7$Se van a chocar derecha',
+    (-2, 0): '8$Se van a chocar izquierda',
+    (1, -1): '9$Se chocaron diagonal superior derecha',
+    (1, 1): '10$Se chocaron diagonal inferior derecha',
+    (-1, 1): '11$Se chocaron diagonal inferior izquierda',
+    (-1, -1): '12$Se chocaron diagonal superior izquierda',
+    (2, -2):'13$Se van a chocar diagonal superior derecha',
+    (2, 2): '14$Se van a chocar diagonal inferior derecha',
+    (-2, 2): '15$Se van a chocar diagonal inferior izquierda',
+    (-2, -2): '16$Se van a chocar diagonal superior izquierda'
 }
 
 def posibleChoque(p1, p2):
@@ -53,8 +53,7 @@ class Control(object):
         self.wall_is_vertical = range(8,38)
         self.nodes = nodes
 
-    def agregarPedido(self,pedido):
-        inicio_robot = True
+    def agregarPedido(self,pedido): #Agragamos un pedido a un robot
         self.pedidosDibujar.append(pedido)
         self.totalrobotlibres = len(self.robots)
         for r in self.robots:
@@ -72,27 +71,25 @@ class Control(object):
                 self.path.insert(0, (r.source))
                 self.path = self.gen_path(self.path)
                 self.path = self.gen_path_order(self.path)
-                r.coordenadas_producto = self.path
+                r.coordenadas_producto = self.path[1:]
                 self.path.append(self.salida)
                 self.path.append((r.source))
                 #print self.path
                 self.pathRobot = []
+                self.loop = 0  # Nos va a decir en q ciclo esta el for
                 for t in range(len(self.path)-1):
                     try:
-                        nodes_map_raw = self._get_str_map(self.path[t], self.path[t+1])
+                        nodes_map_raw = self._get_str_map(self.path[t], self.path[t+1]) # Hace que se el robot se quede en el producto 2tiempos
                         a = AStar(nodes_map_raw)
                         for i in a.step():
-                            pass
-                        # para que el robot se para un momento en cada producto.
-                        # repetimos el punto del producto las veces que necesitemos para que el robot se pare en el producto, mientras mas alto el rango mas tiempo se para
-                        if not inicio_robot:
-                            for a1 in range(TIEMPO_ESPERA_PRODUCTO):
-                                a.path.insert(0,a.path[0])
-                        # fin
-                        self.pathRobot += a.path
+                            pass   
+                        if self.loop > 0:                     
+                            self.pathRobot += a.path[1:]
+                        else:
+                            self.pathRobot += a.path
                     except:
                             pass
-                    inicio_robot = False
+                    self.loop += 1 
                 #print self.pathRobot
                 r.agregarRuta(self.pathRobot,pedido)
                 r.state = 'ocupado'
@@ -120,7 +117,7 @@ class Control(object):
                     Rect(nx, ny, NODE_SIZE, NODE_SIZE))
         
 
-    def asignarPedidoRobot(self,nombre):
+    def asignarPedidoRobot(self,nombre): #Asignamos pedidos que esten en espera a un robot que este libre
         if len(self.pedidos)>0:
             for r in self.robots:
                 print r.state
@@ -136,20 +133,24 @@ class Control(object):
                     self.path.insert(0, r.source)
                     self.path = self.gen_path(self.path)
                     self.path = self.gen_path_order(self.path)
-                    r.coordenadas_producto = self.path
+                    r.coordenadas_producto = self.path[1:]
                     self.path.append(self.salida)
                     self.path.append(r.source)
                     self.pathRobot = []
-                    for t in range(len(self.path)):
-                        if t+1 < len(self.path):
-                            nodes_map_raw = self._get_str_map(self.path[t], self.path[t+1])
-                            try:
-                                a = AStar(nodes_map_raw)
-                                for i in a.step():
-                                    pass
+                    self.loop = 0  # Nos va a decir en q ciclo esta el for
+                    for t in range(len(self.path)-1):
+                        try:
+                            nodes_map_raw = self._get_str_map(self.path[t], self.path[t+1]) # Hace que se el robot se quede en el producto 2tiempos
+                            a = AStar(nodes_map_raw)
+                            for i in a.step():
+                                pass   
+                            if self.loop > 0:                     
+                                self.pathRobot += a.path[1:]
+                            else:
                                 self.pathRobot += a.path
-                            except:
-                                pass 
+                        except:
+                                pass
+                        self.loop += 1 
                     r.agregarRuta(self.pathRobot,self.pedidos[0])
                     r.state = 'ocupado'
                     r.play()

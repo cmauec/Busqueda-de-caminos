@@ -20,6 +20,7 @@ class Robot(object):
         colorRobot.pop(self.index_colorRandom)
         self.source = source
         self.state = 'libre'
+        self.esperando_producto = False
         self.nombre = nombre
         self.path = []
         self.path_restante = []
@@ -80,7 +81,7 @@ class Robot(object):
 
 
     def Mover(self):
-        if self.play_animation:
+        if self.play_animation and not self.esperando_producto:  #Si las dos funciones son verdaderas - el robot camina, si esperando producto es falso (no hay productos para recoger) - el robot no camina (porq una de las condiciones no se cumple).
             self.length_path = len(self.path)
             if self.mov_pos < self.length_path:
                 self.source1 = self.path[self.mov_pos]
@@ -92,40 +93,10 @@ class Robot(object):
                 self.path_restante.pop(0)
                 self.posicion_actual = self.path_restante[0]
 
+   
+    def estadoEsperandoProducto(self):
+        self.esperando_producto = False
 
-    def direccionRobot(self, sentido):
-        if sentido == 'posterior':
-            direccion = self.path_restante[1]
-            if direccion[1] < self.posicion_actual[1] and direccion[0] == self.posicion_actual[0]:
-                dic_robot = 'arriba'
-            elif direccion[1] < self.posicion_actual[1] and direccion[0] > self.posicion_actual[0]:
-                dic_robot = 'arriba_diagonal_der'
-            elif direccion[1] == self.posicion_actual[1] and direccion[0] > self.posicion_actual[0]:
-                dic_robot = 'derecha'
-            elif direccion[1] > self.posicion_actual[1] and direccion[0] > self.posicion_actual[0]:
-                dic_robot = 'abajo_diagonal_der'
-            elif direccion[1] > self.posicion_actual[1] and direccion[0] == self.posicion_actual[0]:
-                dic_robot = 'abajo'
-            elif direccion[1] > self.posicion_actual[1] and direccion[0] < self.posicion_actual[0]:
-                dic_robot = 'abajo_diagonal_izq'
-            elif direccion[1] == self.posicion_actual[1] and direccion[0] < self.posicion_actual[0]:
-                dic_robot = 'izquierda'
-            elif direccion[1] < self.posicion_actual[1] and direccion[0] < self.posicion_actual[0]:
-                dic_robot = 'arriba_diagonal_izq'                
-            else:
-                dic_robot = 'bloque 3'
-            return dic_robot
-
-    def esperandoProducto(self):
-        #quitamos el punto inicial(porq no es un producto, sino donde comienza el robot) de los productos
-        
-        if self.posicion_actual in self.coordenadas_producto:
-            if self.posicion_actual == self.path_restante[1]:
-                return True
-            else:
-                return 
-        else:
-            return 
 
 
 
