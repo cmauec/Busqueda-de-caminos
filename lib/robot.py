@@ -21,7 +21,10 @@ class Robot(object):
         self.source = source
         self.state = 'libre'
         self.esperando_producto = False
-        self.nombre = nombre
+        self.esperando_robot = False
+        self.robot_choque = None       #Es el nombre del robot al que tiene que esperar que pase para poner en accion al robot q esta esperando 
+        self.tipo_choque = None      #Almacenamos el tipo de choque 
+        self.nombre = nombre    
         self.path = []
         self.path_restante = []
         self.coordenadas_producto = []     #es el punto del camino no el de la pared
@@ -81,7 +84,7 @@ class Robot(object):
 
 
     def Mover(self):
-        if self.play_animation and not self.esperando_producto:  #Si las dos funciones son verdaderas - el robot camina, si esperando producto es falso (no hay productos para recoger) - el robot no camina (porq una de las condiciones no se cumple).
+        if self.play_animation and not self.esperando_producto and not self.esperando_robot:  #Si las dos funciones son verdaderas - el robot camina, si esperando producto es falso (no hay productos para recoger) - el robot no camina (porq una de las condiciones no se cumple).
             self.length_path = len(self.path)
             if self.mov_pos < self.length_path:
                 self.source1 = self.path[self.mov_pos]
