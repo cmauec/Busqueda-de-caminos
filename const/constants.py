@@ -70,7 +70,7 @@ STOPPED = 1
 # =======================================
 CAPTION = 'Tienda'
 
-NODE_SIZE  = 15
+NODE_SIZE  = 35
 RESOLUTION = (1350, 700)
 MAP_SIZE = (1350, 700)
 

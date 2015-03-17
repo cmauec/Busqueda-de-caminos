@@ -26,6 +26,7 @@ class Robot(object):
         self.tipo_choque = None      #Almacenamos el tipo de choque 
         self.nombre = nombre    
         self.path = []
+        self.path_pruebas = []
         self.path_restante = []
         self.coordenadas_producto = []     #es el punto del camino no el de la pared
         self.color = self.colorRandom 
@@ -47,7 +48,7 @@ class Robot(object):
         pygame.draw.rect(screen, self.color, Rect(nx, ny, NODE_SIZE, NODE_SIZE))
        
     def agregarRuta(self,ruta,pedido):
-        self.path = ruta
+        self.path = self.path_pruebas
         self.path_restante = list(self.path)
         self.pedido_actual = pedido
 
