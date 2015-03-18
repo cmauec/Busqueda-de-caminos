@@ -108,7 +108,7 @@ class UI(object):
 
     #Dibujamos las paredes
     def _draw_map_init(self):
-        '''self._draw_wall([(1,4),(81,4)],'horizontal')
+        self._draw_wall([(1,4),(81,4)],'horizontal')
         self._draw_wall([(1,3),(81,3)],'horizontal')
         self._draw_wall([(1,42),(81,42)],'horizontal')
         self._draw_wall([(1,41),(81,41)],'horizontal')
@@ -162,5 +162,5 @@ class UI(object):
         self._draw_wall([(75,8),(75,37)])
         self._draw_wall([(79,8),(79,37)])
         self._draw_wall([(80,8),(80,37)])
-        self._draw_wall([(81,8),(81,37)])'''
+        self._draw_wall([(81,8),(81,37)])
         self._draw_nodes()

@@ -75,13 +75,7 @@ class Client(object):
         self.ui = UI(ui_path)
 
         # Creamos robots
-        self.robotp0 = Robot((4, 3), uuid.uuid4())
-        for a in range(4,11):   
-            self.robotp0.path_pruebas.append((4,a))
-        self.robotp1 = Robot((4, 9), uuid.uuid4())
-        for a in range(8,1,-1):
-            self.robotp1.path_pruebas.append((4,a))
-        self.robots = [self.robotp0, self.robotp1]
+        self.robots = CrearRobots(2)
              
         # Creacion del control del sistema
         self.control = Control(self.ui.nodes)
@@ -157,7 +151,6 @@ class Client(object):
 
                 for robot1 in self.robots_temporal:
                     comparacion = posibleChoque(robot0.posicion_actual, robot1.posicion_actual)
-                    print comparacion
                     if OpcionesChoque.has_key(comparacion):                        
                         if 1 in comparacion or -1 in comparacion:
                             if robot0.path_restante[0] == robot1.path_restante[1] and robot0.path_restante[1] == robot1.path_restante[0] :
