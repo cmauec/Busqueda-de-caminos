@@ -60,17 +60,16 @@ class Control(object):
             if r.state == 'libre':
                 # si el robot esta en la parte de arriba tendra como salida al norte o al noreste
                 if r.source[1]<8:
-                    self.salida = self.salida_norte+self.salida_noreste
-                    self.salida = random.choice(self.salida)
+                    self.salida = (18,19)
+                    #self.salida = random.choice(self.salida)
                 # si el robot esta en la parte inferior tendra como salida al sur o suroeste
                 elif r.source[1]>37:
-                    self.salida = self.salida_sur+self.salida_suroeste
-                    self.salida = random.choice(self.salida)
-
+                    self.salida = (18,20)
+                    #self.salida = random.choice(self.salida)
                 self.path = pedido.productos
                 self.path.insert(0, (r.source))
-                self.path = self.gen_path(self.path)
-                self.path = self.gen_path_order(self.path)
+                #self.path = self.gen_path(self.path)
+                #self.path = self.gen_path_order(self.path)
                 r.coordenadas_producto = self.path[1:]
                 self.path.append(self.salida)
                 self.path.append((r.source))
@@ -79,7 +78,7 @@ class Control(object):
                 self.loop = 0  # Nos va a decir en q ciclo esta el for
                 for t in range(len(self.path)-1):
                     try:
-                        nodes_map_raw = self._get_str_map(self.path[t], self.path[t+1]) # Hace que se el robot se quede en el producto 2tiempos
+                        nodes_map_raw = self._get_str_map(self.path[t], self.path[t+1]) # 
                         a = AStar(nodes_map_raw)
                         for i in a.step():
                             pass   
@@ -131,8 +130,8 @@ class Control(object):
                         self.salida = random.choice(self.salida)
                     self.path = self.pedidos[0].productos
                     self.path.insert(0, r.source)
-                    self.path = self.gen_path(self.path)
-                    self.path = self.gen_path_order(self.path)
+                    #self.path = self.gen_path(self.path)
+                    #self.path = self.gen_path_order(self.path)
                     r.coordenadas_producto = self.path[1:]
                     self.path.append(self.salida)
                     self.path.append(r.source)
