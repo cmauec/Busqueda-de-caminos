@@ -1,10 +1,12 @@
-from const.constants import * 
 import pygame
+import random 
+import collections
 from pygame.locals import *
 from lib.pedido import *
-import random 
+from const.constants import * 
 from algo.astar import *
-import collections
+from math import sqrt
+
 
 OpcionesChoque = {
     (0, 1): '1$Se chocaron abajo',
@@ -24,6 +26,14 @@ OpcionesChoque = {
     (-2, 2): '15$Se van a chocar diagonal inferior izquierda',
     (-2, -2): '16$Se van a chocar diagonal superior izquierda'
 }
+
+def posibleChoqueCruzado(p1, p2):
+    x = p2[0] - p1[0]
+    y = p2[1] - p1[1]
+    h = sqrt((x**2) + (y**2))
+    return h
+
+
 
 def posibleChoque(p1, p2):
     x = p2[0] - p1[0]

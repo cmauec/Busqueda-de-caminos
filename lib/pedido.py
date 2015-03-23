@@ -92,19 +92,47 @@ class Pedido(object):
             self.productos = [(1,25),(6,20)]'''
         #genetamos pedidos diagonal inferior derecha
         '''if robot == '1':
-            self.productos = [(6,20), (11,25)]            
+            self.productos = [(5,19), (11,25)]            
         elif robot == '2':
-            self.productos = [(11,25),(6,20)]'''
+            self.productos = [(11,25),(5,19)]'''
         #genetamos pedidos diagonal superior izquierda
         '''if robot == '1':
-            self.productos = [(11,25), (6,20)]            
+            self.productos = [(11,25), (7,21)]            
         elif robot == '2':
-            self.productos = [(6,20),(11,25)]'''
+            self.productos = [(7,21),(11,25)]'''
         #genetamos pedidos diagonal superior derecha
-        if robot == '1':
-            self.productos = [(11,25), (16,20)]            
+        '''if robot == '1':
+            self.productos = [(10,26), (16,20)]            
         elif robot == '2':
-            self.productos = [(16,20),(11,25)]
+            self.productos = [(16,20),(10,26)]'''
+        #generamos pedidos horizontales
+        '''if robot == '1':
+            self.productos = [(10,22), (17,22)]            
+        elif robot == '2':
+            self.productos = [(17,22),(10,22)]'''
+
+        #generamos pedidos Cruzados(robot0-horiz)Viene de izq a der
+        '''if robot == '1':
+            self.productos = [(4,10), (7,10)]            
+        elif robot == '2':
+            self.productos = [(5,10),(5,15)]'''
+        #generamos pedidos Cruzados(robot0-horiz)Viene de der a izq
+        '''if robot == '1':
+            self.productos = [(7,10), (4,10)]            
+        elif robot == '2':
+            self.productos = [(5,10),(5,15)]'''
+        #generamos pedidos Cruzados(robot0-ver)Viene de arrib a abaj
+        '''if robot == '1':
+            self.productos = [(5,10),(5,15)]            
+        elif robot == '2':
+            self.productos = [(7,10),(4,10)]'''
+        #generamos pedidos Cruzados(robot0-ver)Viene de abaj a arrib
+        if robot == '1':
+            self.productos = [(5,19),(5,14)]            
+        elif robot == '2':
+            self.productos = [(10,10),(4,10)]
+
+
             
         
 
