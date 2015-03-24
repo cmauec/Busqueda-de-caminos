@@ -127,10 +127,15 @@ class Pedido(object):
         elif robot == '2':
             self.productos = [(7,10),(4,10)]'''
         #generamos pedidos Cruzados(robot0-ver)Viene de abaj a arrib
-        if robot == '1':
-            self.productos = [(5,19),(5,14)]            
+        '''if robot == '1':
+            self.productos = [(5,19),(5,12)]            
         elif robot == '2':
-            self.productos = [(10,10),(4,10)]
+            self.productos = [(17,14),(4,14)]'''
+        #generamos pedidos Cruzados(robot0-ver)Viene de abaj a arrib
+        if robot == '1':
+            self.productos = [(4,10), (7,13)]            
+        elif robot == '2':
+            self.productos = [(10,10), (7,13)]
 
 
             

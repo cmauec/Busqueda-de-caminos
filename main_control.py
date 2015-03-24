@@ -45,11 +45,12 @@ from threading import Timer
 
 #Posiciones de los robots para Choques rectos
 #posicionRobot = [(4, 1), (4, 45)]
-
 #Posiciones de los robots para Choques cruzados
-#posicionRobot = [(4, 1), (6, 1)]
+posicionRobot = [(4, 1), (10, 1)]
 #Posiciones de los robots para Choques cruzados
-posicionRobot = [(4, 25), (4, 9)]
+#posicionRobot = [(4, 1), (6, 4)]
+#Posiciones de los robots para Choques cruzados
+#posicionRobot = [(4, 40), (4, 5)]
 
 def CrearRobots(robots):
     listaRobots = [] 
@@ -94,6 +95,7 @@ class Client(object):
         # general status
         self.status = ''
         self.flag = 1
+        self.estadoChoqueCruzado = 0
 
         
 
@@ -108,7 +110,8 @@ class Client(object):
                     self._quit()
                 elif event.type == KEYDOWN:
                     self._handle_keyboard(event)
-            
+
+
             
             # Dibujamos el color de fondo para el mapa
             self.ui._draw_background()
@@ -129,11 +132,22 @@ class Client(object):
             for robot in self.robots:
                 if robot.play_animation:
                     self.robots_movimiento.append(robot)
-            self.robots_temporal = self.robots_movimiento[1:]
+            self.robots_temporal = self.robots_movimiento[1:]            
             for robot0 in self.robots_movimiento:
                 if robot0.esperando_robot:
-                    for robot in self.robots_movimiento:
+                    for robot in self.robots_movimiento:                        
                         if robot0.robot_choque == robot.nombre:
+                            #Choque cruzado. Vertical
+                            if robot0.tipo_choque == '17':                                                                
+                                if self.estadoChoqueCruzado == 1:
+                                    self.estadoChoqueCruzado += 1
+                                elif self.estadoChoqueCruzado == 2:
+                                    robot0.esperando_robot = False
+                                    self.estadoChoqueCruzado = 0
+                                    robot0.tipo_choque = None
+                                    robot0.robot_choque = None
+
+
                             #Choque vertical. Comprobamos cuando el robot ya paso el punto, y robot0 puede avanzar
                             if robot0.tipo_choque in ['1', '2','3', '4']:
                                 if (robot0.posicion_actual[1] - robot.posicion_actual[1]) > 0:                                    
@@ -143,6 +157,8 @@ class Client(object):
                                         robot0.posicion_actual = (robot0.posicion_actual[0] - 1, robot0.posicion_actual[1])
                                     elif robot0.posicion_actual[0] in robot_move_left_wall:
                                             robot0.posicion_actual = (robot0.posicion_actual[0] + 1, robot0.posicion_actual[1])'''
+                                    robot0.tipo_choque = None
+                                    robot0.robot_choque = None
                                 elif (robot0.posicion_actual[1] - robot1.posicion_actual[1]) < 0:
                                     robot0.esperando_robot = False
                                     robot0.posicion_actual = (robot0.posicion_actual[0] - 1, robot0.posicion_actual[1])
@@ -150,6 +166,8 @@ class Client(object):
                                         robot0.posicion_actual = (robot0.posicion_actual[0] - 1, robot0.posicion_actual[1])
                                     elif robot0.posicion_actual[0] in robot_move_left_wall:
                                             robot0.posicion_actual = (robot0.posicion_actual[0] + 1, robot0.posicion_actual[1])'''
+                                    robot0.tipo_choque = None
+                                    robot0.robot_choque = None
                                 #fin choque vertical
                             #Choques horizontales
                             elif robot0.tipo_choque in ['5', '6','7', '8']:
@@ -160,6 +178,8 @@ class Client(object):
                                         robot0.posicion_actual = (robot0.posicion_actual[0] - 1, robot0.posicion_actual[1])
                                     elif robot0.posicion_actual[0] in robot_move_left_wall:
                                             robot0.posicion_actual = (robot0.posicion_actual[0] + 1, robot0.posicion_actual[1])'''
+                                    robot0.tipo_choque = None
+                                    robot0.robot_choque = None
                                 elif (robot0.posicion_actual[0] - robot1.posicion_actual[0]) < 0:
                                     robot0.esperando_robot = False
                                     robot0.posicion_actual = (robot0.posicion_actual[0], robot0.posicion_actual[1] + 1)
@@ -167,6 +187,8 @@ class Client(object):
                                         robot0.posicion_actual = (robot0.posicion_actual[0] - 1, robot0.posicion_actual[1])
                                     elif robot0.posicion_actual[0] in robot_move_left_wall:
                                             robot0.posicion_actual = (robot0.posicion_actual[0] + 1, robot0.posicion_actual[1])'''
+                                    robot0.tipo_choque = None
+                                    robot0.robot_choque = None
                                 
                             #Choque diagonal    
                             elif robot0.tipo_choque in ['9', '10', '13', '14']:
@@ -174,18 +196,26 @@ class Client(object):
                                     if robot0.path_restante[0] == robot1.posicion_actual:
                                         robot0.esperando_robot = False
                                         robot0.posicion_actual = (robot0.posicion_actual[0] +1, robot0.posicion_actual[1])
+                                        robot0.tipo_choque = None
+                                        robot0.robot_choque = None
                                 else:
                                     robot0.esperando_robot = False
                                     robot0.posicion_actual = (robot0.posicion_actual[0] +1, robot0.posicion_actual[1])
+                                    robot0.tipo_choque = None
+                                    robot0.robot_choque = None
 
                             elif robot0.tipo_choque in ['11', '12', '15', '16']:
                                 if robot0.tipo_choque in ['15', '16']:
                                     if robot0.path_restante[0] == robot1.posicion_actual:
                                         robot0.esperando_robot = False
                                         robot0.posicion_actual = (robot0.posicion_actual[0] -1, robot0.posicion_actual[1])
+                                        robot0.tipo_choque = None
+                                        robot0.robot_choque = None
                                 else:
                                     robot0.esperando_robot = False
                                     robot0.posicion_actual = (robot0.posicion_actual[0] -1, robot0.posicion_actual[1])
+                                    robot0.tipo_choque = None
+                                    robot0.robot_choque = None
 
                                                      
                 #Codigo para analizar choques en lineas cruzadas
@@ -197,6 +227,14 @@ class Client(object):
                                 pass
                             else:
                                 print 'Choque Cruzado'
+                                robot0.esperando_robot = True
+                                robot0.tipo_choque = '17'
+                                robot0.robot_choque = robot1.nombre
+                                self.estadoChoqueCruzado += 1
+
+
+
+
 
                         
                 #Codigo para analizar choques en linea recta
