@@ -131,11 +131,21 @@ class Pedido(object):
             self.productos = [(5,19),(5,12)]            
         elif robot == '2':
             self.productos = [(17,14),(4,14)]'''
-        #generamos pedidos Cruzados(robot0-ver)Viene de abaj a arrib
+        #generamos pedidos Cruzados Diagonal
         if robot == '1':
-            self.productos = [(4,10), (7,13)]            
+            self.productos = [(10,16), (7,13)]            
         elif robot == '2':
-            self.productos = [(10,10), (7,13)]
+            self.productos = [(4,16), (7,13)]
+        #generamos pedidos Cruzados Diagonal (dia - vert)
+        '''if robot == '1':
+            self.productos = [(4,16), (7,13)]            
+        elif robot == '2':
+            self.productos = [(7,16), (7,13)]'''
+        #generamos pedidos Combinados
+        '''if robot == '1':
+            self.productos = [(4,13), (6,13), (6,9)]            
+        elif robot == '2':
+            self.productos = [(7,6), (3,6), (6,9), (9, 9), (6,9),(6,13), ]'''
 
 
             

@@ -27,6 +27,7 @@ OpcionesChoque = {
     (-2, -2): '16$Se van a chocar diagonal superior izquierda'
 }
 # '17' - choque cruzado vertical
+# '18' - choque cruzado diagonal
 
 def posibleChoqueCruzado(p1, p2):
     x = p2[0] - p1[0]

@@ -46,11 +46,15 @@ from threading import Timer
 #Posiciones de los robots para Choques rectos
 #posicionRobot = [(4, 1), (4, 45)]
 #Posiciones de los robots para Choques cruzados
-posicionRobot = [(4, 1), (10, 1)]
+#posicionRobot = [(4, 1), (6, 1)]
 #Posiciones de los robots para Choques cruzados
 #posicionRobot = [(4, 1), (6, 4)]
 #Posiciones de los robots para Choques cruzados
 #posicionRobot = [(4, 40), (4, 5)]
+#Posiciones de los robots para Choques cruzados diagonales
+#posicionRobot = [(4, 1), (10, 1)]
+#Posiciones de los robots para Choques cruzados dos choques
+posicionRobot = [(7, 44), (4, 41)]
 
 def CrearRobots(robots):
     listaRobots = [] 
@@ -96,6 +100,7 @@ class Client(object):
         self.status = ''
         self.flag = 1
         self.estadoChoqueCruzado = 0
+        self.estadoChoqueDiagonal = 0
 
         
 
@@ -144,6 +149,14 @@ class Client(object):
                                 elif self.estadoChoqueCruzado == 2:
                                     robot0.esperando_robot = False
                                     self.estadoChoqueCruzado = 0
+                                    robot0.tipo_choque = None
+                                    robot0.robot_choque = None
+                            elif robot0.tipo_choque == '18':                                                                
+                                if self.estadoChoqueDiagonal == 1:
+                                    self.estadoChoqueDiagonal += 1
+                                elif self.estadoChoqueDiagonal == 2:
+                                    robot0.esperando_robot = False
+                                    self.estadoChoqueDiagonal= 0
                                     robot0.tipo_choque = None
                                     robot0.robot_choque = None
 
@@ -317,15 +330,41 @@ class Client(object):
                                         robot0.robot_choque = robot1.nombre
                                         robot0.tipo_choque = '4'
                                     elif OpcionesChoque[comparacion].split('$')[0] == '7':
-                                        robot0.posicion_actual = (robot0.posicion_actual[0], robot0.posicion_actual[1] -1)
-                                        robot0.esperando_robot = True
-                                        robot0.robot_choque = robot1.nombre
-                                        robot0.tipo_choque = '7'
+                                        if (robot0.path_restante[1] == robot1.path_restante[1]) and (robot0.posicion_actual[1] != robot0.path_restante[1][1]) and (robot1.posicion_actual[1] != robot1.path_restante[1][1]):
+                                            print 'choque diagonal'
+                                            robot0.esperando_robot = True
+                                            robot0.tipo_choque = '18'
+                                            robot0.robot_choque = robot1.nombre
+                                            self.estadoChoqueDiagonal += 1
+                                        else:
+                                            robot0.posicion_actual = (robot0.posicion_actual[0], robot0.posicion_actual[1] -1)
+                                            robot0.esperando_robot = True
+                                            robot0.robot_choque = robot1.nombre
+                                            robot0.tipo_choque = '7'
                                     elif OpcionesChoque[comparacion].split('$')[0] == '8':
-                                        robot0.posicion_actual = (robot0.posicion_actual[0], robot0.posicion_actual[1] -1)
-                                        robot0.esperando_robot = True
-                                        robot0.robot_choque = robot1.nombre
-                                        robot0.tipo_choque = '8'
+                                        if (robot0.path_restante[1] == robot1.path_restante[1]) and (robot0.posicion_actual[1] != robot0.path_restante[1][1]) and (robot1.posicion_actual[1] != robot1.path_restante[1][1]):
+                                            print 'choque diagonal'                                            
+                                            if robot0.posicion_actual == robot1.path_restante[2]:
+                                                robot0.esperando_robot = True
+                                                robot0.tipo_choque = '18'
+                                                robot0.robot_choque = robot1.nombre
+                                                self.estadoChoqueDiagonal += 1
+                                                robot0.posicion_actual = (robot0.posicion_actual[0] + 1, robot0.posicion_actual[1])
+
+                                            else:
+                                                robot0.esperando_robot = True
+                                                robot0.tipo_choque = '18'
+                                                robot0.robot_choque = robot1.nombre
+                                                self.estadoChoqueDiagonal += 1
+                                                
+
+
+
+                                        else:
+                                            robot0.posicion_actual = (robot0.posicion_actual[0], robot0.posicion_actual[1] -1)
+                                            robot0.esperando_robot = True
+                                            robot0.robot_choque = robot1.nombre
+                                            robot0.tipo_choque = '8'
                                     elif OpcionesChoque[comparacion].split('$')[0] == '13':
                                         robot0.posicion_actual = (robot0.posicion_actual[0], robot0.posicion_actual[1] -1)
                                         robot0.esperando_robot = True
