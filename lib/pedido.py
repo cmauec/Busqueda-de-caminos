@@ -115,32 +115,32 @@ class Pedido(object):
         '''if robot == '1':
             self.productos = [(4,10), (7,10)]            
         elif robot == '2':
-            self.productos = [(5,10),(5,15)]'''
+            self.productos = [(5,10),(5,15)]'''\
         #generamos pedidos Cruzados(robot0-horiz)Viene de der a izq
-        '''if robot == '1':
-            self.productos = [(7,10), (4,10)]            
-        elif robot == '2':
-            self.productos = [(5,10),(5,15)]'''
+        # if robot == '1':
+        #     self.productos = [(7,10), (4,10)]            
+        # elif robot == '2':
+        #     self.productos = [(5,10),(5,15)]
         #generamos pedidos Cruzados(robot0-ver)Viene de arrib a abaj
-        '''if robot == '1':
-            self.productos = [(5,10),(5,15)]            
-        elif robot == '2':
-            self.productos = [(7,10),(4,10)]'''
+        # if robot == '1':
+        #     self.productos = [(5,10),(5,15)]            
+        # elif robot == '2':
+        #     self.productos = [(7,10),(4,10)]
         #generamos pedidos Cruzados(robot0-ver)Viene de abaj a arrib
-        '''if robot == '1':
-            self.productos = [(5,19),(5,12)]            
-        elif robot == '2':
-            self.productos = [(17,14),(4,14)]'''
+        # if robot == '1':
+        #     self.productos = [(5,19),(5,12)]            
+        # elif robot == '2':
+        #     self.productos = [(17,14),(4,14)]
         #generamos pedidos Cruzados Diagonal
-        if robot == '1':
-            self.productos = [(10,16), (7,13)]            
-        elif robot == '2':
-            self.productos = [(4,16), (7,13)]
+        # if robot == '1':
+        #     self.productos = [(4,10), (11,17)]            
+        # elif robot == '2':
+        #     self.productos = [(11,17), (4,10)]
         #generamos pedidos Cruzados Diagonal (dia - vert)
-        '''if robot == '1':
-            self.productos = [(4,16), (7,13)]            
-        elif robot == '2':
-            self.productos = [(7,16), (7,13)]'''
+        # if robot == '1':
+        #     self.productos = [(4,16), (7,13)]            
+        # elif robot == '2':
+        #     self.productos = [(7,16), (7,13)]
         #generamos pedidos Combinados
         '''if robot == '1':
             self.productos = [(4,13), (6,13), (6,9)]            

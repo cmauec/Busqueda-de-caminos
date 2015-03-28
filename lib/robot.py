@@ -35,6 +35,7 @@ class Robot(object):
         self.pedido_actual = None
         self.play_animation = False
         self.posicion_actual = source
+        # rectangulo delimitador para colisones
         x, y = self.source
         nx, ny = x * NODE_SIZE, y * NODE_SIZE
         self.rec_colision = pygame.Rect(nx, ny, NODE_SIZE, NODE_SIZE)
@@ -84,17 +85,19 @@ class Robot(object):
 
 
     def Mover(self):
-        if self.play_animation and not self.esperando_producto and not self.esperando_robot:  #Si las dos funciones son verdaderas - el robot camina, si esperando producto es falso (no hay productos para recoger) - el robot no camina (porq una de las condiciones no se cumple).
+        # Si las dos funciones son verdaderas - el robot camina, si esperando producto es falso (no hay productos para recoger) - el robot no camina (porq una de las condiciones no se cumple).
+        if self.play_animation and not self.esperando_producto and not self.esperando_robot: 
             self.length_path = len(self.path)
             if self.mov_pos < self.length_path:
-                self.source1 = self.path[self.mov_pos]
                 self.mov_pos += 1
-                self.posicion_actual = self.source1
-                x, y = self.source1
-                nx, ny = x * NODE_SIZE, y * NODE_SIZE
-                self.rec_colision = pygame.Rect(nx, ny, NODE_SIZE, NODE_SIZE)
                 self.path_restante.pop(0)
-                self.posicion_actual = self.path_restante[0]
+                try:
+                    self.posicion_actual = self.path_restante[0]
+                except:
+                    self.posicion_actual = self.source
+                x, y = self.posicion_actual
+                nx, ny = x * NODE_SIZE, y * NODE_SIZE
+                self.rec_colision = pygame.Rect(nx, ny, NODE_SIZE, NODE_SIZE).inflate(NODE_SIZE*2,NODE_SIZE*2)
 
    
     def estadoEsperandoProducto(self):
