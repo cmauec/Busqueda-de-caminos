@@ -40,19 +40,22 @@ from lib.pedido import *
 from lib.control import *
 from threading import Timer
  
-
+#Posiciones de los robots para Choques verticales
+posicionRobot = [(4, 1), (6, 38)]
 #Posiciones de los robots para Choques rectos
 #posicionRobot = [(4, 1), (4, 45)]
+#Posiciones de los robots para Choques diag-inf-izq
+#posicionRobot = [(4, 5), (6, 1)]
 #Posiciones de los robots para Choques cruzados
 #posicionRobot = [(4, 1), (6, 1)]
 #Posiciones de los robots para Choques cruzados
-# posicionRobot = [(4, 1), (6, 4)]
+#posicionRobot = [(4, 1), (6, 4)]
 #Posiciones de los robots para Choques cruzados
 # posicionRobot = [(4, 40), (4, 5)]
 #Posiciones de los robots para Choques cruzados diagonales
-#posicionRobot = [(4, 1), (10, 1)]
+#posicionRobot = [(10, 1), (4, 7)]
 #Posiciones de los robots para Choques cruzados dos choques
-posicionRobot = [(4, 1), (6, 1)]
+#posicionRobot = [(4, 1), (6, 1)]
 
 # posicionRobot = [(4, 1), (6, 1), (8, 1), (4, 45), (6, 45), (8, 45)]
 
@@ -62,8 +65,10 @@ ui_path = os.path.join(cur_path, 'ui')
 pygame.font.init()
 
 texto_choque = 'Choque robots'
+texto_se_van_chocar = 'Se van a chocar'
 font = pygame.font.Font(os.path.join(ui_path, FONT_NAME),40)
 txt_choque = font.render(texto_choque,True,(0,0,0))
+txt_se_van_chocar = font.render(texto_se_van_chocar,True,(0,0,0))
 
 def CrearRobots(robots):
     '''Creamos una lista de robots. Parametro robot indica cuantos robots creamos'''
@@ -409,7 +414,7 @@ class Client(object):
 
 
 
-            # Dibuajamos la animacion del robot
+            # Dibuajamos la animacion del robot            
             for robot in self.robots:
                 robot.dibujarRuta(self.ui.screen, self.ui.nodes)
                 if robot.play_animation:
@@ -418,9 +423,8 @@ class Client(object):
                 if (robot.posicion_actual == robot.source) and robot.pedido_actual != None:
                     # al finalizar el recorrido imprime los puntos de la trayectoria
                     #print robot.path
-                    self.control.quitarPedidoConcluido(robot.pedido_actual)
+                    self.control.quitarPedidoConcluido(robot.pedido_actual)                    
                     robot.notificacion_libre(self.control)
-
             self.robots_movimiento = []
             for robot in self.robots:
                 if robot.play_animation:
@@ -428,10 +432,35 @@ class Client(object):
             self.robots_temporal = self.robots_movimiento[1:]            
             for robot0 in self.robots_movimiento:
                 for robot1 in self.robots_temporal:
+                    if robot0.robot_choque == robot1.nombre:
+                        robot0.esperando_robot = True
+
+
+            self.robots_movimiento = []
+            for robot in self.robots:
+                if robot.play_animation:
+                    self.robots_movimiento.append(robot)
+            self.robots_temporal = self.robots_movimiento[1:]           
+            for robot0 in self.robots_movimiento:
+                for robot1 in self.robots_temporal:
                     if robot0.rec_colision.colliderect(robot1.rec_colision):
                         if robot0.path_restante[1]==robot1.path_restante[1]:
-                            self.ui.screen.blit(txt_choque,(170,30))
-                            print 'choque'
+                            self.ui.screen.blit(txt_se_van_chocar,(170,30)) # Pone texto en pantalla
+                            print 'Se van a chocar'                            
+                            self.probabilidad_desvio = [(robot0.posicion_actual[0]+1, robot0.posicion_actual[1]),(robot0.posicion_actual[0]+1, robot0.posicion_actual[1]+1),(robot0.posicion_actual[0], robot0.posicion_actual[1]+1),(robot0.posicion_actual[0]-1, robot0.posicion_actual[1]+1),(robot0.posicion_actual[0]-1, robot0.posicion_actual[1]),(robot0.posicion_actual[0]-1, robot0.posicion_actual[1]-1),(robot0.posicion_actual[0], robot0.posicion_actual[1]-1),(robot0.posicion_actual[0]+1, robot0.posicion_actual[1]-1)]
+                            try:                                
+                                self.probabilidad_desvio.remove(robot1.path_restante[1])
+                            except:
+                                self.coordenada_desvio = random.choice(self.probabilidad_desvio)                                
+                                robot0.path_restante.insert(1, self.coordenada_desvio)
+                                robot0.robot_choque = robot1.nombre
+                                
+
+                                #self.probabilidad_desvio.remove(robot1.path_restante[2])
+                                #self.probabilidad_desvio.remove(robot1.path_restante[3])
+
+
+
                         elif (robot0.path_restante[1]==robot1.path_restante[0])and(robot0.path_restante[0]==robot1.path_restante[1]):
                             self.ui.screen.blit(txt_choque,(170,30))
                             print 'choque'
