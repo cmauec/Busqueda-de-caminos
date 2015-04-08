@@ -82,8 +82,8 @@ class Pedido(object):
 
         #self.productos = products_in_wall1+products_in_wall2+products_in_wall3+products_in_wall4+products_in_wall5+products_in_wall6+products_in_wall7+products_in_wall8+products_in_wall9+products_in_wall10+products_in_wall11+products_in_wall12+products_in_wall13+products_in_wall14+products_in_wall15+products_in_wall16
         #generamos pedidos verticales
-        '''self.productos = []
-        for a in range(20,30):   
+        self.productos = []
+        '''for a in range(20,30):   
             self.productos.append((4,a))'''
         #genetamos pedidos diagonal inferior izquierda
         '''if robot == '1':
@@ -117,26 +117,26 @@ class Pedido(object):
         elif robot == '2':
             self.productos = [(7,10),(5,15)]'''
 
-        #generamos pedidos Cruzados(robot0-horiz)Viene de der a izq
+        #generamos pedidos Cruzados(robot0-horiz)Viene de der a izq######Indicar a Mauro2
         '''if robot == '1':
             self.productos = [(9,10), (4,10)]            
         elif robot == '2':
             self.productos = [(5,10),(5,15)]'''
         #generamos pedidos Cruzados(robot0-ver)Viene de arrib a abaj
-        '''if robot == '1':
+        if robot == '1':
             self.productos = [(5,10),(5,15)]            
         elif robot == '2':
-            self.productos = [(7,10),(4,10)]'''
+            self.productos = [(7,10),(4,10)]
         #generamos pedidos Cruzados(robot0-ver)Viene de abaj a arrib
         '''if robot == '1':
             self.productos = [(5,19),(5,12)]            
         elif robot == '2':
             self.productos = [(17,14),(4,14)]'''
-        #generamos pedidos Cruzados Diagonal
-        if robot == '1':
+        #generamos pedidos Cruzados Diagonal  ##### Indicar Mauro
+        '''if robot == '1':
             self.productos = [(4,10), (11,17)]            
         elif robot == '2':
-            self.productos = [(11,17), (4,10)]
+            self.productos = [(11,17), (4,10)]'''
         #generamos pedidos Cruzados Diagonal (dia - vert)
         '''if robot == '1':
             self.productos = [(4,16), (7,13)]            
