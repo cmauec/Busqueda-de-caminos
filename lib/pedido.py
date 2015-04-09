@@ -133,10 +133,10 @@ class Pedido(object):
         elif robot == '2':
             self.productos = [(17,14),(4,14)]'''
         #generamos pedidos Cruzados Diagonal  ##### Indicar Mauro
-        '''if robot == '1':
+        if robot == '1':
             self.productos = [(4,10), (11,17)]            
         elif robot == '2':
-            self.productos = [(11,17), (4,10)]'''
+            self.productos = [(11,17), (4,10)]
         #generamos pedidos Cruzados Diagonal (dia - vert)
         '''if robot == '1':
             self.productos = [(4,16), (7,13)]            
