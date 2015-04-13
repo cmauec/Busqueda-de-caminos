@@ -55,7 +55,7 @@ from threading import Timer
 #Posiciones de los robots para Choques cruzados diagonales
 #posicionRobot = [(10, 1), (4, 7)]
 #Posiciones de los robots para Choques cruzados dos choques
-posicionRobot = [(25, 3), (4, 1)]##indicar Mauro
+posicionRobot = [(4, 1), (7, 4)]##indicar Mauro
 
 # posicionRobot = [(4, 1), (6, 1), (8, 1), (4, 45), (6, 45), (8, 45)]
 
@@ -436,7 +436,7 @@ class Client(object):
                     if robot0.robot_choque == robot1.nombre:
                         if robot0.esperando_robot == False:
                             robot0.esperando_robot = True
-                        if DistanciaEntrePuntos(robot0.posicion_actual, robot1.posicion_actual) > 2:
+                        if DistanciaEntrePuntos(robot0.posicion_actual, robot1.posicion_actual) > 3:
                             robot0.esperando_robot = False
                             robot0.tipo_choque = None
                             robot0.robot_choque = None
@@ -462,7 +462,7 @@ class Client(object):
                                 robot0.robot_choque = robot1.nombre 
                                 robot1.tipo_choque = 1
                                 robot1.robot_choque = robot0.nombre 
-                                robot0.esperando_robot = True 
+                                #robot0.esperando_robot = True 
                                 self.probabilidad_desvio = [(robot0.posicion_actual[0]+1, robot0.posicion_actual[1]),(robot0.posicion_actual[0]+1, robot0.posicion_actual[1]+1),(robot0.posicion_actual[0], robot0.posicion_actual[1]+1),(robot0.posicion_actual[0]-1, robot0.posicion_actual[1]+1),(robot0.posicion_actual[0]-1, robot0.posicion_actual[1]),(robot0.posicion_actual[0]-1, robot0.posicion_actual[1]-1),(robot0.posicion_actual[0], robot0.posicion_actual[1]-1),(robot0.posicion_actual[0]+1, robot0.posicion_actual[1]-1)]
                                 self.probabilidad_desvio.remove(robot1.path_restante[1])
                                 if robot1.path_restante[2] in self.probabilidad_desvio:
@@ -471,8 +471,8 @@ class Client(object):
                                     self.probabilidad_desvio.remove(robot1.path_restante[3])                             
                                 self.coordenada_desvio = random.choice(self.probabilidad_desvio)                                
                                 robot0.path_restante.insert(1, self.coordenada_desvio)
-                                robot0.path_restante.insert(2, self.coordenada_desvio)
-                                robot0.path_restante.insert(3, robot0.path_restante[0])
+                                #robot0.path_restante.insert(2, self.coordenada_desvio)
+                                robot0.path_restante.insert(2, robot0.path_restante[0])
 
 
                                 
@@ -495,7 +495,7 @@ class Client(object):
                                 self.coordenada_desvio = random.choice(self.probabilidad_desvio)                                
                                 robot0.path_restante.insert(1, self.coordenada_desvio)
                                 #robot0.path_restante.insert(1, self.coordenada_desvio)  #Ponemos dos veces para que espere y no se choque
-                                robot0.path_restante.insert(3, robot0.path_restante[0])
+                                robot0.path_restante.insert(2, robot0.path_restante[0])
                                 
 
                 try: 
