@@ -40,24 +40,7 @@ from lib.pedido import *
 from lib.control import *
 from threading import Timer
  
-#Posiciones de los robots para Choques verticales
-#posicionRobot = [(4, 1), (6, 38)]
-#Posiciones de los robots para Choques rectos
-#posicionRobot = [(4, 1), (4, 45)]
-#Posiciones de los robots para Choques diag-inf-izq
-#posicionRobot = [(4, 0), (6, 4)]
-#Posiciones de los robots para Choques cruzados######Indicar a Mauro2
-#posicionRobot = [(4, 1), (6, 1)]
-#Posiciones de los robots para Choques cruzados
-#posicionRobot = [(4, 1), (6, 4)]
-#Posiciones de los robots para Choques cruzados
-#posicionRobot = [(4, 40), (4, 5)]
-#Posiciones de los robots para Choques cruzados diagonales
-#posicionRobot = [(10, 1), (4, 7)]
-#Posiciones de los robots para Choques cruzados dos choques
-posicionRobot = [(4, 1), (7, 4)]##indicar Mauro
-
-# posicionRobot = [(4, 1), (6, 1), (8, 1), (4, 45), (6, 45), (8, 45)]
+posicionRobot = [(4, 1), (6, 1), (8, 1), (4, 45), (6, 45), (8, 45)]
 
 FONT_NAME = 'freesansbold.ttf'
 cur_path = os.path.abspath(os.path.dirname(__file__))
@@ -148,7 +131,6 @@ class Client(object):
 
 
            
-
 
             '''for robot in self.robots:
                 if len(robot.coordenadas_producto) > 0:
@@ -305,11 +287,7 @@ class Client(object):
             for robot in self.robots:
                 robot.play()
 
-
-        elif event.key == K_t:
-            print self.robots[0].direccionRobot('posterior')
-            print self.robots[0].posicion_actual
-
+        
         elif event.key == K_o:
             self.robots[0].play_animation = False
             self.robots[1].play_animation = False
@@ -323,8 +301,7 @@ class Client(object):
 
         elif event.key == K_p:
             self.robots[0].play_animation = True
-            self.robots[1].play_animation = True
-                
+            self.robots[1].play_animation = True             
              
 
         

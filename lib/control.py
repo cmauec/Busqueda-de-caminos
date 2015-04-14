@@ -8,27 +8,6 @@ from algo.astar import *
 from math import sqrt
 
 
-OpcionesChoque = {
-    (0, 1): '1$Se chocaron abajo',
-    (0, -1): '2$Se chocaron arriba',
-    (0, 2): '3$Se van a chocar abajo',
-    (0, -2): '4$se van a chocar arriba',
-    (1, 0): '5$Se chocaron derecha',
-    (-1, 0): '6$Se chocaron izquierda',
-    (2, 0): '7$Se van a chocar derecha',
-    (-2, 0): '8$Se van a chocar izquierda',
-    (1, -1): '9$Se chocaron diagonal superior derecha',
-    (1, 1): '10$Se chocaron diagonal inferior derecha',
-    (-1, 1): '11$Se chocaron diagonal inferior izquierda',
-    (-1, -1): '12$Se chocaron diagonal superior izquierda',
-    (2, -2):'13$Se van a chocar diagonal superior derecha',
-    (2, 2): '14$Se van a chocar diagonal inferior derecha',
-    (-2, 2): '15$Se van a chocar diagonal inferior izquierda',
-    (-2, -2): '16$Se van a chocar diagonal superior izquierda'
-}
-# '17' - choque cruzado vertical
-# '18' - choque cruzado diagonal
-
 def DistanciaEntrePuntos(p1, p2):
     x = p2[0] - p1[0]
     y = p2[1] - p1[1]
@@ -72,16 +51,16 @@ class Control(object):
             if r.state == 'libre':
                 # si el robot esta en la parte de arriba tendra como salida al norte o al noreste
                 if r.source[1]<8:
-                    self.salida = (18,19)
-                    #self.salida = random.choice(self.salida)
+                    self.salida = self.salida_norte + self.salida_noreste
+                    self.salida = random.choice(self.salida)
                 # si el robot esta en la parte inferior tendra como salida al sur o suroeste
                 elif r.source[1]>37:
-                    self.salida = (18,20)
-                    #self.salida = random.choice(self.salida)
+                    self.salida = self.salida_sur + self.salida_suroeste
+                    self.salida = random.choice(self.salida)
                 self.path = pedido.productos
                 self.path.insert(0, (r.source))
-                #self.path = self.gen_path(self.path)
-                #self.path = self.gen_path_order(self.path)
+                self.path = self.gen_path(self.path)
+                self.path = self.gen_path_order(self.path)
                 r.coordenadas_producto = self.path[1:]
                 self.path.append(self.salida)
                 self.path.append((r.source))
@@ -142,8 +121,8 @@ class Control(object):
                         self.salida = random.choice(self.salida)
                     self.path = self.pedidos[0].productos
                     self.path.insert(0, r.source)
-                    #self.path = self.gen_path(self.path)
-                    #self.path = self.gen_path_order(self.path)
+                    self.path = self.gen_path(self.path)
+                    self.path = self.gen_path_order(self.path)
                     r.coordenadas_producto = self.path[1:]
                     self.path.append(self.salida)
                     self.path.append(r.source)
