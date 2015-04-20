@@ -5,10 +5,10 @@ import random
 
 colorRobot = [(235,56,211),(255,109,5),(59,57,55),(36,90,240),(0,255,4),(49,18,204),(119,5,176)]
 colorRobotTemp = []
-robot_move_right_wall = (2,10,16,22,28,34,40,46,52,58,64,70,76,82) 
-robot_move_left_wall = (6,12,18,24,30,36,42,48,54,60,66,74,78) 
-robot_move_down_wall = 5
-robot_move_up_wall = 40
+pared_izq = (2,10,16,22,28,34,40,46,52,58,64,70,76,82) #Posiciones donde existe pared a la izq
+pared_der = (6,12,18,24,30,36,42,48,54,60,66,74,78)   #Posiciones donde existe pared a la der
+pared_arriba = 5   #Posiciones donde existe pared arrib
+pared_abajo = 40    #Posiciones donde existe pared abaj
 
 
 class Robot(object):
