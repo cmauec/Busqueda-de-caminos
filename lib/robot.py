@@ -64,7 +64,7 @@ class Robot(object):
         self.posicion_actual = self.source
         self.mov_pos = 0
         self.pedido_actual = None
-        self.stop()
+        #self.stop()
         control.asignarPedidoRobot(self.nombre)
 
 

@@ -31,10 +31,11 @@ class Control(object):
         self.pedidos = []
         self.pedidosDibujar = []
         self.robots = []
-        self.salida_norte = [(89,6),(89,8),(89,10)]
-        self.salida_noreste = [(89,15),(89,17),(89,19)]
-        self.salida_sur = [(89,35),(89,37),(89,39)]
-        self.salida_suroeste = [(89,25),(89,27),(89,29)]
+        self.salida_norte = [(88,6),(88,8),(88,10)]
+        self.salida_noreste = [(88,15),(88,17),(88,19)]
+        self.salida_sur = [(88,35),(88,37),(88,39)]
+        self.salida_suroeste = [(88,25),(88, 27),(88,29)]
+        
         self.sections = [(1,8),(9,14),(15,20),(21,26),(27,32),(33,38),(39,44),(45,50),(51,56),(57,62),(63,68),(69,74),(75,80),(81,82)]
         #nos sirve para crear la sombra de los targets
         self.move_right_wall = (1,9,15,21,27,33,39,45,51,57,63,69,75,81) #aumentamos en x uno
@@ -53,10 +54,12 @@ class Control(object):
                 if r.source[1]<8:
                     self.salida = self.salida_norte + self.salida_noreste
                     self.salida = random.choice(self.salida)
+                    self.salida_dibujo = (self.salida[0]+1, self.salida[1])
                 # si el robot esta en la parte inferior tendra como salida al sur o suroeste
                 elif r.source[1]>37:
                     self.salida = self.salida_sur + self.salida_suroeste
                     self.salida = random.choice(self.salida)
+                    self.salida_dibujo = (self.salida[0]+1, self.salida[1])
                 self.path = pedido.productos
                 self.path.insert(0, (r.source))
                 self.path = self.gen_path(self.path)
@@ -99,7 +102,7 @@ class Control(object):
     def dibujarPedidos(self, screen):
         for p in self.pedidosDibujar:
             color = p.color
-            p.productos.append(self.salida)
+            p.productos.append(self.salida_dibujo)
             for producto in p.productos:
                 x, y = producto
                 nx, ny = x * NODE_SIZE, y * NODE_SIZE
@@ -115,10 +118,12 @@ class Control(object):
                     if r.source[1]<8:
                         self.salida = self.salida_norte+self.salida_noreste
                         self.salida = random.choice(self.salida)
+                        self.salida_dibujo = (self.salida[0]+1, self.salida[1])
                     #si el robot esta en la parte inferior tendra como salida al sur o suroeste
                     elif r.source[1]>37:
                         self.salida = self.salida_sur+self.salida_suroeste
                         self.salida = random.choice(self.salida)
+                        self.salida_dibujo = (self.salida[0]+1, self.salida[1])
                     self.path = self.pedidos[0].productos
                     self.path.insert(0, r.source)
                     self.path = self.gen_path(self.path)

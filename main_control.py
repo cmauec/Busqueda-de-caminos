@@ -140,7 +140,7 @@ class Client(object):
                         Timer(2,robot.estadoEsperandoProducto).start()   #Hace que el robot se detenga 3 segundos para recoger roductos'''
 
 
-
+            
             # Dibuajamos la animacion del robot            
             for robot in self.robots:
                 robot.dibujarRuta(self.ui.screen, self.ui.nodes)
@@ -150,9 +150,11 @@ class Client(object):
                 if robot.posicion_actual == (robot.source[0]+1,robot.source[1]):
                     # al finalizar el recorrido imprime los puntos de la trayectoria
                     #print robot.path
+                    print 'llego al final'
                     self.control.quitarPedidoConcluido(robot.pedido_actual)                    
                     robot.notificacion_libre(self.control)
 
+                            
             self.robots_movimiento = []
             for robot in self.robots:
                 if robot.play_animation:
@@ -177,7 +179,12 @@ class Client(object):
             for robot in self.robots:
                 if robot.play_animation:
                     self.robots_movimiento.append(robot)
-            self.robots_temporal = self.robots_movimiento[1:]           
+            self.robots_temporal = self.robots_movimiento[1:]             
+            if len(self.robots_movimiento)==1:
+                print 'queda un robot'
+                #self.robots_movimiento[0].play_animation = True  
+                #self.robots_movimiento[0].esperando_producto = False 
+                #self.robots_movimiento[0].esperando_robot = False       
             for robot0 in self.robots_movimiento:
                 for robot1 in self.robots_temporal:
                     if robot0.tipo_choque == None and robot1.tipo_choque == None:
