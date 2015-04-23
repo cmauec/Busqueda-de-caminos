@@ -64,6 +64,9 @@ class Robot(object):
         self.posicion_actual = self.source
         self.mov_pos = 0
         self.pedido_actual = None
+        self.play_animation = False
+        self.robot_choque = None
+        self.tipo_choque = None
         #self.stop()
         control.asignarPedidoRobot(self.nombre)
 
@@ -87,8 +90,8 @@ class Robot(object):
     def Mover(self):
         # Si las dos funciones son verdaderas - el robot camina, si esperando producto es falso (no hay productos para recoger) - el robot no camina (porq una de las condiciones no se cumple).
         if self.play_animation and not self.esperando_producto and not self.esperando_robot: 
-            self.length_path = len(self.path)
-            if self.mov_pos < self.length_path:
+            self.length_path = len(self.path_restante)
+            if  self.length_path>0:
                 self.mov_pos += 1
                 self.path_restante.pop(0)
                 try:
