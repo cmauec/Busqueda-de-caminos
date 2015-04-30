@@ -179,10 +179,14 @@ class Client(object):
                                 robot1.tipo_choque = None
                                 robot1.robot_choque = None
                     elif robot0.tipo_choque == 20 and robot1.tipo_choque == 20:
+                        print 'entra 20'
                         if robot1.robot_choque == robot0.nombre:
+                            print '20 20'
                             if robot1.esperando_robot == False:
+                                print '20 20 20'
                                 robot1.esperando_robot = True
                             if DistanciaEntrePuntos(robot1.posicion_actual, robot0.posicion_actual) > 3:
+                                print '20 20 20 20'
                                 robot0.esperando_robot = False
                                 robot0.tipo_choque = None
                                 robot0.robot_choque = None
@@ -192,9 +196,12 @@ class Client(object):
                     elif robot0.tipo_choque == 21 and robot1.tipo_choque == 21:
                         print 'entra 21'
                         if robot0.robot_choque == robot1.nombre:
+                            print  '21 21'
                             if robot0.esperando_robot == False:
+                                print '21 21 21'
                                 robot0.esperando_robot = True
                             if DistanciaEntrePuntos(robot0.posicion_actual, robot1.posicion_actual) > 3:
+                                print '21 21 21 21'
                                 robot0.esperando_robot = False
                                 robot0.tipo_choque = None
                                 robot0.robot_choque = None
@@ -286,7 +293,7 @@ class Client(object):
 
 
 
-                    elif robot0.esperando_producto and robot1.play_animation:
+                    elif robot0.esperando_producto and robot1.play_animation and not robot1.esperando_robot:
                         if (DistanciaEntrePuntos(robot0.posicion_actual, robot1.posicion_actual) == 1 ) or (DistanciaEntrePuntos(robot0.posicion_actual, robot1.posicion_actual) == sqrt(2)):
                             print 'colision, rob0-esperando, rob1-mov'                                                        
                             robot0.robot_choque = robot1.nombre
@@ -298,7 +305,7 @@ class Client(object):
                             print robot1.posicion_actual
                             print robot1.path_restante[1]
                             print robot0.path_restante[1]
-                            #if (robot0.path_restante[1] == robot1.posicion_actual) and (robot1.path_restante[1] == robot0.posicion_actual):                      
+                            #if robot1.path_restante[1][0] == robot0.posicion_actual[0]:                      
                             print 'Gina'
                             self.probabilidad_desvio = [(robot1.posicion_actual[0]+1, robot1.posicion_actual[1]),(robot1.posicion_actual[0]+1, robot1.posicion_actual[1]+1),(robot1.posicion_actual[0], robot1.posicion_actual[1]+1),(robot1.posicion_actual[0]-1, robot1.posicion_actual[1]+1),(robot1.posicion_actual[0]-1, robot1.posicion_actual[1]),(robot1.posicion_actual[0]-1, robot1.posicion_actual[1]-1),(robot1.posicion_actual[0], robot1.posicion_actual[1]-1),(robot1.posicion_actual[0]+1, robot1.posicion_actual[1]-1)]
                             
@@ -318,7 +325,7 @@ class Client(object):
                                 self.probabilidad_desvio.remove((robot1.posicion_actual[0], robot1.posicion_actual[1]+1))
                                 self.probabilidad_desvio.remove((robot1.posicion_actual[0]-1, robot1.posicion_actual[1]+1))
                                 self.probabilidad_desvio.remove((robot1.posicion_actual[0]+1, robot1.posicion_actual[1]+1))
-                            self.probabilidad_desvio.remove(robot0.path_restante[0])
+                            self.probabilidad_desvio.remove(robot0.posicion_actual)
                             if robot0.path_restante[1] in self.probabilidad_desvio:
                                 self.probabilidad_desvio.remove(robot0.path_restante[1])
                             elif robot0.path_restante[2] in self.probabilidad_desvio:
@@ -332,7 +339,7 @@ class Client(object):
 
 
                               
-                    elif robot1.esperando_producto and robot0.play_animation:
+                    elif robot1.esperando_producto and robot0.play_animation and not robot0.esperando_robot:
                         if (DistanciaEntrePuntos(robot1.posicion_actual, robot0.posicion_actual) == 1) or (DistanciaEntrePuntos(robot1.posicion_actual, robot0.posicion_actual) == sqrt(2)):
                             print 'colision, rob1-esperando, rob0-mov'                            
                             robot0.robot_choque = robot1.nombre
@@ -344,7 +351,7 @@ class Client(object):
                             print robot0.posicion_actual
                             print robot0.path_restante[1]
                             print robot1.path_restante[1]
-                            #if (robot0.path_restante[1] == robot1.posicion_actual) and (robot1.path_restante[1] == robot0.posicion_actual):
+                            #if robot0.path_restante[1][0] == robot1.posicion_actual[0]:
                             print 'Gina1'
                             self.probabilidad_desvio = [(robot0.posicion_actual[0]+1, robot0.posicion_actual[1]),(robot0.posicion_actual[0]+1, robot0.posicion_actual[1]+1),(robot0.posicion_actual[0], robot0.posicion_actual[1]+1),(robot0.posicion_actual[0]-1, robot0.posicion_actual[1]+1),(robot0.posicion_actual[0]-1, robot0.posicion_actual[1]),(robot0.posicion_actual[0]-1, robot0.posicion_actual[1]-1),(robot0.posicion_actual[0], robot0.posicion_actual[1]-1),(robot0.posicion_actual[0]+1, robot0.posicion_actual[1]-1)]                            
                             if robot0.posicion_actual[0] in pared_izq:
@@ -363,7 +370,7 @@ class Client(object):
                                 self.probabilidad_desvio.remove((robot0.posicion_actual[0], robot0.posicion_actual[1]+1))
                                 self.probabilidad_desvio.remove((robot0.posicion_actual[0]-1, robot0.posicion_actual[1]+1))
                                 self.probabilidad_desvio.remove((robot0.posicion_actual[0]+1, robot0.posicion_actual[1]+1))
-                            self.probabilidad_desvio.remove(robot1.path_restante[0])
+                            self.probabilidad_desvio.remove(robot1.posicion_actual)
                             if robot1.path_restante[1] in self.probabilidad_desvio:
                                 self.probabilidad_desvio.remove(robot1.path_restante[1])
                             elif robot1.path_restante[2] in self.probabilidad_desvio:
