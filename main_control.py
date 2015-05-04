@@ -226,6 +226,9 @@ class Client(object):
                     if (robot0.tipo_choque == None and robot1.tipo_choque == None) and not robot0.esperando_producto and not robot1.esperando_producto:
                         if robot0.rec_colision.colliderect(robot1.rec_colision):  
                             if robot0.path_restante[1]==robot1.path_restante[1]:
+                                #Se para en el momento del choque
+                                robot0.play_animation = False
+                                robot1.play_animation = False
                                 self.ui.screen.blit(txt_se_van_chocar,(170,30)) # Pone texto en pantalla
                                 print 'Se van a chocar'   
                                 robot0.tipo_choque = 1
@@ -235,21 +238,34 @@ class Client(object):
                                 self.probabilidad_desvio = [(robot0.posicion_actual[0]+1, robot0.posicion_actual[1]),(robot0.posicion_actual[0]+1, robot0.posicion_actual[1]+1),(robot0.posicion_actual[0], robot0.posicion_actual[1]+1),(robot0.posicion_actual[0]-1, robot0.posicion_actual[1]+1),(robot0.posicion_actual[0]-1, robot0.posicion_actual[1]),(robot0.posicion_actual[0]-1, robot0.posicion_actual[1]-1),(robot0.posicion_actual[0], robot0.posicion_actual[1]-1),(robot0.posicion_actual[0]+1, robot0.posicion_actual[1]-1)]
                                 self.probabilidad_desvio.remove(robot1.path_restante[1])
                                 if robot0.posicion_actual[0] in pared_izq:
-                                    self.probabilidad_desvio.remove((robot0.posicion_actual[0]-1, robot0.posicion_actual[1]))
-                                    self.probabilidad_desvio.remove((robot0.posicion_actual[0]-1, robot0.posicion_actual[1]+1))
-                                    self.probabilidad_desvio.remove((robot0.posicion_actual[0]-1, robot0.posicion_actual[1]-1))
+                                    #Antes de borrar el elemto revizamos si esta en el vector. Cuando el choque se produce en la parte sup. o infe. que no hay pared a la izq o der y el punto de choque esta en la posicion de la pared.El codigo primero quitaba el punto de  choque pero este punto tambien pertenece a los puntos que hay q quitar por la pared, entonces se queria quitar un punto que ya no existia
+                                    if (robot0.posicion_actual[0]-1, robot0.posicion_actual[1]) in self.probabilidad_desvio:
+                                        self.probabilidad_desvio.remove((robot0.posicion_actual[0]-1, robot0.posicion_actual[1]))
+                                    if (robot0.posicion_actual[0]-1, robot0.posicion_actual[1]+1) in self.probabilidad_desvio:
+                                        self.probabilidad_desvio.remove((robot0.posicion_actual[0]-1, robot0.posicion_actual[1]+1))
+                                    if (robot0.posicion_actual[0]-1, robot0.posicion_actual[1]-1) in self.probabilidad_desvio:
+                                        self.probabilidad_desvio.remove((robot0.posicion_actual[0]-1, robot0.posicion_actual[1]-1))
                                 elif robot0.posicion_actual[0] in pared_der:
-                                    self.probabilidad_desvio.remove((robot0.posicion_actual[0]+1, robot0.posicion_actual[1]))
-                                    self.probabilidad_desvio.remove((robot0.posicion_actual[0]+1, robot0.posicion_actual[1]+1))
-                                    self.probabilidad_desvio.remove((robot0.posicion_actual[0]+1, robot0.posicion_actual[1]-1))
+                                    if (robot0.posicion_actual[0]+1, robot0.posicion_actual[1]) in self.probabilidad_desvio:
+                                        self.probabilidad_desvio.remove((robot0.posicion_actual[0]+1, robot0.posicion_actual[1]))
+                                    if (robot0.posicion_actual[0]+1, robot0.posicion_actual[1]+1) in self.probabilidad_desvio:
+                                        self.probabilidad_desvio.remove((robot0.posicion_actual[0]+1, robot0.posicion_actual[1]+1))
+                                    if (robot0.posicion_actual[0]+1, robot0.posicion_actual[1]-1) in self.probabilidad_desvio:
+                                        self.probabilidad_desvio.remove((robot0.posicion_actual[0]+1, robot0.posicion_actual[1]-1))
                                 elif robot0.posicion_actual[1] == pared_arriba:
-                                    self.probabilidad_desvio.remove((robot0.posicion_actual[0], robot0.posicion_actual[1]-1))
-                                    self.probabilidad_desvio.remove((robot0.posicion_actual[0]-1, robot0.posicion_actual[1]-1))
-                                    self.probabilidad_desvio.remove((robot0.posicion_actual[0]+1, robot0.posicion_actual[1]-1))
+                                    if (robot0.posicion_actual[0], robot0.posicion_actual[1]-1) in self.probabilidad_desvio:
+                                        self.probabilidad_desvio.remove((robot0.posicion_actual[0], robot0.posicion_actual[1]-1))
+                                    if (robot0.posicion_actual[0]-1, robot0.posicion_actual[1]-1) in self.probabilidad_desvio:
+                                        self.probabilidad_desvio.remove((robot0.posicion_actual[0]-1, robot0.posicion_actual[1]-1))
+                                    if (robot0.posicion_actual[0]+1, robot0.posicion_actual[1]-1) in self.probabilidad_desvio:
+                                        self.probabilidad_desvio.remove((robot0.posicion_actual[0]+1, robot0.posicion_actual[1]-1))
                                 elif robot0.posicion_actual[1] == pared_abajo:
-                                    self.probabilidad_desvio.remove((robot0.posicion_actual[0], robot0.posicion_actual[1]+1))
-                                    self.probabilidad_desvio.remove((robot0.posicion_actual[0]-1, robot0.posicion_actual[1]+1))
-                                    self.probabilidad_desvio.remove((robot0.posicion_actual[0]+1, robot0.posicion_actual[1]+1))
+                                    if (robot0.posicion_actual[0], robot0.posicion_actual[1]+1) in self.probabilidad_desvio:
+                                        self.probabilidad_desvio.remove((robot0.posicion_actual[0], robot0.posicion_actual[1]+1))
+                                    if (robot0.posicion_actual[0]-1, robot0.posicion_actual[1]+1) in self.probabilidad_desvio:
+                                        self.probabilidad_desvio.remove((robot0.posicion_actual[0]-1, robot0.posicion_actual[1]+1))
+                                    if (robot0.posicion_actual[0]+1, robot0.posicion_actual[1]+1) in self.probabilidad_desvio:
+                                        self.probabilidad_desvio.remove((robot0.posicion_actual[0]+1, robot0.posicion_actual[1]+1))
                                 if robot1.path_restante[2] in self.probabilidad_desvio:
                                         self.probabilidad_desvio.remove(robot1.path_restante[2])
                                 elif robot1.path_restante[3] in self.probabilidad_desvio:
@@ -258,6 +274,8 @@ class Client(object):
                                 robot0.path_restante.insert(1, self.coordenada_desvio)
                                 robot0.path_restante.insert(2, robot0.path_restante[0])
                             elif (robot0.path_restante[1]==robot1.path_restante[0])and(robot0.path_restante[0]==robot1.path_restante[1]):
+                                robot0.play_animation = False
+                                robot1.play_animation = False
                                 self.ui.screen.blit(txt_choque,(170,30))
                                 print 'choque'
                                 robot0.tipo_choque = 2
@@ -295,6 +313,8 @@ class Client(object):
 
                     elif robot0.esperando_producto and robot1.play_animation and not robot1.esperando_robot:
                         if (DistanciaEntrePuntos(robot0.posicion_actual, robot1.posicion_actual) == 1 ) or (DistanciaEntrePuntos(robot0.posicion_actual, robot1.posicion_actual) == sqrt(2)):
+                            robot0.play_animation = False
+                            robot1.play_animation = False
                             print 'colision, rob0-esperando, rob1-mov'                                                        
                             robot0.robot_choque = robot1.nombre
                             robot1.robot_choque = robot0.nombre
@@ -341,6 +361,8 @@ class Client(object):
                               
                     elif robot1.esperando_producto and robot0.play_animation and not robot0.esperando_robot:
                         if (DistanciaEntrePuntos(robot1.posicion_actual, robot0.posicion_actual) == 1) or (DistanciaEntrePuntos(robot1.posicion_actual, robot0.posicion_actual) == sqrt(2)):
+                            robot0.play_animation = False
+                            robot1.play_animation = False
                             print 'colision, rob1-esperando, rob0-mov'                            
                             robot0.robot_choque = robot1.nombre
                             robot1.robot_choque = robot0.nombre
@@ -382,6 +404,8 @@ class Client(object):
                             
 
                     elif robot1.esperando_producto and robot0.esperando_producto: 
+                        robot0.play_animation = False
+                        robot1.play_animation = False
                         print 'Gina3'
 
                                 
@@ -410,7 +434,7 @@ class Client(object):
     def _handle_keyboard(self, event):
         """Handle keyboard events
         """
-        
+        #Agragar pedidos
         if event.key == K_SPACE:
             nombre = uuid.uuid4()
             if self.flag == 1:
@@ -421,14 +445,14 @@ class Client(object):
             self.control.agregarPedido(self.pedido)
             print self.pedido.nombre
 
-
+        #Tecla para agregar robots en el punto de partida
         elif event.key == K_s:
             self.robotNuevo = CrearRobot()
             if self.robotNuevo:
                 self.robots.append(self.robotNuevo)
                 self.control.agregarRobot(self.robotNuevo)
 
-
+        #Tecla para quitar robots en el punto de partida
         elif event.key == K_a:
             for robot in self.robots:
                 if robot.state == 'libre':
@@ -441,34 +465,42 @@ class Client(object):
 
 
         elif event.key == K_e:
+            print "INFORMACION"
+            print '-------------------------------------------------'            
             for robot in self.robots:
-                print robot.play_animation
-                print robot.esperando_producto
-                print robot.esperando_robot
-                print robot.mov_pos
-                print len(robot.path)
-                print robot.state
-                # robot.stop()
+                print "INFORMACION robot"
+                print '-------------------------------------------------'                
+                print 'play_animation: ' + str (robot.play_animation)
+                print 'esperando_producto: ' + str (robot.esperando_producto)
+                print 'esperando_robot: ' + str (robot.esperando_robot)                
+                print 'source: ' + str (robot.source)
+                print 'state: ' + robot.state                 
+                print 'robot_choque: ' + str (robot.robot_choque) 
+                print 'tipo_choque: ' + str (robot.tipo_choque) 
+                print 'nombre: ' + str (robot.nombre)     
+                print 'path: ' + str (robot.path) 
+                print 'path_restante: ' + str (robot.path_restante) 
+                print 'coordenadas_producto: ' + str (robot.coordenadas_producto)
+                print 'color: ' + str (robot.color) 
+                print 'init: ' + str (robot.init) 
+                print 'pos: ' + str (robot.pos) 
+                print 'mov_pos: ' + str (robot.mov_pos) 
+                print 'pedido_actual: ' + str (robot.pedido_actual)                
+                print 'posicion_actual: ' + str (robot.posicion_actual) 
+                print '-------------------------------------------------'
 
-        elif event.key == K_r:
-            for robot in self.robots:
-                robot.play()
-
-        
+               
         elif event.key == K_o:
             self.robots[0].play_animation = False
             self.robots[1].play_animation = False
-            # print self.robots[0].posicion_actual
-            # print self.robots[0].path
-            # print self.robots[0].path_restante
-            '''print self.robots[0].posicion_actual
-            print self.robots[0].rec_colision
-            print self.robots[1].posicion_actual
-            print self.robots[1].rec_colision'''
+           
 
         elif event.key == K_p:
             self.robots[0].play_animation = True
-            self.robots[1].play_animation = True             
+            self.robots[1].play_animation = True 
+
+        
+                        
              
 
         
