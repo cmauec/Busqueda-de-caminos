@@ -406,6 +406,8 @@ class Client(object):
                     elif robot1.esperando_producto and robot0.esperando_producto: 
                         robot0.play_animation = False
                         robot1.play_animation = False
+                        robot0.tipo_choque = 3
+                        robot1.tipo_choque = 3
                         print 'Gina3'
 
                                 
@@ -444,6 +446,10 @@ class Client(object):
             self.flag = 2
             self.control.agregarPedido(self.pedido)
             print self.pedido.nombre
+            file = open("robotgina.txt", "w")
+            for c in self.robots[0].path:
+                file.write(str(c[0]) + ' ' + str(c[1]) + '\n')
+            file.close()
 
         #Tecla para agregar robots en el punto de partida
         elif event.key == K_s:
