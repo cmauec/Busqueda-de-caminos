@@ -227,8 +227,8 @@ class Client(object):
                         if robot0.rec_colision.colliderect(robot1.rec_colision):  
                             if robot0.path_restante[1]==robot1.path_restante[1]:
                                 #Se para en el momento del choque
-                                robot0.play_animation = False
-                                robot1.play_animation = False
+                                #robot0.play_animation = False
+                                #robot1.play_animation = False
                                 self.ui.screen.blit(txt_se_van_chocar,(170,30)) # Pone texto en pantalla
                                 print 'Se van a chocar'   
                                 robot0.tipo_choque = 1
@@ -274,8 +274,8 @@ class Client(object):
                                 robot0.path_restante.insert(1, self.coordenada_desvio)
                                 robot0.path_restante.insert(2, robot0.path_restante[0])
                             elif (robot0.path_restante[1]==robot1.path_restante[0])and(robot0.path_restante[0]==robot1.path_restante[1]):
-                                robot0.play_animation = False
-                                robot1.play_animation = False
+                                #robot0.play_animation = False
+                                #robot1.play_animation = False
                                 self.ui.screen.blit(txt_choque,(170,30))
                                 print 'choque'
                                 robot0.tipo_choque = 2
@@ -313,8 +313,8 @@ class Client(object):
 
                     elif robot0.esperando_producto and robot1.play_animation and not robot1.esperando_robot:
                         if (DistanciaEntrePuntos(robot0.posicion_actual, robot1.posicion_actual) == 1 ) or (DistanciaEntrePuntos(robot0.posicion_actual, robot1.posicion_actual) == sqrt(2)):
-                            robot0.play_animation = False
-                            robot1.play_animation = False
+                            #robot0.play_animation = False
+                            #robot1.play_animation = False
                             print 'colision, rob0-esperando, rob1-mov'                                                        
                             robot0.robot_choque = robot1.nombre
                             robot1.robot_choque = robot0.nombre
@@ -361,8 +361,8 @@ class Client(object):
                               
                     elif robot1.esperando_producto and robot0.play_animation and not robot0.esperando_robot:
                         if (DistanciaEntrePuntos(robot1.posicion_actual, robot0.posicion_actual) == 1) or (DistanciaEntrePuntos(robot1.posicion_actual, robot0.posicion_actual) == sqrt(2)):
-                            robot0.play_animation = False
-                            robot1.play_animation = False
+                            #robot0.play_animation = False
+                            #robot1.play_animation = False
                             print 'colision, rob1-esperando, rob0-mov'                            
                             robot0.robot_choque = robot1.nombre
                             robot1.robot_choque = robot0.nombre
@@ -435,7 +435,7 @@ class Client(object):
 
     def _handle_keyboard(self, event):
         """Handle keyboard events
-        """
+     cd   """
         #Agragar pedidos
         if event.key == K_SPACE:
             nombre = uuid.uuid4()
