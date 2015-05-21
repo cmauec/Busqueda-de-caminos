@@ -45,7 +45,30 @@ class Robot(object):
     def dibujarRobot(self,screen):
         x, y = self.posicion_actual
         nx, ny = x * NODE_SIZE, y * NODE_SIZE
-        pygame.draw.rect(screen, self.color, Rect(nx, ny, NODE_SIZE, NODE_SIZE))
+        xi = nx +2
+        yi = ny +2 
+        cort_esq = 1
+        '''poligono = [
+            (xi, yi), 
+            (xi + Rect(xi, yi, NODE_SIZE, NODE_SIZE).inflate(-NODE_SIZE*0.3, -NODE_SIZE*0.3)[2], yi),
+            (xi + Rect(xi, yi, NODE_SIZE, NODE_SIZE).inflate(-NODE_SIZE*0.3, -NODE_SIZE*0.3)[2], yi + Rect(xi, yi, NODE_SIZE, NODE_SIZE).inflate(-NODE_SIZE*0.3, -NODE_SIZE*0.3)[3] ),
+            (xi, yi + Rect(xi, yi, NODE_SIZE, NODE_SIZE).inflate(-NODE_SIZE*0.3, -NODE_SIZE*0.3)[3] )
+
+        ]'''
+
+
+        poligono = [
+            (xi + cort_esq, yi),             
+            (xi + Rect(xi, yi, NODE_SIZE, NODE_SIZE).inflate(-NODE_SIZE*0.3, -NODE_SIZE*0.3)[2] - cort_esq, yi),
+            (xi + Rect(xi, yi, NODE_SIZE, NODE_SIZE).inflate(-NODE_SIZE*0.3, -NODE_SIZE*0.3)[2], yi + cort_esq),
+            (xi + Rect(xi, yi, NODE_SIZE, NODE_SIZE).inflate(-NODE_SIZE*0.3, -NODE_SIZE*0.3)[2], yi + Rect(xi, yi, NODE_SIZE, NODE_SIZE).inflate(-NODE_SIZE*0.3, -NODE_SIZE*0.3)[3] - cort_esq),
+            (xi + Rect(xi, yi, NODE_SIZE, NODE_SIZE).inflate(-NODE_SIZE*0.3, -NODE_SIZE*0.3)[2] - cort_esq, yi +  Rect(xi, yi, NODE_SIZE, NODE_SIZE).inflate(-NODE_SIZE*0.3, -NODE_SIZE*0.3)[3]),
+            (xi + cort_esq, yi+ Rect(xi, yi, NODE_SIZE, NODE_SIZE).inflate(-NODE_SIZE*0.3, -NODE_SIZE*0.3)[3]),
+            (xi, yi+ Rect(xi, yi, NODE_SIZE, NODE_SIZE).inflate(-NODE_SIZE*0.3, -NODE_SIZE*0.3)[3] - cort_esq),
+            (xi, yi + cort_esq )
+        ]
+        pygame.draw.polygon(screen, self.color, poligono)
+       
        
     def agregarRuta(self,ruta,pedido):
         self.path = ruta

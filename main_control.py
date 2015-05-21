@@ -41,7 +41,7 @@ from lib.control import *
 from threading import Timer
  
 posicionRobot = [(5, 1), (7, 2), (3, 0), (7, 45), (3, 43), (5, 44)]
-
+#posicionRobot = [(1, 1), (1, 1)]
 FONT_NAME = 'freesansbold.ttf'
 cur_path = os.path.abspath(os.path.dirname(__file__))
 ui_path = os.path.join(cur_path, 'ui')
