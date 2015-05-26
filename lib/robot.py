@@ -35,6 +35,7 @@ class Robot(object):
         self.pedido_actual = None
         self.play_animation = False
         self.posicion_actual = source
+        self.girar = False
         # rectangulo delimitador para colisones
         x, y = self.source
         nx, ny = x * NODE_SIZE, y * NODE_SIZE
@@ -45,16 +46,16 @@ class Robot(object):
     def dibujarRobot(self,screen):
         x, y = self.posicion_actual
         nx, ny = x * NODE_SIZE, y * NODE_SIZE
-        xi = nx +2
+        '''xi = nx +2
         yi = ny +2 
         cort_esq = 1
-        '''poligono = [
+        poligono = [
             (xi, yi), 
             (xi + Rect(xi, yi, NODE_SIZE, NODE_SIZE).inflate(-NODE_SIZE*0.3, -NODE_SIZE*0.3)[2], yi),
             (xi + Rect(xi, yi, NODE_SIZE, NODE_SIZE).inflate(-NODE_SIZE*0.3, -NODE_SIZE*0.3)[2], yi + Rect(xi, yi, NODE_SIZE, NODE_SIZE).inflate(-NODE_SIZE*0.3, -NODE_SIZE*0.3)[3] ),
             (xi, yi + Rect(xi, yi, NODE_SIZE, NODE_SIZE).inflate(-NODE_SIZE*0.3, -NODE_SIZE*0.3)[3] )
 
-        ]'''
+        ]
 
 
         poligono = [
@@ -67,9 +68,52 @@ class Robot(object):
             (xi, yi+ Rect(xi, yi, NODE_SIZE, NODE_SIZE).inflate(-NODE_SIZE*0.3, -NODE_SIZE*0.3)[3] - cort_esq),
             (xi, yi + cort_esq )
         ]
-        pygame.draw.polygon(screen, self.color, poligono)
+        pygame.draw.polygon(screen, self.color, poligono)'''
+        if not self.girar:  
+            b = pygame.sprite.Sprite() # create sprite
+            b.image = pygame.image.load("robot.png").convert_alpha() # load ball image
+            b.rect = b.image.get_rect() # use image extent values 
+            b.rect.topleft = [nx+3, ny+3] # put the ball in the top left corner
+            screen.blit(b.image, b.rect)
+        elif self.girar:
+            b = pygame.sprite.Sprite() # create sprite
+            b.image = pygame.image.load("robot.png").convert_alpha() # load ball image
+            pygame.transform.rotate(b.image,20)
+            b.rect = b.image.get_rect() # use image extent values 
+            b.rect.topleft = [nx+3, ny+3] # put the ball in the top left corner
+            screen.blit(b.image, b.rect)
+
        
-       
+
+
+    def girar(self, screen):       
+        x, y = self.posicion_actual
+        nx, ny = x * NODE_SIZE, y * NODE_SIZE
+        '''xi = nx +2
+        yi = ny +2 
+        cort_esq = 1
+        poligono = [
+            (xi, yi), 
+            (xi + Rect(xi, yi, NODE_SIZE, NODE_SIZE).inflate(-NODE_SIZE*0.3, -NODE_SIZE*0.3)[2], yi),
+            (xi + Rect(xi, yi, NODE_SIZE, NODE_SIZE).inflate(-NODE_SIZE*0.3, -NODE_SIZE*0.3)[2], yi + Rect(xi, yi, NODE_SIZE, NODE_SIZE).inflate(-NODE_SIZE*0.3, -NODE_SIZE*0.3)[3] ),
+            (xi, yi + Rect(xi, yi, NODE_SIZE, NODE_SIZE).inflate(-NODE_SIZE*0.3, -NODE_SIZE*0.3)[3] )
+
+        ]
+
+
+        poligono = [
+            (xi + cort_esq, yi),             
+            (xi + Rect(xi, yi, NODE_SIZE, NODE_SIZE).inflate(-NODE_SIZE*0.3, -NODE_SIZE*0.3)[2] - cort_esq, yi),
+            (xi + Rect(xi, yi, NODE_SIZE, NODE_SIZE).inflate(-NODE_SIZE*0.3, -NODE_SIZE*0.3)[2], yi + cort_esq),
+            (xi + Rect(xi, yi, NODE_SIZE, NODE_SIZE).inflate(-NODE_SIZE*0.3, -NODE_SIZE*0.3)[2], yi + Rect(xi, yi, NODE_SIZE, NODE_SIZE).inflate(-NODE_SIZE*0.3, -NODE_SIZE*0.3)[3] - cort_esq),
+            (xi + Rect(xi, yi, NODE_SIZE, NODE_SIZE).inflate(-NODE_SIZE*0.3, -NODE_SIZE*0.3)[2] - cort_esq, yi +  Rect(xi, yi, NODE_SIZE, NODE_SIZE).inflate(-NODE_SIZE*0.3, -NODE_SIZE*0.3)[3]),
+            (xi + cort_esq, yi+ Rect(xi, yi, NODE_SIZE, NODE_SIZE).inflate(-NODE_SIZE*0.3, -NODE_SIZE*0.3)[3]),
+            (xi, yi+ Rect(xi, yi, NODE_SIZE, NODE_SIZE).inflate(-NODE_SIZE*0.3, -NODE_SIZE*0.3)[3] - cort_esq),
+            (xi, yi + cort_esq )
+        ]
+        pygame.draw.polygon(screen, self.color, poligono)'''
+
+   
     def agregarRuta(self,ruta,pedido):
         self.path = ruta
         self.path_restante = list(self.path)

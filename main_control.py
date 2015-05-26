@@ -135,14 +135,17 @@ class Client(object):
             self.control.dibujarPedidos(self.ui.screen)
 
 
-           
+            for robot in self.robots:
+                if robot.esperando_producto:                    
+                    robot.girar = True
+
 
             for robot in self.robots:
                 if len(robot.coordenadas_producto) > 0:
                     if robot.posicion_actual == robot.coordenadas_producto[0]:
                         robot.esperando_producto = True
                         robot.coordenadas_producto.pop(0)
-                        Timer(2,robot.estadoEsperandoProducto).start()   #Hace que el robot se detenga 3 segundos para recoger roductos
+                        Timer(4,robot.estadoEsperandoProducto).start()   #Hace que el robot se detenga 4 segundos para recoger roductos
 
 
             
