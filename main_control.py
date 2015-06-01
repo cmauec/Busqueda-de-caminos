@@ -477,6 +477,7 @@ class Client(object):
                 self.pedido = Pedido(nombre,'2')
             self.flag = 2
             self.control.agregarPedido(self.pedido)
+            print self.pedido.productos_nom
             print self.pedido.nombre
             file = open("robotgina.txt", "w")
             for c in self.robots[0].path:

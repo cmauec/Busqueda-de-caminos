@@ -81,6 +81,8 @@ FONT_NAME = 'freesansbold.ttf'
 ICON_NAME = 'ico.png'
 
 
+
+
 # color table
 BACKGROUND_COLOR         = 'gray95'
 GRID_LINE_COLOR          = 'gray'

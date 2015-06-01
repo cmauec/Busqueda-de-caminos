@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import random
 from const.constants import * 
 import pygame
@@ -6,6 +7,8 @@ import random
 
 
 coloresProductos = [(207,23,23),(168,19,19),(133,15,15),(94,10,10),(59,6,6),(230,39,39),(237,111,111),(235,75,75),(242,148,148)]
+nombresProductos = [u'Картофель', u'Капуста', u'Морковь', u'Помидоры', u'Огурцы', u'Чеснок', u'Лук', u'Свекла', u'Зелень', u'Рыба', u'Тушенка', u'Горошек', u'Кукуруза', u'Сгущенка', u'Грибы', u'Макароны', u'Спагетти', u'Гречка', u'Перловка',u'Рис', u'Геркулес', u'Кукурузная крупа', u'Горох', u'Мёд', u'Яйца', u'Уксус', u'Маргарин', u'Мука', u'Сахар', u'Кофе', u'чай', u'Какао']
+
 
 class Pedido(object):
 
@@ -81,7 +84,13 @@ class Pedido(object):
             products_in_wall16.append(self.gen_element2(41,7,81))
 
         self.productos = products_in_wall1+products_in_wall2+products_in_wall3+products_in_wall4+products_in_wall5+products_in_wall6+products_in_wall7+products_in_wall8+products_in_wall9+products_in_wall10+products_in_wall11+products_in_wall12+products_in_wall13+products_in_wall14+products_in_wall15+products_in_wall16
-                           
+
+        self.productos_nom = {}
+        for p in self.productos:
+            nombresProductosTemporal = nombresProductos[:]
+            nombreProducto = random.choice(nombresProductosTemporal)
+            self.productos_nom[nombreProducto]  = p
+            nombresProductosTemporal.remove(nombreProducto)                          
 
         self.color = random.choice(coloresProductos)
         self.nombre = nombre
