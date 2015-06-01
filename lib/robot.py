@@ -73,14 +73,14 @@ class Robot(object):
             b = pygame.sprite.Sprite() # create sprite
             b.image = pygame.image.load("robot.png").convert_alpha() # load ball image
             b.rect = b.image.get_rect() # use image extent values 
-            b.rect.topleft = [nx+3, ny+3] # put the ball in the top left corner
+            b.rect.topleft = [nx+2, ny+2] # put the ball in the top left corner
             screen.blit(b.image, b.rect)
         elif self.girar:
             b = pygame.sprite.Sprite() # create sprite
             b.image = pygame.image.load("robot.png").convert_alpha() # load ball image
-            image = pygame.transform.rotate(b.image,45)
+            image = pygame.transform.rotate(b.image,90)
             b.rect = image.get_rect() # use image extent values 
-            b.rect.topleft = [nx+3, ny+3] # put the ball in the top left corner
+            b.rect.topleft = [nx+2, ny+2] # put the ball in the top left corner
             screen.blit(image, b.rect)
 
 
