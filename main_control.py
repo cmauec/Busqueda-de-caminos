@@ -63,6 +63,14 @@ def CrearRobots(robots):
         index_posicionRobotRandom = posicionRobot.index(posicionRobotRandom)
         posicionRobot.pop(index_posicionRobotRandom)
         robot = Robot(posicionRobotRandom, uuid.uuid4())
+        canastaA = CanastaRobot('A', 1) #1 - arriba
+        canastaB = CanastaRobot('B', 2) #2 - der
+        canastaC = CanastaRobot('C', 3) #3 - izq
+        canastaD = CanastaRobot('D', 4) #4 - abajo
+        robot.canastas.append(canastaA)
+        robot.canastas.append(canastaB)
+        robot.canastas.append(canastaC)
+        robot.canastas.append(canastaD)
         listaRobots.append(robot)
     return listaRobots
 
@@ -470,12 +478,8 @@ class Client(object):
      cd   """
         #Agragar pedidos
         if event.key == K_SPACE:
-            nombre = uuid.uuid4()
-            if self.flag == 1:
-                self.pedido = Pedido(nombre,'1')
-            elif self.flag == 2:
-                self.pedido = Pedido(nombre,'2')
-            self.flag = 2
+            nombre = uuid.uuid4()            
+            self.pedido = Pedido(nombre)            
             self.control.agregarPedido(self.pedido)
             print self.pedido.productos_nom
             print self.pedido.nombre

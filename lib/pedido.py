@@ -7,12 +7,12 @@ import random
 
 
 coloresProductos = [(207,23,23),(168,19,19),(133,15,15),(94,10,10),(59,6,6),(230,39,39),(237,111,111),(235,75,75),(242,148,148)]
-nombresProductos = [u'Картофель', u'Капуста', u'Морковь', u'Помидоры', u'Огурцы', u'Чеснок', u'Лук', u'Свекла', u'Зелень', u'Рыба', u'Тушенка', u'Горошек', u'Кукуруза', u'Сгущенка', u'Грибы', u'Макароны', u'Спагетти', u'Гречка', u'Перловка',u'Рис', u'Геркулес', u'Кукурузная крупа', u'Горох', u'Мёд', u'Яйца', u'Уксус', u'Маргарин', u'Мука', u'Сахар', u'Кофе', u'чай', u'Какао']
+nombresProductos = ['Potatoes',' cabbage ',' carrot ',' tomatoes', 'Cucumber', 'garlic', 'Bow', 'Beetroot', 'green', 'fish', 'Stew', 'peas',' Corn ',' condensed', 'milk', 'Mushrooms',' Makarony', 'spaghetti', 'Buckwheat', 'barley', 'Figure' 'Hercules',' Corn grits', 'peas',' Honey ',' Eggs', 'Vinegar ',' Margarine',' flour ',' sugar ',' Coffee',' tea ',' Cocoa']
 
 
 class Pedido(object):
 
-    def __init__(self, nombre, robot = 0):
+    def __init__(self, nombre):
         #estado del pedido
         self.state = 'por_entregar'
         # Creamos variables para guardar coordenadas de los productos en las estanterias(targets)

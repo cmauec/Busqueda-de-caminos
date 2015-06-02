@@ -10,11 +10,18 @@ pared_der = (6,12,18,24,30,36,42,48,54,60,66,74,78)   #Posiciones donde existe p
 pared_arriba = 5   #Posiciones donde existe pared arrib
 pared_abajo = 40    #Posiciones donde existe pared abaj
 
+class CanastaRobot(object):
+    def __init__(self, nombreCanasta, posicionCanasta):
+        self.nombreCanasta = nombreCanasta
+        self.posicionCanasta = posicionCanasta
+        self.productosCanasta = []
+        self.productosRecoger = []
 
 class Robot(object):
 
     def __init__(self,source,nombre):
         #Punto donde sale el robot
+        self.canastas = []
         self.colorRandom = random.choice(colorRobot)
         self.index_colorRandom = colorRobot.index(self.colorRandom)
         colorRobot.pop(self.index_colorRandom)
