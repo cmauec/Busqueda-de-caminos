@@ -83,7 +83,15 @@ class Control(object):
                     except:
                             pass
                     self.loop += 1 
-                #print self.pathRobot
+                
+                self.pedidosConNombreOrdenados =[]
+                for p in self.pathRobot:
+                    for pn in pedido.productos_nom:
+                        if p in pn:
+                            self.pedidosConNombreOrdenados.append(pn)
+                print self.pedidosConNombreOrdenados
+                print self.pathRobot 
+
                 r.agregarRuta(self.pathRobot,pedido)
                 r.state = 'ocupado'
                 r.play()

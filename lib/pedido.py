@@ -7,7 +7,7 @@ import random
 
 
 coloresProductos = [(207,23,23),(168,19,19),(133,15,15),(94,10,10),(59,6,6),(230,39,39),(237,111,111),(235,75,75),(242,148,148)]
-nombresProductos = ['Potatoes',' cabbage ',' carrot ',' tomatoes', 'Cucumber', 'garlic', 'Bow', 'Beetroot', 'green', 'fish', 'Stew', 'peas',' Corn ',' condensed', 'milk', 'Mushrooms',' Makarony', 'spaghetti', 'Buckwheat', 'barley', 'Figure' 'Hercules',' Corn grits', 'peas',' Honey ',' Eggs', 'Vinegar ',' Margarine',' flour ',' sugar ',' Coffee',' tea ',' Cocoa']
+nombresProductos = ['bacon','bagel','bake','batter','beancurd','beans','beef','beet','bell pepper','brownie','brown rice','brunch','buckwheat','cereal','chard','cheddar','cheese','cheesecake','chef','chips','chives','chocolate','chopsticks','chow','chutney','cinnamon','clam','cobbler','coconut','cod','coffee','coleslaw','collard greens','cream','cream cheese','crepe','crisp','crunch'.'cucumber','cuisine','cupboard','preserves','pretzel','protein','provisions','prune','pudding','soup','sour cream','soybeans','soysauce','spareribs','spices','spicy','spinach','split peas','spoon','spork','taco','take-out','tamale','tangerine','tapioca','wheat', 'rye', 'oats', 'corn', 'barley', 'buckwheat', 'bakery goods',' rolls', 'buns', 'cakes', 'cookies', 'corn flakes', 'wheat flakes','muesli', 'popcorn','pasta', 'macaroni', 'noodles', 'spaghetti', 'vermicelli','flour', 'dough', 'cake mix', 'bread', 'white bread', 'garlic bread', 'pita bread', 'tortilla']
 
 
 class Pedido(object):
@@ -85,12 +85,13 @@ class Pedido(object):
 
         self.productos = products_in_wall1+products_in_wall2+products_in_wall3+products_in_wall4+products_in_wall5+products_in_wall6+products_in_wall7+products_in_wall8+products_in_wall9+products_in_wall10+products_in_wall11+products_in_wall12+products_in_wall13+products_in_wall14+products_in_wall15+products_in_wall16
 
-        self.productos_nom = {}
-        for p in self.productos:
-            nombresProductosTemporal = nombresProductos[:]
+        self.productos_nom = []
+        nombresProductosTemporal = nombresProductos[:]
+        for p in self.productos:            
             nombreProducto = random.choice(nombresProductosTemporal)
-            self.productos_nom[nombreProducto]  = p
-            nombresProductosTemporal.remove(nombreProducto)                          
+            self.productos_nom.append((nombreProducto, p)) 
+            nombresProductosTemporal.remove(nombreProducto)   
+        print self.productos_nom                       
 
         self.color = random.choice(coloresProductos)
         self.nombre = nombre

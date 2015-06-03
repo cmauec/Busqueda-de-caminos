@@ -16,6 +16,7 @@ class CanastaRobot(object):
         self.posicionCanasta = posicionCanasta
         self.productosCanasta = []
         self.productosRecoger = []
+        self.estadoCanasta = 0   # 0-vacia, 1- llena
 
 class Robot(object):
 
