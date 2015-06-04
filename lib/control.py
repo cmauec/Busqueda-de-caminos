@@ -87,10 +87,32 @@ class Control(object):
                 self.pedidosConNombreOrdenados =[]
                 for p in self.pathRobot:
                     for pn in pedido.productos_nom:
-                        if p in pn:
+                        if pn[1][1] in self.wall_is_vertical:   #[1]-coordenadas del producto y [1]-y
+                            if pn[1][0] in self.move_right_wall:
+                                pn1 = (pn[1][0]+1,pn[1][1])
+                            elif pn[1][0] in self.move_left_wall:
+                                pn1 = (pn[1][0]-1,pn[1][1]) 
+                        else:
+                            if pn[1][1] == self.move_down_wall:
+                                pn1 = (pn[1][0], pn[1][1]+1)
+                            elif pn[1][1] == self.move_up_wall:
+                                pn1 = (pn[1][0],pn[1][1]-1)
+                        if p == pn1:
                             self.pedidosConNombreOrdenados.append(pn)
-                print self.pedidosConNombreOrdenados
-                print self.pathRobot 
+                #print self.pedidosConNombreOrdenados
+                #print self.pathRobot 
+                #Llenamos las 3 canastas de un robot 
+                self.num_minProductos = len(self.pedidosConNombreOrdenados)/3
+                r.canastas[0].productosCanasta = self.pedidosConNombreOrdenados[: self.num_minProductos]
+                r.canastas[1].productosCanasta = self.pedidosConNombreOrdenados[self.num_minProductos: self.num_minProductos*2 ]
+                r.canastas[2].productosCanasta = self.pedidosConNombreOrdenados[self.num_minProductos*2 :]
+                for canasta in r.canastas:
+                    print 'Canasta ' + canasta.nombreCanasta
+                    print canasta.productosCanasta
+                    print '---------------------------------------------------------------'
+
+
+
 
                 r.agregarRuta(self.pathRobot,pedido)
                 r.state = 'ocupado'

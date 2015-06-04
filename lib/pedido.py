@@ -7,7 +7,7 @@ import random
 
 
 coloresProductos = [(207,23,23),(168,19,19),(133,15,15),(94,10,10),(59,6,6),(230,39,39),(237,111,111),(235,75,75),(242,148,148)]
-nombresProductos = ['bacon','bagel','bake','batter','beancurd','beans','beef','beet','bell pepper','brownie','brown rice','brunch','buckwheat','cereal','chard','cheddar','cheese','cheesecake','chef','chips','chives','chocolate','chopsticks','chow','chutney','cinnamon','clam','cobbler','coconut','cod','coffee','coleslaw','collard greens','cream','cream cheese','crepe','crisp','crunch'.'cucumber','cuisine','cupboard','preserves','pretzel','protein','provisions','prune','pudding','soup','sour cream','soybeans','soysauce','spareribs','spices','spicy','spinach','split peas','spoon','spork','taco','take-out','tamale','tangerine','tapioca','wheat', 'rye', 'oats', 'corn', 'barley', 'buckwheat', 'bakery goods',' rolls', 'buns', 'cakes', 'cookies', 'corn flakes', 'wheat flakes','muesli', 'popcorn','pasta', 'macaroni', 'noodles', 'spaghetti', 'vermicelli','flour', 'dough', 'cake mix', 'bread', 'white bread', 'garlic bread', 'pita bread', 'tortilla']
+nombresProductos = ['bacon','bagel','bake','batter','beancurd','beans','beef','beet','bell pepper','brownie','brown rice','brunch','buckwheat','cereal','chard','cheddar','cheese','cheesecake','chef','chips','chives','chocolate','chopsticks','chow','chutney','cinnamon','clam','cobbler','coconut','cod','coffee','coleslaw','collard greens','cream','cream cheese','crepe','crisp','crunch','cucumber','cuisine','cupboard','preserves','pretzel','protein','provisions','prune','pudding','soup','sour cream','soybeans','soysauce','spareribs','spices','spicy','spinach','split peas','spoon','spork','taco','tamale','tangerine','tapioca','wheat', 'rye', 'oats', 'corn', 'barley', 'buckwheat', 'bakery goods',' rolls', 'buns', 'cakes', 'cookies', 'corn flakes', 'wheat flakes','muesli', 'popcorn','pasta', 'macaroni', 'noodles', 'spaghetti', 'vermicelli','flour', 'dough', 'cake mix', 'bread', 'white bread', 'garlic bread', 'pita bread', 'tortilla']
 
 
 class Pedido(object):
@@ -91,7 +91,8 @@ class Pedido(object):
             nombreProducto = random.choice(nombresProductosTemporal)
             self.productos_nom.append((nombreProducto, p)) 
             nombresProductosTemporal.remove(nombreProducto)   
-        print self.productos_nom                       
+        print self.productos_nom
+        print '---------------------------------------------'                       
 
         self.color = random.choice(coloresProductos)
         self.nombre = nombre
