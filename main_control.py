@@ -142,18 +142,16 @@ class Client(object):
             # Movemos a los robots que tiene que recoger un pedido
             self.control.moverRobots(self.ui.screen)
 
+            # Hacemos que el robot coja el producto que va en la canasta
+            self.control.cogerProductos()
+
 
             # for robot in self.robots:
             #     if robot.esperando_producto:                    
             #         robot.girar = True
 
 
-            # for robot in self.robots:
-            #     if len(robot.coordenadas_producto) > 0:
-            #         if robot.posicion_actual == robot.coordenadas_producto[0]:
-            #             robot.esperando_producto = True
-            #             robot.coordenadas_producto.pop(0)
-            #             Timer(4,robot.estadoEsperandoProducto).start()   #Hace que el robot se detenga 4 segundos para recoger roductos
+            
 
 
                             
@@ -260,29 +258,14 @@ class Client(object):
 
 
         elif event.key == K_e:
-            print "INFORMACION"
-            print '-------------------------------------------------'            
-            for robot in self.robots:
-                print "INFORMACION robot"
-                print '-------------------------------------------------'                
-                print 'play: ' + str (robot.play)
-                print 'esperando_producto: ' + str (robot.esperando_producto)
-                print 'esperando_robot: ' + str (robot.esperando_robot)                
-                print 'source: ' + str (robot.source)
-                print 'state: ' + robot.state                 
-                print 'robot_choque: ' + str (robot.robot_choque) 
-                print 'tipo_choque: ' + str (robot.tipo_choque) 
-                print 'nombre: ' + str (robot.nombre)     
-                print 'path: ' + str (robot.path) 
-                print 'path_restante: ' + str (robot.path_restante) 
-                print 'coordenadas_producto: ' + str (robot.coordenadas_producto)
-                print 'color: ' + str (robot.color) 
-                print 'init: ' + str (robot.init) 
-                print 'pos: ' + str (robot.pos) 
-                print 'mov_pos: ' + str (robot.mov_pos) 
-                print 'pedido_actual: ' + str (robot.pedido_actual)                
-                print 'posicion_actual: ' + str (robot.posicion_actual) 
-                print '-------------------------------------------------'
+            for canasta in self.robots[0].canastas:
+                print 'Canasta ' + canasta.nombreCanasta
+                print 'productosRecoger' 
+                print canasta.productosRecoger
+                print '---------------------------------------------------------------'
+                print 'productosCanasta' 
+                print canasta.productosCanasta
+                print '---------------------------------------------------------------'
 
                
         elif event.key == K_o:

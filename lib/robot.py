@@ -9,13 +9,16 @@ colorRobotTemp = []
     1 - se van a chocar en la siguiente posicion
     2 - se chocaron
 '''
+giroCanastaA = {'der': 90, 'izq': -90, 'arriba': 0, 'abajo':180}
+giroCanastaB = {'der': 0, 'izq': -180, 'arriba': -90, 'abajo':90}
+giroCanastaC = {'der': -180, 'izq': 0, 'arriba': 90, 'abajo':-90}
 
 class CanastaRobot(object):
     def __init__(self, nombreCanasta, posicionCanasta):
         self.nombreCanasta = nombreCanasta
         self.posicionCanasta = posicionCanasta
-        self.productosCanasta = []
-        self.productosRecoger = []
+        self.productosCanasta = [] #producctos que se van recogiendo
+        self.productosRecoger = [] #lista de todos los producctos que hay que recoger
         self.estadoCanasta = 0   # 0-vacia, 1- llena
 
 class Robot(object):
@@ -53,30 +56,7 @@ class Robot(object):
 
     def dibujarRobot(self,screen):
         x, y = self.posicion_actual
-        nx, ny = x * NODE_SIZE, y * NODE_SIZE
-        '''xi = nx +2
-        yi = ny +2 
-        cort_esq = 1
-        poligono = [
-            (xi, yi), 
-            (xi + Rect(xi, yi, NODE_SIZE, NODE_SIZE).inflate(-NODE_SIZE*0.3, -NODE_SIZE*0.3)[2], yi),
-            (xi + Rect(xi, yi, NODE_SIZE, NODE_SIZE).inflate(-NODE_SIZE*0.3, -NODE_SIZE*0.3)[2], yi + Rect(xi, yi, NODE_SIZE, NODE_SIZE).inflate(-NODE_SIZE*0.3, -NODE_SIZE*0.3)[3] ),
-            (xi, yi + Rect(xi, yi, NODE_SIZE, NODE_SIZE).inflate(-NODE_SIZE*0.3, -NODE_SIZE*0.3)[3] )
-
-        ]
-
-
-        poligono = [
-            (xi + cort_esq, yi),             
-            (xi + Rect(xi, yi, NODE_SIZE, NODE_SIZE).inflate(-NODE_SIZE*0.3, -NODE_SIZE*0.3)[2] - cort_esq, yi),
-            (xi + Rect(xi, yi, NODE_SIZE, NODE_SIZE).inflate(-NODE_SIZE*0.3, -NODE_SIZE*0.3)[2], yi + cort_esq),
-            (xi + Rect(xi, yi, NODE_SIZE, NODE_SIZE).inflate(-NODE_SIZE*0.3, -NODE_SIZE*0.3)[2], yi + Rect(xi, yi, NODE_SIZE, NODE_SIZE).inflate(-NODE_SIZE*0.3, -NODE_SIZE*0.3)[3] - cort_esq),
-            (xi + Rect(xi, yi, NODE_SIZE, NODE_SIZE).inflate(-NODE_SIZE*0.3, -NODE_SIZE*0.3)[2] - cort_esq, yi +  Rect(xi, yi, NODE_SIZE, NODE_SIZE).inflate(-NODE_SIZE*0.3, -NODE_SIZE*0.3)[3]),
-            (xi + cort_esq, yi+ Rect(xi, yi, NODE_SIZE, NODE_SIZE).inflate(-NODE_SIZE*0.3, -NODE_SIZE*0.3)[3]),
-            (xi, yi+ Rect(xi, yi, NODE_SIZE, NODE_SIZE).inflate(-NODE_SIZE*0.3, -NODE_SIZE*0.3)[3] - cort_esq),
-            (xi, yi + cort_esq )
-        ]
-        pygame.draw.polygon(screen, self.color, poligono)'''
+        nx, ny = x * NODE_SIZE, y * NODE_SIZE        
         if not self.girar:  
             b = pygame.sprite.Sprite() # create sprite
             b.image = pygame.image.load("robot.png").convert_alpha() # load ball image
@@ -153,12 +133,13 @@ class Robot(object):
     def estadoEsperandoProducto(self):
         self.esperando_producto = False
         self.girar = False
-        b = pygame.sprite.Sprite() # create sprite
+        self.play = True
+        '''b = pygame.sprite.Sprite() # create sprite
         b.image = pygame.image.load("robot.png").convert_alpha() # load ball image
         image = pygame.transform.rotate(b.image,-45)
         b.rect = image.get_rect() # use image extent values 
         b.rect.topleft = [nx+3, ny+3] # put the ball in the top left corner
-        screen.blit(image, b.rect)
+        screen.blit(image, b.rect)'''
 
 
 

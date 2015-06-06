@@ -7,6 +7,7 @@ from const.constants import *
 from algo.astar import *
 from math import sqrt
 import os
+from threading import Timer
 
 FONT_NAME = 'freesansbold.ttf'
 cur_path = os.path.abspath(os.path.dirname(__file__))
@@ -99,38 +100,12 @@ class Control(object):
                             self.pathRobot += a.path
                     except:
                             pass
-                    self.loop += 1 
-                
-                self.pedidosConNombreOrdenados =[]
-                for p in self.pathRobot:
-                    for pn in pedido.productos_nom:
-                        if pn[1][1] in self.wall_is_vertical:   #[1]-coordenadas del producto y [1]-y
-                            if pn[1][0] in self.move_right_wall:
-                                pn1 = (pn[1][0]+1,pn[1][1])
-                            elif pn[1][0] in self.move_left_wall:
-                                pn1 = (pn[1][0]-1,pn[1][1]) 
-                        else:
-                            if pn[1][1] == self.move_down_wall:
-                                pn1 = (pn[1][0], pn[1][1]+1)
-                            elif pn[1][1] == self.move_up_wall:
-                                pn1 = (pn[1][0],pn[1][1]-1)
-                        if p == pn1:
-                            self.pedidosConNombreOrdenados.append(pn)
-                #print self.pedidosConNombreOrdenados
-                #print self.pathRobot 
-                #Llenamos las 3 canastas de un robot 
-                self.num_minProductos = len(self.pedidosConNombreOrdenados)/3
-                r.canastas[0].productosCanasta = self.pedidosConNombreOrdenados[: self.num_minProductos]
-                r.canastas[1].productosCanasta = self.pedidosConNombreOrdenados[self.num_minProductos: self.num_minProductos*2 ]
-                r.canastas[2].productosCanasta = self.pedidosConNombreOrdenados[self.num_minProductos*2 :]
-                for canasta in r.canastas:
-                    print 'Canasta ' + canasta.nombreCanasta
-                    print canasta.productosCanasta
-                    print '---------------------------------------------------------------'
-
-
-
-
+                    self.loop += 1  
+                #Llenamos las 3 canastas de un robot con el pedido grande
+                self.num_minProductos = len(pedido.productos_nom)/3
+                r.canastas[0].productosRecoger = pedido.productos_nom[: self.num_minProductos]
+                r.canastas[1].productosRecoger = pedido.productos_nom[self.num_minProductos: self.num_minProductos*2 ]
+                r.canastas[2].productosRecoger = pedido.productos_nom[self.num_minProductos*2 :]                                
                 r.agregarRuta(self.pathRobot,pedido)
                 r.state = 'ocupado'
                 r.iniciarRecorrido()
@@ -141,6 +116,7 @@ class Control(object):
             self.pedidos.append(pedido)
             print 'Pedido agregado a la cola'
         
+
 
     def agregarRobot(self,robot):
         self.robots.append(robot)
@@ -597,6 +573,31 @@ class Control(object):
                 self.quitarPedidoConcluido(robot.pedido_actual)                    
                 robot.notificacion_libre(self)
 
-
+    def cogerProductos(self):
+        for robot in self.robots:
+            if len(robot.coordenadas_producto) > 0:
+                if robot.posicion_actual == robot.coordenadas_producto[0]:
+                    robot.esperando_producto = True
+                    robot.play = False
+                    robot.coordenadas_producto.pop(0)
+                    for canasta in robot.canastas:
+                        for producto in canasta.productosRecoger:                                                      
+                            if producto[1][1] in self.wall_is_vertical:   #[1]-coordenadas del producto y [1]-y
+                                if producto[1][0] in self.move_right_wall:
+                                    pn1 = (producto[1][0]+1,producto[1][1])
+                                elif producto[1][0] in self.move_left_wall:
+                                    pn1 = (producto[1][0]-1,producto[1][1]) 
+                            else:
+                                if producto[1][1] == self.move_down_wall:
+                                    pn1 = (producto[1][0], producto[1][1]+1)
+                                elif producto[1][1] == self.move_up_wall:
+                                    pn1 = (producto[1][0],producto[1][1]-1)  
+                            try:                                                                          
+                                if robot.coordenadas_producto[0] == pn1:                                
+                                    canasta.productosCanasta.append(producto)
+                                    canasta.productosRecoger.remove(producto)
+                            except:
+                                pass
+                    #Timer(4,robot.estadoEsperandoProducto).start()   #Hace que el robot se detenga 4 segundos para recoger roductos
 
 
