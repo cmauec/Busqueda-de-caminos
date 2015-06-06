@@ -6,6 +6,23 @@ from lib.pedido import *
 from const.constants import * 
 from algo.astar import *
 from math import sqrt
+import os
+
+FONT_NAME = 'freesansbold.ttf'
+cur_path = os.path.abspath(os.path.dirname(__file__))
+ui_path = os.path.join(cur_path, '../ui')
+pygame.font.init()
+
+texto_choque = 'Choque robots'
+texto_se_van_chocar = 'Se van a chocar'
+font = pygame.font.Font(os.path.join(ui_path, FONT_NAME),40)
+txt_choque = font.render(texto_choque,True,(0,0,0))
+txt_se_van_chocar = font.render(texto_se_van_chocar,True,(0,0,0))
+
+pared_izq = (2,10,16,22,28,34,40,46,52,58,64,70,76,82) #Posiciones donde existe pared a la izq
+pared_der = (6,12,18,24,30,36,42,48,54,60,66,74,78)   #Posiciones donde existe pared a la der
+pared_arriba = 5   #Posiciones donde existe pared arrib
+pared_abajo = 40    #Posiciones donde existe pared abaj
 
 
 def DistanciaEntrePuntos(p1, p2):
@@ -116,7 +133,7 @@ class Control(object):
 
                 r.agregarRuta(self.pathRobot,pedido)
                 r.state = 'ocupado'
-                r.play()
+                r.iniciarRecorrido()
                 return
             else:
                 self.totalrobotlibres = self.totalrobotlibres - 1
@@ -178,7 +195,7 @@ class Control(object):
                         self.loop += 1 
                     r.agregarRuta(self.pathRobot,self.pedidos[0])
                     r.state = 'ocupado'
-                    r.play()
+                    r.iniciarRecorrido()
                     self.pedidos.pop(0)
                     return
         else:
@@ -287,6 +304,298 @@ class Control(object):
             final_str.append(''.join(str))
         return ''.join(final_str)
 
+    def resetChoqueRobot(self):
+        self.robots_movimiento1 = []
+        self.robots_temporal1 = []
+        for robot in self.robots:
+            if robot.play:
+                self.robots_movimiento1.append(robot)
+        self.robots_temporal1 = self.robots_movimiento1[1:]            
+        for robot0 in self.robots_movimiento1:
+            for robot1 in self.robots_temporal1:
+                if robot0.tipo_choque == 1 and robot1.tipo_choque == 1:
+                    if robot0.robot_choque == robot1.nombre:
+                        if robot0.esperando_robot == False:
+                            robot0.esperando_robot = True
+                        if DistanciaEntrePuntos(robot0.posicion_actual, robot1.posicion_actual) > 3:
+                            robot0.esperando_robot = False
+                            robot0.tipo_choque = None
+                            robot0.robot_choque = None
+                            robot1.esperando_robot = False
+                            robot1.tipo_choque = None
+                            robot1.robot_choque = None
+                elif robot0.tipo_choque == 20 and robot1.tipo_choque == 20:
+                    print 'entra 20'
+                    if robot1.robot_choque == robot0.nombre:
+                        print '20 20'
+                        if robot1.esperando_robot == False:
+                            print '20 20 20'
+                            robot1.esperando_robot = True
+                        if DistanciaEntrePuntos(robot1.posicion_actual, robot0.posicion_actual) > 3:
+                            print '20 20 20 20'
+                            robot0.esperando_robot = False
+                            robot0.tipo_choque = None
+                            robot0.robot_choque = None
+                            robot1.esperando_robot = False
+                            robot1.tipo_choque = None
+                            robot1.robot_choque = None
+                elif robot0.tipo_choque == 21 and robot1.tipo_choque == 21:
+                    print 'entra 21'
+                    if robot0.robot_choque == robot1.nombre:
+                        print  '21 21'
+                        if robot0.esperando_robot == False:
+                            print '21 21 21'
+                            robot0.esperando_robot = True
+                        if DistanciaEntrePuntos(robot0.posicion_actual, robot1.posicion_actual) > 3:
+                            print '21 21 21 21'
+                            robot0.esperando_robot = False
+                            robot0.tipo_choque = None
+                            robot0.robot_choque = None
+                            robot1.esperando_robot = False
+                            robot1.tipo_choque = None
+                            robot1.robot_choque = None
+
+    def moverRobots(self,screen):
+        #Calculamos choques en los robots
+        self.robots_movimiento = []
+        self.robots_temporal = []
+        self.probabilidad_desvio = []
+        for robot in self.robots:
+            if robot.play:
+                self.robots_movimiento.append(robot)
+        self.robots_temporal = self.robots_movimiento[1:]
+        for robot0 in self.robots_movimiento:
+            for robot1 in self.robots_temporal:
+                if robot0.tipo_choque == None and robot1.tipo_choque == None:
+                    if robot0.rec_colision.colliderect(robot1.rec_colision):  
+                        if robot0.path_restante[1]==robot1.path_restante[1]:
+                            screen.blit(txt_se_van_chocar,(170,30)) # Escribe texto en pantalla
+
+                            # Asignamos el tipo de choque de los robots involucrados y el nombre con el que estan en choque cada uno  
+                            robot0.tipo_choque = 1
+                            robot0.robot_choque = robot1.nombre 
+                            robot1.tipo_choque = 1
+                            robot1.robot_choque = robot0.nombre
+
+                            # Calculamos la mejor direccion para que se desvie el robot
+                            # Creamos un vector con todas las posibilidades de desvio alrededor del robot
+                            self.probabilidad_desvio = [(robot0.posicion_actual[0]+1, robot0.posicion_actual[1]),(robot0.posicion_actual[0]+1, robot0.posicion_actual[1]+1),(robot0.posicion_actual[0], robot0.posicion_actual[1]+1),(robot0.posicion_actual[0]-1, robot0.posicion_actual[1]+1),(robot0.posicion_actual[0]-1, robot0.posicion_actual[1]),(robot0.posicion_actual[0]-1, robot0.posicion_actual[1]-1),(robot0.posicion_actual[0], robot0.posicion_actual[1]-1),(robot0.posicion_actual[0]+1, robot0.posicion_actual[1]-1)]
+                            # Quitamos las opciones no validas
+                            self.probabilidad_desvio.remove(robot1.path_restante[1])
+                            if robot0.posicion_actual[0] in pared_izq:
+                                #Antes de borrar el elemto revizamos si esta en el vector. Cuando el choque se produce en la parte sup. o infe. que no hay pared a la izq o der y el punto de choque esta en la posicion de la pared.El codigo primero quitaba el punto de  choque pero este punto tambien pertenece a los puntos que hay q quitar por la pared, entonces se queria quitar un punto que ya no existia
+                                if (robot0.posicion_actual[0]-1, robot0.posicion_actual[1]) in self.probabilidad_desvio:
+                                    self.probabilidad_desvio.remove((robot0.posicion_actual[0]-1, robot0.posicion_actual[1]))
+                                if (robot0.posicion_actual[0]-1, robot0.posicion_actual[1]+1) in self.probabilidad_desvio:
+                                    self.probabilidad_desvio.remove((robot0.posicion_actual[0]-1, robot0.posicion_actual[1]+1))
+                                if (robot0.posicion_actual[0]-1, robot0.posicion_actual[1]-1) in self.probabilidad_desvio:
+                                    self.probabilidad_desvio.remove((robot0.posicion_actual[0]-1, robot0.posicion_actual[1]-1))
+                            elif robot0.posicion_actual[0] in pared_der:
+                                if (robot0.posicion_actual[0]+1, robot0.posicion_actual[1]) in self.probabilidad_desvio:
+                                    self.probabilidad_desvio.remove((robot0.posicion_actual[0]+1, robot0.posicion_actual[1]))
+                                if (robot0.posicion_actual[0]+1, robot0.posicion_actual[1]+1) in self.probabilidad_desvio:
+                                    self.probabilidad_desvio.remove((robot0.posicion_actual[0]+1, robot0.posicion_actual[1]+1))
+                                if (robot0.posicion_actual[0]+1, robot0.posicion_actual[1]-1) in self.probabilidad_desvio:
+                                    self.probabilidad_desvio.remove((robot0.posicion_actual[0]+1, robot0.posicion_actual[1]-1))
+                            elif robot0.posicion_actual[1] == pared_arriba:
+                                if (robot0.posicion_actual[0], robot0.posicion_actual[1]-1) in self.probabilidad_desvio:
+                                    self.probabilidad_desvio.remove((robot0.posicion_actual[0], robot0.posicion_actual[1]-1))
+                                if (robot0.posicion_actual[0]-1, robot0.posicion_actual[1]-1) in self.probabilidad_desvio:
+                                    self.probabilidad_desvio.remove((robot0.posicion_actual[0]-1, robot0.posicion_actual[1]-1))
+                                if (robot0.posicion_actual[0]+1, robot0.posicion_actual[1]-1) in self.probabilidad_desvio:
+                                    self.probabilidad_desvio.remove((robot0.posicion_actual[0]+1, robot0.posicion_actual[1]-1))
+                            elif robot0.posicion_actual[1] == pared_abajo:
+                                if (robot0.posicion_actual[0], robot0.posicion_actual[1]+1) in self.probabilidad_desvio:
+                                    self.probabilidad_desvio.remove((robot0.posicion_actual[0], robot0.posicion_actual[1]+1))
+                                if (robot0.posicion_actual[0]-1, robot0.posicion_actual[1]+1) in self.probabilidad_desvio:
+                                    self.probabilidad_desvio.remove((robot0.posicion_actual[0]-1, robot0.posicion_actual[1]+1))
+                                if (robot0.posicion_actual[0]+1, robot0.posicion_actual[1]+1) in self.probabilidad_desvio:
+                                    self.probabilidad_desvio.remove((robot0.posicion_actual[0]+1, robot0.posicion_actual[1]+1))
+                            if robot1.path_restante[2] in self.probabilidad_desvio:
+                                    self.probabilidad_desvio.remove(robot1.path_restante[2])
+                            elif robot1.path_restante[3] in self.probabilidad_desvio:
+                                    self.probabilidad_desvio.remove(robot1.path_restante[3])                          
+                            self.coordenada_desvio = random.choice(self.probabilidad_desvio)                 
+                            robot0.path_restante.insert(1, self.coordenada_desvio)
+                            robot0.path_restante.insert(2, robot0.path_restante[0])
+                        elif (robot0.path_restante[1]==robot1.path_restante[0])and(robot0.path_restante[0]==robot1.path_restante[1]):
+                            screen.blit(txt_choque,(170,30))
+                            robot0.tipo_choque = 2
+                            robot0.robot_choque = robot1.nombre 
+                            robot1.tipo_choque = 2
+                            robot1.robot_choque = robot0.nombre
+                            self.probabilidad_desvio = [(robot0.posicion_actual[0]+1, robot0.posicion_actual[1]),(robot0.posicion_actual[0]+1, robot0.posicion_actual[1]+1),(robot0.posicion_actual[0], robot0.posicion_actual[1]+1),(robot0.posicion_actual[0]-1, robot0.posicion_actual[1]+1),(robot0.posicion_actual[0]-1, robot0.posicion_actual[1]),(robot0.posicion_actual[0]-1, robot0.posicion_actual[1]-1),(robot0.posicion_actual[0], robot0.posicion_actual[1]-1),(robot0.posicion_actual[0]+1, robot0.posicion_actual[1]-1)]
+                            
+                            if robot0.posicion_actual[0] in pared_izq:
+                                self.probabilidad_desvio.remove((robot0.posicion_actual[0]-1, robot0.posicion_actual[1]))
+                                self.probabilidad_desvio.remove((robot0.posicion_actual[0]-1, robot0.posicion_actual[1]-1))
+                                self.probabilidad_desvio.remove((robot0.posicion_actual[0]-1, robot0.posicion_actual[1]+1))
+                            elif robot0.posicion_actual[0] in pared_der:
+                                self.probabilidad_desvio.remove((robot0.posicion_actual[0]+1, robot0.posicion_actual[1]))
+                                self.probabilidad_desvio.remove((robot0.posicion_actual[0]+1, robot0.posicion_actual[1]-1))
+                                self.probabilidad_desvio.remove((robot0.posicion_actual[0]+1, robot0.posicion_actual[1]+1)) 
+                            elif robot0.posicion_actual[1] == pared_arriba:
+                                self.probabilidad_desvio.remove((robot0.posicion_actual[0], robot0.posicion_actual[1]-1))
+                                self.probabilidad_desvio.remove((robot0.posicion_actual[0]-1, robot0.posicion_actual[1]-1))
+                                self.probabilidad_desvio.remove((robot0.posicion_actual[0]+1, robot0.posicion_actual[1]-1))
+                            elif robot0.posicion_actual[1] == pared_abajo:
+                                self.probabilidad_desvio.remove((robot0.posicion_actual[0], robot0.posicion_actual[1]+1))
+                                self.probabilidad_desvio.remove((robot0.posicion_actual[0]-1, robot0.posicion_actual[1]+1))
+                                self.probabilidad_desvio.remove((robot0.posicion_actual[0]+1, robot0.posicion_actual[1]+1))
+                            self.probabilidad_desvio.remove(robot1.path_restante[0])
+                            if robot1.path_restante[1] in self.probabilidad_desvio:
+                                self.probabilidad_desvio.remove(robot1.path_restante[1])
+                            elif robot1.path_restante[2] in self.probabilidad_desvio:
+                                self.probabilidad_desvio.remove(robot1.path_restante[2])                                                     
+                            self.coordenada_desvio = random.choice(self.probabilidad_desvio)                                
+                            robot0.path_restante.insert(1, self.coordenada_desvio)
+                            robot0.path_restante.insert(2, robot0.path_restante[0])
+
+
+
+                # elif robot0.esperando_producto and robot1.play and not robot1.esperando_robot:
+                #     if (DistanciaEntrePuntos(robot0.posicion_actual, robot1.posicion_actual) == 1 ) or (DistanciaEntrePuntos(robot0.posicion_actual, robot1.posicion_actual) == sqrt(2)):
+                #         #robot0.play = False
+                #         #robot1.play = False
+                #         print 'colision, rob0-esperando, rob1-mov'                                                        
+                #         robot0.robot_choque = robot1.nombre
+                #         robot1.robot_choque = robot0.nombre
+                #         robot0.tipo_choque = 20
+                #         robot1.tipo_choque = 20
+                        
+                #         print robot0.posicion_actual
+                #         print robot1.posicion_actual
+                #         print robot1.path_restante[1]
+                #         print robot0.path_restante[1]
+                #         #if robot1.path_restante[1][0] == robot0.posicion_actual[0]:                      
+                #         print 'Gina'
+                #         self.probabilidad_desvio = [(robot1.posicion_actual[0]+1, robot1.posicion_actual[1]),(robot1.posicion_actual[0]+1, robot1.posicion_actual[1]+1),(robot1.posicion_actual[0], robot1.posicion_actual[1]+1),(robot1.posicion_actual[0]-1, robot1.posicion_actual[1]+1),(robot1.posicion_actual[0]-1, robot1.posicion_actual[1]),(robot1.posicion_actual[0]-1, robot1.posicion_actual[1]-1),(robot1.posicion_actual[0], robot1.posicion_actual[1]-1),(robot1.posicion_actual[0]+1, robot1.posicion_actual[1]-1)]
+                        
+                #         if robot1.posicion_actual[0] in pared_izq:
+                #             self.probabilidad_desvio.remove((robot1.posicion_actual[0]-1, robot1.posicion_actual[1]))
+                #             self.probabilidad_desvio.remove((robot1.posicion_actual[0]-1, robot1.posicion_actual[1]-1))
+                #             self.probabilidad_desvio.remove((robot1.posicion_actual[0]-1, robot1.posicion_actual[1]+1))
+                #         elif robot1.posicion_actual[0] in pared_der:
+                #             self.probabilidad_desvio.remove((robot1.posicion_actual[0]+1, robot1.posicion_actual[1]))
+                #             self.probabilidad_desvio.remove((robot1.posicion_actual[0]+1, robot1.posicion_actual[1]-1))
+                #             self.probabilidad_desvio.remove((robot1.posicion_actual[0]+1, robot1.posicion_actual[1]+1)) 
+                #         elif robot1.posicion_actual[1] == pared_arriba:
+                #             self.probabilidad_desvio.remove((robot1.posicion_actual[0], robot1.posicion_actual[1]-1))
+                #             self.probabilidad_desvio.remove((robot1.posicion_actual[0]-1, robot1.posicion_actual[1]-1))
+                #             self.probabilidad_desvio.remove((robot1.posicion_actual[0]+1, robot1.posicion_actual[1]-1))
+                #         elif robot1.posicion_actual[1] == pared_abajo:
+                #             self.probabilidad_desvio.remove((robot1.posicion_actual[0], robot1.posicion_actual[1]+1))
+                #             self.probabilidad_desvio.remove((robot1.posicion_actual[0]-1, robot1.posicion_actual[1]+1))
+                #             self.probabilidad_desvio.remove((robot1.posicion_actual[0]+1, robot1.posicion_actual[1]+1))
+                #         self.probabilidad_desvio.remove(robot0.posicion_actual)
+                #         if robot0.path_restante[1] in self.probabilidad_desvio:
+                #             self.probabilidad_desvio.remove(robot0.path_restante[1])
+                #         elif robot0.path_restante[2] in self.probabilidad_desvio:
+                #             self.probabilidad_desvio.remove(robot0.path_restante[2])                                                     
+                #         self.coordenada_desvio = random.choice(self.probabilidad_desvio)
+                #         #self.coordenada_desvio = (robot1.posicion_actual[0]+1, robot1.posicion_actual[1])                             
+                #         robot1.path_restante.insert(1, self.coordenada_desvio)
+                #         robot1.path_restante.insert(2, robot1.path_restante[0])
+
+
+
+
+                          
+                # elif robot1.esperando_producto and robot0.play and not robot0.esperando_robot:
+                #     if (DistanciaEntrePuntos(robot1.posicion_actual, robot0.posicion_actual) == 1) or (DistanciaEntrePuntos(robot1.posicion_actual, robot0.posicion_actual) == sqrt(2)):
+                #         #robot0.play = False
+                #         #robot1.play = False
+                #         print 'colision, rob1-esperando, rob0-mov'                            
+                #         robot0.robot_choque = robot1.nombre
+                #         robot1.robot_choque = robot0.nombre
+                #         robot0.tipo_choque = 21
+                #         robot1.tipo_choque = 21
+                       
+                #         print robot1.posicion_actual
+                #         print robot0.posicion_actual
+                #         print robot0.path_restante[1]
+                #         print robot1.path_restante[1]
+                #         #if robot0.path_restante[1][0] == robot1.posicion_actual[0]:
+                #         print 'Gina1'
+                #         self.probabilidad_desvio = [(robot0.posicion_actual[0]+1, robot0.posicion_actual[1]),(robot0.posicion_actual[0]+1, robot0.posicion_actual[1]+1),(robot0.posicion_actual[0], robot0.posicion_actual[1]+1),(robot0.posicion_actual[0]-1, robot0.posicion_actual[1]+1),(robot0.posicion_actual[0]-1, robot0.posicion_actual[1]),(robot0.posicion_actual[0]-1, robot0.posicion_actual[1]-1),(robot0.posicion_actual[0], robot0.posicion_actual[1]-1),(robot0.posicion_actual[0]+1, robot0.posicion_actual[1]-1)]                            
+                #         if robot0.posicion_actual[0] in pared_izq:
+                #             self.probabilidad_desvio.remove((robot0.posicion_actual[0]-1, robot0.posicion_actual[1]))
+                #             self.probabilidad_desvio.remove((robot0.posicion_actual[0]-1, robot0.posicion_actual[1]-1))
+                #             self.probabilidad_desvio.remove((robot0.posicion_actual[0]-1, robot0.posicion_actual[1]+1))
+                #         elif robot0.posicion_actual[0] in pared_der:
+                #             self.probabilidad_desvio.remove((robot0.posicion_actual[0]+1, robot0.posicion_actual[1]))
+                #             self.probabilidad_desvio.remove((robot0.posicion_actual[0]+1, robot0.posicion_actual[1]-1))
+                #             self.probabilidad_desvio.remove((robot0.posicion_actual[0]+1, robot0.posicion_actual[1]+1)) 
+                #         elif robot0.posicion_actual[1] == pared_arriba:
+                #             self.probabilidad_desvio.remove((robot0.posicion_actual[0], robot0.posicion_actual[1]-1))
+                #             self.probabilidad_desvio.remove((robot0.posicion_actual[0]-1, robot0.posicion_actual[1]-1))
+                #             self.probabilidad_desvio.remove((robot0.posicion_actual[0]+1, robot0.posicion_actual[1]-1))
+                #         elif robot0.posicion_actual[1] == pared_abajo:
+                #             self.probabilidad_desvio.remove((robot0.posicion_actual[0], robot0.posicion_actual[1]+1))
+                #             self.probabilidad_desvio.remove((robot0.posicion_actual[0]-1, robot0.posicion_actual[1]+1))
+                #             self.probabilidad_desvio.remove((robot0.posicion_actual[0]+1, robot0.posicion_actual[1]+1))
+                #         self.probabilidad_desvio.remove(robot1.posicion_actual)
+                #         if robot1.path_restante[1] in self.probabilidad_desvio:
+                #             self.probabilidad_desvio.remove(robot1.path_restante[1])
+                #         elif robot1.path_restante[2] in self.probabilidad_desvio:
+                #             self.probabilidad_desvio.remove(robot1.path_restante[2])                                                     
+                #         self.coordenada_desvio = random.choice(self.probabilidad_desvio)
+                #         #self.coordenada_desvio = (robot0.posicion_actual[0]+1, robot0.posicion_actual[1])                              
+                #         robot0.path_restante.insert(1, self.coordenada_desvio)
+                #         robot0.path_restante.insert(2, robot0.path_restante[0])
+                        
+
+                # elif robot1.esperando_producto and robot0.esperando_producto: 
+                #     robot0.play = False
+                #     robot1.play = False                        
+                #     if (robot0.path_restante[1]==robot1.path_restante[0])and(robot0.path_restante[0]==robot1.path_restante[1]):
+                #         robot0.tipo_choque = 3
+                #         robot0.robot_choque = robot1.nombre 
+                #         robot1.tipo_choque = 3
+                #         robot1.robot_choque = robot0.nombre
+                #         self.probabilidad_desvio = [(robot0.posicion_actual[0]+1, robot0.posicion_actual[1]),(robot0.posicion_actual[0]+1, robot0.posicion_actual[1]+1),(robot0.posicion_actual[0], robot0.posicion_actual[1]+1),(robot0.posicion_actual[0]-1, robot0.posicion_actual[1]+1),(robot0.posicion_actual[0]-1, robot0.posicion_actual[1]),(robot0.posicion_actual[0]-1, robot0.posicion_actual[1]-1),(robot0.posicion_actual[0], robot0.posicion_actual[1]-1),(robot0.posicion_actual[0]+1, robot0.posicion_actual[1]-1)]
+                        
+                #         if robot0.posicion_actual[0] in pared_izq:
+                #             self.probabilidad_desvio.remove((robot0.posicion_actual[0]-1, robot0.posicion_actual[1]))
+                #             self.probabilidad_desvio.remove((robot0.posicion_actual[0]-1, robot0.posicion_actual[1]-1))
+                #             self.probabilidad_desvio.remove((robot0.posicion_actual[0]-1, robot0.posicion_actual[1]+1))
+                #         elif robot0.posicion_actual[0] in pared_der:
+                #             self.probabilidad_desvio.remove((robot0.posicion_actual[0]+1, robot0.posicion_actual[1]))
+                #             self.probabilidad_desvio.remove((robot0.posicion_actual[0]+1, robot0.posicion_actual[1]-1))
+                #             self.probabilidad_desvio.remove((robot0.posicion_actual[0]+1, robot0.posicion_actual[1]+1)) 
+                #         elif robot0.posicion_actual[1] == pared_arriba:
+                #             self.probabilidad_desvio.remove((robot0.posicion_actual[0], robot0.posicion_actual[1]-1))
+                #             self.probabilidad_desvio.remove((robot0.posicion_actual[0]-1, robot0.posicion_actual[1]-1))
+                #             self.probabilidad_desvio.remove((robot0.posicion_actual[0]+1, robot0.posicion_actual[1]-1))
+                #         elif robot0.posicion_actual[1] == pared_abajo:
+                #             self.probabilidad_desvio.remove((robot0.posicion_actual[0], robot0.posicion_actual[1]+1))
+                #             self.probabilidad_desvio.remove((robot0.posicion_actual[0]-1, robot0.posicion_actual[1]+1))
+                #             self.probabilidad_desvio.remove((robot0.posicion_actual[0]+1, robot0.posicion_actual[1]+1))
+                #         self.probabilidad_desvio.remove(robot1.path_restante[0])
+                #         if robot1.path_restante[1] in self.probabilidad_desvio:
+                #             self.probabilidad_desvio.remove(robot1.path_restante[1])
+                #         elif robot1.path_restante[2] in self.probabilidad_desvio:
+                #             self.probabilidad_desvio.remove(robot1.path_restante[2])                                                     
+                #         self.coordenada_desvio = random.choice(self.probabilidad_desvio)                                
+                #         robot0.path_restante.insert(1, self.coordenada_desvio)
+                #         robot0.path_restante.insert(2, robot0.path_restante[0])
+                #         print 'Gina3'
+
+                            
+
+            try: 
+                self.robots_temporal.pop(0)
+            except:
+                pass
+
+        for robot in self.robots:
+            if robot.play:
+                    robot.Mover()
+            if robot.posicion_actual == (robot.source[0]+1,robot.source[1]):
+                # al finalizar el recorrido imprime los puntos de la trayectoria
+                #print robot.path
+                self.quitarPedidoConcluido(robot.pedido_actual)                    
+                robot.notificacion_libre(self)
 
 
 

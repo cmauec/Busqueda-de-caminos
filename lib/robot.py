@@ -5,10 +5,10 @@ import random
 
 colorRobot = [(235,56,211),(255,109,5),(59,57,55),(36,90,240),(0,255,4),(49,18,204),(119,5,176)]
 colorRobotTemp = []
-pared_izq = (2,10,16,22,28,34,40,46,52,58,64,70,76,82) #Posiciones donde existe pared a la izq
-pared_der = (6,12,18,24,30,36,42,48,54,60,66,74,78)   #Posiciones donde existe pared a la der
-pared_arriba = 5   #Posiciones donde existe pared arrib
-pared_abajo = 40    #Posiciones donde existe pared abaj
+''' Tipos de choque:
+    1 - se van a chocar en la siguiente posicion
+    2 - se chocaron
+'''
 
 class CanastaRobot(object):
     def __init__(self, nombreCanasta, posicionCanasta):
@@ -41,7 +41,7 @@ class Robot(object):
         self.pos = 30
         self.mov_pos = 0
         self.pedido_actual = None
-        self.play_animation = False
+        self.play = False
         self.posicion_actual = source
         self.girar = False
         # rectangulo delimitador para colisones
@@ -99,11 +99,11 @@ class Robot(object):
         self.path_restante = list(self.path)
         self.pedido_actual = pedido
 
-    def play(self):
-        self.play_animation = True
+    def iniciarRecorrido(self):
+        self.play = True
 
     def stop(self):
-        self.play_animation = False
+        self.play = False
 
     def notificacion_libre(self,control):
         self.path = []
@@ -111,7 +111,7 @@ class Robot(object):
         self.posicion_actual = self.source
         self.mov_pos = 0
         self.pedido_actual = None
-        self.play_animation = False
+        self.play = False
         self.robot_choque = None
         self.tipo_choque = None
         #self.stop()
@@ -136,7 +136,7 @@ class Robot(object):
 
     def Mover(self):
         # Si las dos funciones son verdaderas - el robot camina, si esperando producto es falso (no hay productos para recoger) - el robot no camina (porq una de las condiciones no se cumple).
-        if self.play_animation and not self.esperando_producto and not self.esperando_robot: 
+        if self.play: 
             self.length_path = len(self.path_restante)
             if  self.length_path>0:
                 self.mov_pos += 1
