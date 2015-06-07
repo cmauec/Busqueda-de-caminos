@@ -46,7 +46,7 @@ class Robot(object):
         self.pedido_actual = None
         self.play = False
         self.posicion_actual = source
-        self.girar = False
+        #self.canastaRecogerProducto = None #Nos da el nombre(A-B-C-D) de la canasta en q hay q poner el producto
         # rectangulo delimitador para colisones
         x, y = self.source
         nx, ny = x * NODE_SIZE, y * NODE_SIZE
@@ -54,22 +54,72 @@ class Robot(object):
         #self.salida = None
         
 
-    def dibujarRobot(self,screen):
+    def dibujarRobot(self,screen, orientacion = None):
         x, y = self.posicion_actual
-        nx, ny = x * NODE_SIZE, y * NODE_SIZE        
-        if not self.girar:  
+        nx, ny = x * NODE_SIZE, y * NODE_SIZE
+        giroHacia = None 
+        canastaRecogerProducto = None
+        if orientacion:
+            canastaRecogerProducto = orientacion[0]
+            giroHacia = orientacion[1]
+
+        if not canastaRecogerProducto:  
             b = pygame.sprite.Sprite() # create sprite
             b.image = pygame.image.load("robot.png").convert_alpha() # load ball image
             b.rect = b.image.get_rect() # use image extent values 
             b.rect.topleft = [nx+2, ny+2] # put the ball in the top left corner
             screen.blit(b.image, b.rect)
-        elif self.girar:
+        elif canastaRecogerProducto == 'A':
+            if giroHacia == 'der':
+                b = pygame.sprite.Sprite() # create sprite
+                b.image = pygame.image.load("robot.png").convert_alpha() # load ball image
+                image = pygame.transform.rotate(b.image, giroCanastaA['der'])
+                b.rect = image.get_rect() # use image extent values 
+                b.rect.topleft = [nx+2, ny+2] # put the ball in the top left corner
+                screen.blit(image, b.rect)
+            elif giroHacia == 'izq':
+                b = pygame.sprite.Sprite() # create sprite
+                b.image = pygame.image.load("robot.png").convert_alpha() # load ball image
+                image = pygame.transform.rotate(b.image, giroCanastaA['izq'])
+                b.rect = image.get_rect() # use image extent values 
+                b.rect.topleft = [nx+2, ny+2] # put the ball in the top left corner
+                screen.blit(image, b.rect)
+            elif giroHacia == 'arriba':
+                b = pygame.sprite.Sprite() # create sprite
+                b.image = pygame.image.load("robot.png").convert_alpha() # load ball image
+                image = pygame.transform.rotate(b.image, giroCanastaA['arriba'])
+                b.rect = image.get_rect() # use image extent values 
+                b.rect.topleft = [nx+2, ny+2] # put the ball in the top left corner
+                screen.blit(image, b.rect)
+            elif giroHacia == 'abajo':
+                b = pygame.sprite.Sprite() # create sprite
+                b.image = pygame.image.load("robot.png").convert_alpha() # load ball image
+                image = pygame.transform.rotate(b.image, giroCanastaA['abajo'])
+                b.rect = image.get_rect() # use image extent values 
+                b.rect.topleft = [nx+2, ny+2] # put the ball in the top left corner
+                screen.blit(image, b.rect)
+
+        '''elif self.canastaRecogerProducto == 'B':
             b = pygame.sprite.Sprite() # create sprite
             b.image = pygame.image.load("robot.png").convert_alpha() # load ball image
             image = pygame.transform.rotate(b.image,90)
             b.rect = image.get_rect() # use image extent values 
             b.rect.topleft = [nx+2, ny+2] # put the ball in the top left corner
             screen.blit(image, b.rect)
+        elif self.canastaRecogerProducto == 'C':
+            b = pygame.sprite.Sprite() # create sprite
+            b.image = pygame.image.load("robot.png").convert_alpha() # load ball image
+            image = pygame.transform.rotate(b.image,90)
+            b.rect = image.get_rect() # use image extent values 
+            b.rect.topleft = [nx+2, ny+2] # put the ball in the top left corner
+            screen.blit(image, b.rect)
+        elif self.canastaRecogerProducto == 'D':
+            b = pygame.sprite.Sprite() # create sprite
+            b.image = pygame.image.load("robot.png").convert_alpha() # load ball image
+            image = pygame.transform.rotate(b.image,90)
+            b.rect = image.get_rect() # use image extent values 
+            b.rect.topleft = [nx+2, ny+2] # put the ball in the top left corner
+            screen.blit(image, b.rect)'''
 
 
 
@@ -134,6 +184,7 @@ class Robot(object):
         self.esperando_producto = False
         self.girar = False
         self.play = True
+        print 'tiempo'
         '''b = pygame.sprite.Sprite() # create sprite
         b.image = pygame.image.load("robot.png").convert_alpha() # load ball image
         image = pygame.transform.rotate(b.image,-45)
