@@ -139,76 +139,22 @@ class Client(object):
             
             # Reseteamos el estado de los robots que estuvieron en un choque
             self.control.resetChoqueRobot()
-            # Movemos a los robots que tiene que recoger un pedido
+            # Movemos a los robots
             self.control.moverRobots(self.ui.screen)
 
             # Hacemos que el robot coja el producto que va en la canasta
-            self.control.cogerProductos()
+            self.canastaGirar = self.control.cogerProductos()
+            print self.canastaGirar
 
-
-            # for robot in self.robots:
-            #     if robot.esperando_producto:                    
-            #         robot.girar = True
-
-
-            
-
-
-                            
-            # self.robots_movimiento = []
-            # self.robots_temporal = []
-            # for robot in self.robots:
-            #     if robot.play:
-            #         self.robots_movimiento.append(robot)
-            # self.robots_temporal = self.robots_movimiento[1:]            
-            # for robot0 in self.robots_movimiento:
-            #     for robot1 in self.robots_temporal:
-            #         if robot0.tipo_choque == 1 and robot1.tipo_choque == 1:
-            #             if robot0.robot_choque == robot1.nombre:
-            #                 if robot0.esperando_robot == False:
-            #                     robot0.esperando_robot = True
-            #                 if DistanciaEntrePuntos(robot0.posicion_actual, robot1.posicion_actual) > 3:
-            #                     robot0.esperando_robot = False
-            #                     robot0.tipo_choque = None
-            #                     robot0.robot_choque = None
-            #                     robot1.esperando_robot = False
-            #                     robot1.tipo_choque = None
-            #                     robot1.robot_choque = None
-            #         elif robot0.tipo_choque == 20 and robot1.tipo_choque == 20:
-            #             print 'entra 20'
-            #             if robot1.robot_choque == robot0.nombre:
-            #                 print '20 20'
-            #                 if robot1.esperando_robot == False:
-            #                     print '20 20 20'
-            #                     robot1.esperando_robot = True
-            #                 if DistanciaEntrePuntos(robot1.posicion_actual, robot0.posicion_actual) > 3:
-            #                     print '20 20 20 20'
-            #                     robot0.esperando_robot = False
-            #                     robot0.tipo_choque = None
-            #                     robot0.robot_choque = None
-            #                     robot1.esperando_robot = False
-            #                     robot1.tipo_choque = None
-            #                     robot1.robot_choque = None
-            #         elif robot0.tipo_choque == 21 and robot1.tipo_choque == 21:
-            #             print 'entra 21'
-            #             if robot0.robot_choque == robot1.nombre:
-            #                 print  '21 21'
-            #                 if robot0.esperando_robot == False:
-            #                     print '21 21 21'
-            #                     robot0.esperando_robot = True
-            #                 if DistanciaEntrePuntos(robot0.posicion_actual, robot1.posicion_actual) > 3:
-            #                     print '21 21 21 21'
-            #                     robot0.esperando_robot = False
-            #                     robot0.tipo_choque = None
-            #                     robot0.robot_choque = None
-            #                     robot1.esperando_robot = False
-            #                     robot1.tipo_choque = None
-            #                     robot1.robot_choque = None
 
             
             # Dibujamos a los robots
-            for robot in self.robots:   
-                robot.dibujarRobot(self.ui.screen)
+            for robot in self.robots:
+                robot.flagGirar
+                if robot.flagGirar:
+                    robot.dibujarRobot(self.ui.screen,self.canastaGirar)
+                else:
+                    robot.dibujarRobot(self.ui.screen)
                                                  
             # update screen
             pygame.display.update()

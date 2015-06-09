@@ -9,7 +9,7 @@ colorRobotTemp = []
     1 - se van a chocar en la siguiente posicion
     2 - se chocaron
 '''
-giroCanastaA = {'der': 90, 'izq': -90, 'arriba': 0, 'abajo':180}
+giroCanastaA = {'der': 40, 'izq': -40, 'arriba': 0, 'abajo':180}
 giroCanastaB = {'der': 0, 'izq': -180, 'arriba': -90, 'abajo':90}
 giroCanastaC = {'der': -180, 'izq': 0, 'arriba': 90, 'abajo':-90}
 
@@ -46,6 +46,7 @@ class Robot(object):
         self.pedido_actual = None
         self.play = False
         self.posicion_actual = source
+        self.flagGirar = False
         #self.canastaRecogerProducto = None #Nos da el nombre(A-B-C-D) de la canasta en q hay q poner el producto
         # rectangulo delimitador para colisones
         x, y = self.source
@@ -70,10 +71,11 @@ class Robot(object):
             b.rect.topleft = [nx+2, ny+2] # put the ball in the top left corner
             screen.blit(b.image, b.rect)
         elif canastaRecogerProducto == 'A':
+            print 'asdasdsad'
             if giroHacia == 'der':
                 b = pygame.sprite.Sprite() # create sprite
                 b.image = pygame.image.load("robot.png").convert_alpha() # load ball image
-                image = pygame.transform.rotate(b.image, giroCanastaA['der'])
+                image = pygame.transform.rotate(b.image,45)
                 b.rect = image.get_rect() # use image extent values 
                 b.rect.topleft = [nx+2, ny+2] # put the ball in the top left corner
                 screen.blit(image, b.rect)
@@ -182,9 +184,8 @@ class Robot(object):
    
     def estadoEsperandoProducto(self):
         self.esperando_producto = False
-        self.girar = False
         self.play = True
-        print 'tiempo'
+        self.flagGirar = False
         '''b = pygame.sprite.Sprite() # create sprite
         b.image = pygame.image.load("robot.png").convert_alpha() # load ball image
         image = pygame.transform.rotate(b.image,-45)

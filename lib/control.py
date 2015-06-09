@@ -574,30 +574,39 @@ class Control(object):
                 robot.notificacion_libre(self)
 
     def cogerProductos(self):
+        canastaGirar = None
         for robot in self.robots:
-            if len(robot.coordenadas_producto) > 0:
+            if len(robot.coordenadas_producto):
                 if robot.posicion_actual == robot.coordenadas_producto[0]:
                     robot.esperando_producto = True
                     robot.play = False
                     robot.coordenadas_producto.pop(0)
+                    robot.flagGirar = True
                     for canasta in robot.canastas:
                         for producto in canasta.productosRecoger:                                                      
                             if producto[1][1] in self.wall_is_vertical:   #[1]-coordenadas del producto y [1]-y
                                 if producto[1][0] in self.move_right_wall:
                                     pn1 = (producto[1][0]+1,producto[1][1])
+                                    canastaOrientacion = 'der'
                                 elif producto[1][0] in self.move_left_wall:
                                     pn1 = (producto[1][0]-1,producto[1][1]) 
+                                    canastaOrientacion = 'izq'
                             else:
                                 if producto[1][1] == self.move_down_wall:
                                     pn1 = (producto[1][0], producto[1][1]+1)
+                                    canastaOrientacion = 'arriba'
                                 elif producto[1][1] == self.move_up_wall:
-                                    pn1 = (producto[1][0],producto[1][1]-1)  
+                                    pn1 = (producto[1][0],producto[1][1]-1) 
+                                    canastaOrientacion = 'abajo'
                             try:                                                                          
                                 if robot.coordenadas_producto[0] == pn1:                                
                                     canasta.productosCanasta.append(producto)
                                     canasta.productosRecoger.remove(producto)
+                                    canastaGirar = [canasta.nombreCanasta,canastaOrientacion]
                             except:
                                 pass
-                    #Timer(4,robot.estadoEsperandoProducto).start()   #Hace que el robot se detenga 4 segundos para recoger roductos
+                                canastaGirar = None
+                    Timer(4,robot.estadoEsperandoProducto).start()   #Hace que el robot se detenga 4 segundos para recoger roductos
+        return canastaGirar
 
 
