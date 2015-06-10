@@ -127,7 +127,7 @@ class Client(object):
             self.ui._draw_map_init()
 
             # Dibujamos las lineas separadoras de cada nodo
-            self.ui._draw_grid_lines()
+            #self.ui._draw_grid_lines()
 
             # Dibujamos todos los pedidos pendientes de entrega
             self.control.dibujarPedidos(self.ui.screen)
@@ -198,11 +198,11 @@ class Client(object):
 
         elif event.key == K_e:
             for canasta in self.robots[0].canastas:
-                print 'Canasta ' + canasta.nombreCanasta
-                print 'productosRecoger' 
+                print 'Basket ' + canasta.nombreCanasta
+                print 'List 1 (to collect products)' 
                 print canasta.productosRecoger
                 print '---------------------------------------------------------------'
-                print 'productosCanasta' 
+                print 'List 2 (products in the basket)' 
                 print canasta.productosCanasta
                 print '---------------------------------------------------------------'
 

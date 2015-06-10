@@ -90,7 +90,8 @@ class Pedido(object):
         for p in self.productos:            
             nombreProducto = random.choice(nombresProductosTemporal)
             self.productos_nom.append((nombreProducto, p)) 
-            nombresProductosTemporal.remove(nombreProducto)   
+            nombresProductosTemporal.remove(nombreProducto)  
+        print 'General list of products' 
         print self.productos_nom
         print '---------------------------------------------'                       
 

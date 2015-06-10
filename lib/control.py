@@ -102,10 +102,11 @@ class Control(object):
                             pass
                     self.loop += 1  
                 #Llenamos las 3 canastas de un robot con el pedido grande
-                self.num_minProductos = len(pedido.productos_nom)/3
+                self.num_minProductos = len(pedido.productos_nom)/4
                 r.canastas[0].productosRecoger = pedido.productos_nom[: self.num_minProductos]
                 r.canastas[1].productosRecoger = pedido.productos_nom[self.num_minProductos: self.num_minProductos*2 ]
-                r.canastas[2].productosRecoger = pedido.productos_nom[self.num_minProductos*2 :]                                
+                r.canastas[2].productosRecoger = pedido.productos_nom[self.num_minProductos*2: self.num_minProductos*3 ]
+                r.canastas[3].productosRecoger = pedido.productos_nom[self.num_minProductos*3 :]                                
                 r.agregarRuta(self.pathRobot,pedido)
                 r.state = 'ocupado'
                 r.iniciarRecorrido()
