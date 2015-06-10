@@ -574,7 +574,6 @@ class Control(object):
                 robot.notificacion_libre(self)
 
     def cogerProductos(self):
-        canastaGirar = None
         for robot in self.robots:
             if len(robot.coordenadas_producto):
                 if robot.posicion_actual == robot.coordenadas_producto[0]:
@@ -602,11 +601,13 @@ class Control(object):
                                 if robot.coordenadas_producto[0] == pn1:                                
                                     canasta.productosCanasta.append(producto)
                                     canasta.productosRecoger.remove(producto)
-                                    canastaGirar = [canasta.nombreCanasta,canastaOrientacion]
+                                    robot.estadoGiro = [canasta.nombreCanasta,canastaOrientacion]
                             except:
                                 pass
-                                canastaGirar = None
+                                robot.estadoGiro = None
                     Timer(4,robot.estadoEsperandoProducto).start()   #Hace que el robot se detenga 4 segundos para recoger roductos
-        return canastaGirar
+            else:
+                robot.estadoGiro = None
+
 
 

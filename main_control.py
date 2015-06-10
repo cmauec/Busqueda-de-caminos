@@ -144,17 +144,10 @@ class Client(object):
 
             # Hacemos que el robot coja el producto que va en la canasta
             self.canastaGirar = self.control.cogerProductos()
-            print self.canastaGirar
 
-
-            
             # Dibujamos a los robots
             for robot in self.robots:
-                robot.flagGirar
-                if robot.flagGirar:
-                    robot.dibujarRobot(self.ui.screen,self.canastaGirar)
-                else:
-                    robot.dibujarRobot(self.ui.screen)
+                robot.dibujarRobot(self.ui.screen)
                                                  
             # update screen
             pygame.display.update()
