@@ -45,7 +45,7 @@ def posibleChoque(p1, p2):
 class Control(object):
 
     def __init__(self, nodes):
-        print 'Inicializando Control'
+        print 'Initializing Control'
         self.pedidos = []
         self.pedidosDibujar = []
         self.robots = []
@@ -115,13 +115,13 @@ class Control(object):
                 self.totalrobotlibres = self.totalrobotlibres - 1
         if self.totalrobotlibres == 0:
             self.pedidos.append(pedido)
-            print 'Pedido agregado a la cola'
+            print 'Order added to the queue'
         
 
 
     def agregarRobot(self,robot):
         self.robots.append(robot)
-        print 'Robot agregado'
+        # print 'Robot agregado'
 
     def dibujarPedidos(self, screen):
         for p in self.pedidosDibujar:
@@ -137,7 +137,7 @@ class Control(object):
     def asignarPedidoRobot(self,nombre): #Asignamos pedidos que esten en espera a un robot que este libre
         if len(self.pedidos)>0:
             for r in self.robots:
-                print r.state
+                # print r.state
                 if r.nombre == nombre and r.state == 'libre':
                     if r.source[1]<8:
                         self.salida = self.salida_norte+self.salida_noreste
@@ -176,7 +176,7 @@ class Control(object):
                     self.pedidos.pop(0)
                     return
         else:
-            print 'No hay pedidos en espera'
+            print 'No pending orders'
 
 
     def quitarPedidoConcluido(self, pedido):
@@ -292,9 +292,7 @@ class Control(object):
             for robot1 in self.robots_temporal1:
                 if robot0.tipo_choque == 1 and robot1.tipo_choque == 1:
                     if robot0.robot_choque == robot1.nombre:
-                        if robot0.esperando_robot == False:
-                            robot0.esperando_robot = True
-                        if DistanciaEntrePuntos(robot0.posicion_actual, robot1.posicion_actual) > 3:
+                        if DistanciaEntrePuntos(robot0.posicion_actual, robot1.posicion_actual) > 5:
                             robot0.esperando_robot = False
                             robot0.tipo_choque = None
                             robot0.robot_choque = None
@@ -302,14 +300,8 @@ class Control(object):
                             robot1.tipo_choque = None
                             robot1.robot_choque = None
                 elif robot0.tipo_choque == 20 and robot1.tipo_choque == 20:
-                    print 'entra 20'
                     if robot1.robot_choque == robot0.nombre:
-                        print '20 20'
-                        if robot1.esperando_robot == False:
-                            print '20 20 20'
-                            robot1.esperando_robot = True
-                        if DistanciaEntrePuntos(robot1.posicion_actual, robot0.posicion_actual) > 3:
-                            print '20 20 20 20'
+                        if DistanciaEntrePuntos(robot1.posicion_actual, robot0.posicion_actual) > 5:
                             robot0.esperando_robot = False
                             robot0.tipo_choque = None
                             robot0.robot_choque = None
@@ -317,20 +309,14 @@ class Control(object):
                             robot1.tipo_choque = None
                             robot1.robot_choque = None
                 elif robot0.tipo_choque == 21 and robot1.tipo_choque == 21:
-                    print 'entra 21'
-                    if robot0.robot_choque == robot1.nombre:
-                        print  '21 21'
-                        if robot0.esperando_robot == False:
-                            print '21 21 21'
-                            robot0.esperando_robot = True
-                        if DistanciaEntrePuntos(robot0.posicion_actual, robot1.posicion_actual) > 3:
-                            print '21 21 21 21'
+                        if DistanciaEntrePuntos(robot0.posicion_actual, robot1.posicion_actual) > 5:
                             robot0.esperando_robot = False
                             robot0.tipo_choque = None
                             robot0.robot_choque = None
                             robot1.esperando_robot = False
                             robot1.tipo_choque = None
                             robot1.robot_choque = None
+
 
     def moverRobots(self,screen):
         #Calculamos choques en los robots
@@ -347,13 +333,12 @@ class Control(object):
                     if robot0.rec_colision.colliderect(robot1.rec_colision):  
                         if robot0.path_restante[1]==robot1.path_restante[1]:
                             screen.blit(txt_se_van_chocar,(170,30)) # Escribe texto en pantalla
-
                             # Asignamos el tipo de choque de los robots involucrados y el nombre con el que estan en choque cada uno  
                             robot0.tipo_choque = 1
                             robot0.robot_choque = robot1.nombre 
                             robot1.tipo_choque = 1
                             robot1.robot_choque = robot0.nombre
-
+                            robot0.esperando_robot = True
                             # Calculamos la mejor direccion para que se desvie el robot
                             # Creamos un vector con todas las posibilidades de desvio alrededor del robot
                             self.probabilidad_desvio = [(robot0.posicion_actual[0]+1, robot0.posicion_actual[1]),(robot0.posicion_actual[0]+1, robot0.posicion_actual[1]+1),(robot0.posicion_actual[0], robot0.posicion_actual[1]+1),(robot0.posicion_actual[0]-1, robot0.posicion_actual[1]+1),(robot0.posicion_actual[0]-1, robot0.posicion_actual[1]),(robot0.posicion_actual[0]-1, robot0.posicion_actual[1]-1),(robot0.posicion_actual[0], robot0.posicion_actual[1]-1),(robot0.posicion_actual[0]+1, robot0.posicion_actual[1]-1)]
@@ -401,8 +386,8 @@ class Control(object):
                             robot0.robot_choque = robot1.nombre 
                             robot1.tipo_choque = 2
                             robot1.robot_choque = robot0.nombre
+                            robot0.esperando_robot = True
                             self.probabilidad_desvio = [(robot0.posicion_actual[0]+1, robot0.posicion_actual[1]),(robot0.posicion_actual[0]+1, robot0.posicion_actual[1]+1),(robot0.posicion_actual[0], robot0.posicion_actual[1]+1),(robot0.posicion_actual[0]-1, robot0.posicion_actual[1]+1),(robot0.posicion_actual[0]-1, robot0.posicion_actual[1]),(robot0.posicion_actual[0]-1, robot0.posicion_actual[1]-1),(robot0.posicion_actual[0], robot0.posicion_actual[1]-1),(robot0.posicion_actual[0]+1, robot0.posicion_actual[1]-1)]
-                            
                             if robot0.posicion_actual[0] in pared_izq:
                                 self.probabilidad_desvio.remove((robot0.posicion_actual[0]-1, robot0.posicion_actual[1]))
                                 self.probabilidad_desvio.remove((robot0.posicion_actual[0]-1, robot0.posicion_actual[1]-1))
@@ -578,6 +563,20 @@ class Control(object):
         for robot in self.robots:
             if len(robot.coordenadas_producto):
                 if robot.posicion_actual == robot.coordenadas_producto[0]:
+                    clear = lambda: os.system('cls')
+                    clear()
+                    for canasta in robot.canastas:
+                        print 'Basket ' + canasta.nombreCanasta
+                        print '----------'
+                        print ''
+                        print 'List 1 (to collect products)' 
+                        print '-----------------------------'
+                        print canasta.productosRecoger
+                        print ''
+                        print 'List 2 (products in the basket)' 
+                        print '-------------------------------'
+                        print canasta.productosCanasta
+                        print ''
                     robot.esperando_producto = True
                     robot.play = False
                     robot.coordenadas_producto.pop(0)
@@ -606,7 +605,7 @@ class Control(object):
                             except:
                                 pass
                                 robot.estadoGiro = None
-                    Timer(4,robot.estadoEsperandoProducto).start()   #Hace que el robot se detenga 4 segundos para recoger roductos
+                    Timer(1,robot.estadoEsperandoProducto).start()   #Hace que el robot se detenga 4 segundos para recoger roductos
             else:
                 robot.estadoGiro = None
 

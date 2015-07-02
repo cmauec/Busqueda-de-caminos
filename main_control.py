@@ -30,6 +30,7 @@ import random
 import pygame
 import uuid
 
+
 from pygame.locals import *
 from const.constants import * 
 from algo.astar import *
@@ -40,7 +41,7 @@ from lib.pedido import *
 from lib.control import *
 from threading import Timer
  
-posicionRobot = [(5, 1), (7, 2), (3, 0), (7, 45), (3, 43), (5, 44)]
+posicionRobot = [(5, 1), (7, 2), (3, 0), (7, 45), (3, 43), (5, 44),]
 #posicionRobot = [(1, 1), (1, 1)]
 
 
@@ -85,7 +86,7 @@ class Client(object):
         self.ui = UI(ui_path)
 
         # Creamos robots
-        self.robots = CrearRobots(2)
+        self.robots = CrearRobots(1)
              
         # Creacion del control del sistema
         self.control = Control(self.ui.nodes)
@@ -172,10 +173,10 @@ class Client(object):
             nombre = uuid.uuid4()            
             self.pedido = Pedido(nombre)            
             self.control.agregarPedido(self.pedido)
-            # file = open("robotgina.txt", "w")
-            # for c in self.robots[0].path:
-            #     file.write(str(c[0]) + ' ' + str(c[1]) + '\n')
-            # file.close()
+            file = open("robotgina.txt", "w")
+            for c in self.robots[0].path:
+                file.write(str(c[0]) + ' ' + str(c[1]) + '\n')
+            file.close()
 
         #Tecla para agregar robots en el punto de partida
         elif event.key == K_s:
@@ -214,7 +215,7 @@ class Client(object):
 
         elif event.key == K_p:
             self.robots[0].play = True
-            self.robots[1].play = True 
+            # self.robots[1].play = True 
 
         
                         

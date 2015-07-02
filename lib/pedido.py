@@ -91,9 +91,9 @@ class Pedido(object):
             nombreProducto = random.choice(nombresProductosTemporal)
             self.productos_nom.append((nombreProducto, p)) 
             nombresProductosTemporal.remove(nombreProducto)  
-        print 'General list of products' 
-        print self.productos_nom
-        print '---------------------------------------------'                       
+        # print 'General list of products' 
+        # print self.productos_nom
+        # print '---------------------------------------------'                       
 
         self.color = random.choice(coloresProductos)
         self.nombre = nombre
