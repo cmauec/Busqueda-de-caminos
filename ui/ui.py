@@ -10,6 +10,7 @@ class _Node(object):
         top = y * NODE_SIZE
         self.rect = Rect(left, top, NODE_SIZE, NODE_SIZE)
         self.status = NORMAL
+        self.color = BLOCKED_COLOR
         self.parent = None
         self.f = None
         self.g = None
@@ -42,7 +43,7 @@ class UI(object):
 
         # color dictionary
         self.node_color = {NORMAL: Color(NORMAL_COLOR),
-                           BLOCKED: Color(BLOCKED_COLOR),
+                           BLOCKED: BLOCKED_COLOR,
                            OPENED: Color(OPENED_COLOR),
                            CLOSED: Color(CLOSED_COLOR),
                            SOURCE: Color(SOURCE_COLOR),
@@ -62,7 +63,7 @@ class UI(object):
                     wall1.append((wall1[0][0],v))
                 for w in wall1:
                     nx, ny = w
-                    self._set_node_status((nx, ny), BLOCKED)
+                    self._set_node_status((nx, ny), BLOCKED,BLOCKED_COLOR )
             elif direction == 'horizontal':
                 wall1 = wall
                 range_limit_low = (wall1[0][0]+1)
@@ -72,11 +73,37 @@ class UI(object):
                     wall1.append((v, wall1[0][1]))
                 for w in wall1:
                     nx, ny = w
-                    self._set_node_status((nx, ny), BLOCKED)
+                    self._set_node_status((nx, ny), BLOCKED,BLOCKED_COLOR )
 
-    def _set_node_status(self, (x, y), status):
+    def _draw_wall1(self,wall,direction='vertical'):
+            """dibujas las paredes. Se pasa como parametro el punto inicial y el punto final de la pared y la orientacion
+            """
+            #Dibujo pared vertical
+            if direction == 'vertical':
+                wall1 = wall
+                range_limit_low = (wall1[0][1]+1)
+                range_limit_high = (wall1[1][1])
+                nodes_wall = range(range_limit_low,range_limit_high)
+                for v in nodes_wall:
+                    wall1.append((wall1[0][0],v))
+                for w in wall1:
+                    nx, ny = w
+                    self._set_node_status((nx, ny), BLOCKED, WALLS)
+            elif direction == 'horizontal':
+                wall1 = wall
+                range_limit_low = (wall1[0][0]+1)
+                range_limit_high = (wall1[1][0])
+                nodes_wall = range(range_limit_low,range_limit_high)
+                for v in nodes_wall:
+                    wall1.append((v, wall1[0][1]))
+                for w in wall1:
+                    nx, ny = w
+                    self._set_node_status((nx, ny), BLOCKED, WALLS)
+
+    def _set_node_status(self, (x, y), status,color):
             try:
                 self.nodes[y][x].status = status
+                self.nodes[y][x].color = color
             except LookupError, why:
                 print why
 
@@ -87,7 +114,7 @@ class UI(object):
 
     def _draw_node_rect(self,node):
         try:
-            pygame.draw.rect(self.screen, self.node_color[node.status], 
+            pygame.draw.rect(self.screen, node.color, 
                     node.rect, 0)
         except LookupError:
             pass
@@ -105,59 +132,59 @@ class UI(object):
 
     #Dibujamos las paredes
     def _draw_map_init(self):
-        self._draw_wall([(1,4),(81,4)],'horizontal')
-        self._draw_wall([(1,3),(81,3)],'horizontal')
-        self._draw_wall([(1,42),(81,42)],'horizontal')
-        self._draw_wall([(1,41),(81,41)],'horizontal')
-        self._draw_wall([(0,8),(0,37)])
-        self._draw_wall([(1,8),(1,37)])
-        self._draw_wall([(88,3),(88,4)])
-        self._draw_wall([(89,3),(89,4)])
-        self._draw_wall([(88,41),(88,42)])
-        self._draw_wall([(89,41),(89,42)])
-        self._draw_wall([(88,12),(88,13)])
-        self._draw_wall([(89,12),(89,13)])
-        self._draw_wall([(88,22),(88,23)])
-        self._draw_wall([(89,22),(89,23)])
-        self._draw_wall([(88,32),(88,33)])
-        self._draw_wall([(89,32),(89,33)])
-        self._draw_wall([(7,8),(7,37)])
-        self._draw_wall([(8,8),(8,37)])
-        self._draw_wall([(9,8),(9,37)])
-        self._draw_wall([(13,8),(13,37)])
-        self._draw_wall([(14,8),(14,37)])
-        self._draw_wall([(15,8),(15,37)])
-        self._draw_wall([(19,8),(19,37)])
-        self._draw_wall([(20,8),(20,37)])
-        self._draw_wall([(21,8),(21,37)])
-        self._draw_wall([(25,8),(25,37)])
-        self._draw_wall([(26,8),(26,37)])
-        self._draw_wall([(27,8),(27,37)])
-        self._draw_wall([(31,8),(31,37)])
-        self._draw_wall([(32,8),(32,37)])
-        self._draw_wall([(33,8),(33,37)])
-        self._draw_wall([(37,8),(37,37)])
-        self._draw_wall([(38,8),(38,37)])
-        self._draw_wall([(39,8),(39,37)])
-        self._draw_wall([(43,8),(43,37)])
-        self._draw_wall([(44,8),(44,37)])
-        self._draw_wall([(45,8),(45,37)])
-        self._draw_wall([(49,8),(49,37)])
-        self._draw_wall([(50,8),(50,37)])
-        self._draw_wall([(51,8),(51,37)])
-        self._draw_wall([(55,8),(55,37)])
-        self._draw_wall([(56,8),(56,37)])
-        self._draw_wall([(57,8),(57,37)])
-        self._draw_wall([(61,8),(61,37)])
-        self._draw_wall([(62,8),(62,37)])
-        self._draw_wall([(63,8),(63,37)])
-        self._draw_wall([(67,8),(67,37)])
-        self._draw_wall([(68,8),(68,37)])
-        self._draw_wall([(69,8),(69,37)])
-        self._draw_wall([(73,8),(73,37)])
-        self._draw_wall([(74,8),(74,37)])
-        self._draw_wall([(75,8),(75,37)])
-        self._draw_wall([(79,8),(79,37)])
-        self._draw_wall([(80,8),(80,37)])
-        self._draw_wall([(81,8),(81,37)])
+        self._draw_wall1([(3,4),(81,4)],'horizontal')
+        self._draw_wall1([(3,3),(81,3)],'horizontal')
+        self._draw_wall1([(3,42),(81,42)],'horizontal')
+        self._draw_wall1([(3,41),(81,41)],'horizontal')
+
+        # self._draw_wall([(3,7),(81,7)],'horizontal')
+        # self._draw_wall([(3,8),(81,8)],'horizontal')
+        # self._draw_wall([(3,36),(81,36)],'horizontal')
+        # self._draw_wall([(3,35),(81,35)],'horizontal')
+        #letra F
+        self._draw_wall([(3,15),(3,25)])
+        self._draw_wall([(3,15),(7,15)],'horizontal')
+        self._draw_wall([(3,20),(5,20)],'horizontal')
+        #letra E
+        self._draw_wall([(10,15),(10,25)])
+        self._draw_wall([(10,15),(14,15)],'horizontal')
+        self._draw_wall([(10,20),(12,20)],'horizontal')
+        self._draw_wall([(10,25),(14,25)],'horizontal')
+        #letra L
+        self._draw_wall([(17,15),(17,25)])
+        self._draw_wall([(17,25),(21,25)],'horizontal')
+        #letra I
+        self._draw_wall([(24,15),(24,25)])
+        #letra C
+        self._draw_wall([(27,15),(27,25)])
+        self._draw_wall([(27,15),(31,15)],'horizontal')
+        self._draw_wall([(27,25),(31,25)],'horizontal')
+        #letra I
+        self._draw_wall([(34,15),(34,25)])
+        #letra D
+        self._draw_wall([(37,15),(37,25)])
+        self._draw_wall([(41,16),(41,24)])
+        self._draw_wall([(38,15),(40,15)],'horizontal')
+        self._draw_wall([(38,25),(40,25)],'horizontal')
+        #letra A
+        self._draw_wall([(44,16),(44,25)])
+        self._draw_wall([(48,16),(48,25)])
+        self._draw_wall([(45,15),(47,15)],'horizontal')
+        self._draw_wall([(45,20),(47,20)],'horizontal')
+        #letra D
+        self._draw_wall([(51,15),(51,25)])
+        self._draw_wall([(55,16),(55,24)])
+        self._draw_wall([(52,15),(54,15)],'horizontal')
+        self._draw_wall([(52,25),(54,25)],'horizontal')
+        #letra E
+        self._draw_wall([(58,15),(58,25)])
+        self._draw_wall([(58,15),(62,15)],'horizontal')
+        self._draw_wall([(58,20),(60,20)],'horizontal')
+        self._draw_wall([(58,25),(62,25)],'horizontal')
+        #letra S
+        self._draw_wall([(65,15),(65,20)])
+        self._draw_wall([(69,20),(69,25)])
+        self._draw_wall([(65,15),(69,15)],'horizontal')
+        self._draw_wall([(65,20),(69,20)],'horizontal')
+        self._draw_wall([(65,25),(69,25)],'horizontal')
         self._draw_nodes()

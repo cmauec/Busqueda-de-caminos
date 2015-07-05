@@ -41,9 +41,39 @@ from lib.pedido import *
 from lib.control import *
 from threading import Timer
  
-posicionRobot = [(5, 1), (7, 2), (3, 0), (7, 45), (3, 43), (5, 44),]
+posicionRobot = [
+                    #Arriba
+                    #fila 1
+                    (5, 1), (6, 1), (7, 1), (8, 1), (9, 1), (10, 1), (11, 1), (12, 1), (13, 1), (14, 1),
+                    (15, 1), (16, 1), (17, 1), (18, 1), (19, 1), (20, 1), (21, 1), (22, 1), (23, 1), (24, 1),
+                    (25, 1), (26, 1), (27, 1), (28, 1), (29, 1), (30, 1), (31, 1), (32, 1), (33, 1), (34, 1),
+                    (35, 1), (36, 1), (37, 1), (38,1),(39,1),(40,1),
+                    #fila 2
+                    (5, 2), (6, 2), (7, 2), (8, 2), (9, 2), (10, 2), (11, 2), (12, 2), (13, 2), (14, 2),
+                    (15, 2), (16, 2), (17, 2), (18, 2), (19, 2), (20, 2), (21, 2), (22, 2), (23, 2), (24, 2),
+                    (25, 2), (26, 2), (27, 2), (28, 2), (29, 2), (30, 2), (31, 2), (32, 2), (33, 2), (34, 2),
+                    (35, 2), (36, 2), (37, 2), (38, 2), (39, 2), (40, 2), (41, 2), (42, 2), (43, 2), (44, 2),
+                    (45, 2), (46, 2), (47, 2), (48, 2), (49, 2), (50, 2), (51, 2), (52, 2), (53, 2), (54, 2),
+                    (55, 2), (56, 2), (57, 2), (58, 2), (59, 2), (60, 2), (61, 2), (62, 2), (63, 2), (64, 2),
+                    (65, 2), (66, 2), (67, 2), (68, 2), (69, 2), (70, 2), (71, 2), (72, 2), (73, 2), (74, 2),
+                    (75, 2), (76, 2), (77, 2), (78, 2), (79, 2),
+                    #Abajo
+                    #fila 1
+                    (5, 44),(6,44),(7,44),(8,44),(9,44),(10, 44),(11,44),(12,44),(13,44),(14,44),
+                    (15, 44),(16,44),(17,44),(18,44),(19,44),(20, 44),(21,44),(22,44),(23,44),(24,44),
+                    (25, 44), (26, 44), (27, 44), (28, 44), (29, 44), (30, 44), (31, 44), (32, 44), (33, 44), (34, 44),
+                    (35, 44), (36, 44), (37, 44), (38, 44), (39,44),
+                    #fila 2
+                    (5, 43),(6,43),(7,43),(8,43),(9,43),(10, 43),(11,43),(12,43),(13,43),(14,43),
+                    (15, 43),(16,43),(17,43),(18,43),(19,43),(20, 43),(21,43),(22,43),(23,43),(24,43),
+                    (25, 43), (26, 43), (27, 43), (28, 43), (29, 43), (30, 43), (31, 43), (32, 43), (33, 43), (34, 43),
+                    (35, 43), (36, 43), (37, 43), (38, 43), (39,43), (40, 43), (41, 43), (42, 43), (43, 43), (44, 43),
+                    (45, 43), (46, 43), (47, 43), (48, 43), (49, 43), (50, 43), (51, 43), (52, 43), (53, 43), (54, 43),
+                    (55, 43), (56, 43), (57,43), (58, 43), (59, 43), (60, 43), (61, 43), (62, 43), (63, 43), (64, 43),
+                    (65, 43), (66, 43), (67, 43), (68, 43), (69, 43), (70, 43), (71, 43), (72, 43), (73, 43), (74, 43),
+                    (75, 43), (76, 43), (77, 43), (78, 43), (79, 43),
+                ]
 #posicionRobot = [(1, 1), (1, 1)]
-
 
 
 def CrearRobots(robots):
@@ -86,7 +116,7 @@ class Client(object):
         self.ui = UI(ui_path)
 
         # Creamos robots
-        self.robots = CrearRobots(1)
+        self.robots = CrearRobots(221)
              
         # Creacion del control del sistema
         self.control = Control(self.ui.nodes)
@@ -98,12 +128,6 @@ class Client(object):
 
         # general status
         self.status = ''
-        self.flag = 1
-        self.estadoChoqueCruzado = 0
-        self.estadoChoqueDiagonal = 0
-
-        #borrar despues de pruebas
-        self.temp_choque = 0
 
         
 
@@ -128,27 +152,20 @@ class Client(object):
             self.ui._draw_map_init()
 
             # Dibujamos las lineas separadoras de cada nodo
-            #self.ui._draw_grid_lines()
+            # self.ui._draw_grid_lines()
 
-            # Dibujamos todos los pedidos pendientes de entrega
-            self.control.dibujarPedidos(self.ui.screen)
-
-            # Dibuajamos la ruta de los robots            
-            for robot in self.robots:
-                robot.dibujarRuta(self.ui.screen, self.ui.nodes)
-
-            
-            # Reseteamos el estado de los robots que estuvieron en un choque
-            self.control.resetChoqueRobot()
             # Movemos a los robots
             self.control.moverRobots(self.ui.screen)
 
-            # Hacemos que el robot coja el producto que va en la canasta
-            self.canastaGirar = self.control.cogerProductos()
+            # Mdibujamos foto
+            self.control.show_photo(self.ui.screen)
 
             # Dibujamos a los robots
             for robot in self.robots:
-                robot.dibujarRobot(self.ui.screen)
+                robot.dibujarRobotMensaje(self.ui.screen)
+
+            if self.control.letras < 5:
+                self.control.photo = True
                                                  
             # update screen
             pygame.display.update()
@@ -168,60 +185,17 @@ class Client(object):
     def _handle_keyboard(self, event):
         """Handle keyboard event
         """
-        #Agragar pedidos
-        if event.key == K_SPACE:
-            nombre = uuid.uuid4()            
-            self.pedido = Pedido(nombre)            
-            self.control.agregarPedido(self.pedido)
-            file = open("robotgina.txt", "w")
-            for c in self.robots[0].path:
-                file.write(str(c[0]) + ' ' + str(c[1]) + '\n')
-            file.close()
 
-        #Tecla para agregar robots en el punto de partida
-        elif event.key == K_s:
-            self.robotNuevo = CrearRobot()
-            if self.robotNuevo:
-                self.robots.append(self.robotNuevo)
-                self.control.agregarRobot(self.robotNuevo)
+        if event.key == K_g:
+            pygame.mixer.music.load("m.wav")                        
+            pygame.mixer.music.play(-1)
+            self.control.agregarPuntoLetra()
 
-        #Tecla para quitar robots en el punto de partida
-        elif event.key == K_a:
-            for robot in self.robots:
-                if robot.state == 'libre':
-                    indexRobot = self.robots.index(robot)
-                    self.robots.pop(indexRobot)
-                    posicionRobot.append(robot.source)
-                    self.control.quitarRobot(robot)
-                    colorRobot.append(robot.color)
-                    return
+        elif event.key == K_m:
+            print letras
+            for r in self.robots:
+                print r.path_restante
 
-
-        elif event.key == K_e:
-            for canasta in self.robots[0].canastas:
-                print 'Basket ' + canasta.nombreCanasta
-                print 'List 1 (to collect products)' 
-                print canasta.productosRecoger
-                print '---------------------------------------------------------------'
-                print 'List 2 (products in the basket)' 
-                print canasta.productosCanasta
-                print '---------------------------------------------------------------'
-
-               
-        elif event.key == K_o:
-            self.robots[0].play = False
-            self.robots[1].play = False
-           
-
-        elif event.key == K_p:
-            self.robots[0].play = True
-            # self.robots[1].play = True 
-
-        
-                        
-             
-
-        
 
         elif event.key == K_ESCAPE:
             self._quit()

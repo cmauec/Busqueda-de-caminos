@@ -74,7 +74,7 @@ NODE_SIZE  = 15
 RESOLUTION = (1350, 700)
 MAP_SIZE = (1350, 700)
 
-FPS_LIMIT  = 10
+FPS_LIMIT  = 4
 
 FONT_NAME = 'freesansbold.ttf'
 
@@ -84,10 +84,11 @@ ICON_NAME = 'ico.png'
 
 
 # color table
-BACKGROUND_COLOR         = 'gray95'
+BACKGROUND_COLOR         = 'white'
 GRID_LINE_COLOR          = 'gray'
 NORMAL_COLOR             = 'white'
-BLOCKED_COLOR            = 'gray50'
+WALLS                    = (85,176,200)
+BLOCKED_COLOR            = (255,255,255)
 OPENED_COLOR             = 'palegreen'
 CLOSED_COLOR             = 'paleturquoise'
 SOURCE_COLOR             = 'green2'
